@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     // ** 움직임을 저장하는 벡터
     private Vector3 Movement;
 
+    // 플레이어 체력
     private int Health;
 
     // ** 플레이어의 Animator 구성요소를 받아오기 위해
@@ -28,8 +29,13 @@ public class PlayerController : MonoBehaviour
     private bool onDead;    // 사망
     private bool onDive;    // 착지
 
-    // ** 복사할 총알 원본
+    // ** 복제할 총알 원본
     public GameObject BulletPrefab;
+
+    // ** 복제할 FX 원본
+    public GameObject fxPrefab;
+
+    public GameObject[] stageBack = new GameObject[7];
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -64,6 +70,10 @@ public class PlayerController : MonoBehaviour
         onRoll = false;
         onDead = false;
         onDive = false;
+        Direction = 1.0f;
+
+        for (int i = 0; i < 7; ++i)
+            stageBack[i] = GameObject.Find(i.ToString());
     }
 
 
@@ -134,6 +144,9 @@ public class PlayerController : MonoBehaviour
             // ** 총알 스크립트 내부의 방향 변수를 현재 플레이어의 방향 변수로 설정한다.
             Controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
 
+            // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
+            Controller.fxPrefab = fxPrefab;
+
             // ** 총알의 SpriteRenderer를 받아온다.
             SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
 
@@ -148,7 +161,9 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Speed", Hor);
 
         // ** 실제 플레이어를 움직인다.
-        transform.position += Movement;  // 원래 FixedUpdate에 써야 함
+
+        // ** offset box
+        // transform.position += Movement;  // 원래 FixedUpdate에 써야 함
     }
 
 
@@ -270,6 +285,9 @@ public class PlayerController : MonoBehaviour
         Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
+
+        // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
+        Controller.fxPrefab = fxPrefab;
 
         renderer.flipY = spriteRenderer.flipX;
 

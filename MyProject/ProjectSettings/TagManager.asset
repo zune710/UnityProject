@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - FxTemporaire
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Bullet
   - 
   - 
   - 
@@ -41,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3431128927
+    locked: 0
+  - name: Unit
+    uniqueID: 3624976123
     locked: 0
