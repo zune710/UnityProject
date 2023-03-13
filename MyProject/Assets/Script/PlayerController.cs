@@ -30,10 +30,10 @@ public class PlayerController : MonoBehaviour
     private bool onDive;    // 착지
 
     // ** 복제할 총알 원본
-    public GameObject BulletPrefab;
+    private GameObject BulletPrefab;
 
     // ** 복제할 FX 원본
-    public GameObject fxPrefab;
+    private GameObject fxPrefab;
 
     public GameObject[] stageBack = new GameObject[7];
 
@@ -47,13 +47,18 @@ public class PlayerController : MonoBehaviour
     public bool DirLeft;
     public bool DirRight;
 
-    private void Awake()  // Start보다 먼저 실행되고 Start보다 덜 실행됨
+
+    private void Awake()  // Start보다 먼저 실행되고 덜 실행됨
     {
         // ** Player의 Animator를 받아온다.
         animator = this.GetComponent<Animator>();  // 'this.' 생략 가능
 
-        //** Player의 SpriteRenderer를 받아온다.
+        // ** Player의 SpriteRenderer를 받아온다.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
+
+        // ** [Resources] 폴더에서 사용할 리소스를 들고온다.
+        BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
+        fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
     }
 
 
@@ -64,6 +69,7 @@ public class PlayerController : MonoBehaviour
         // ** 속도를 초기화
         Speed = 5.0f;
 
+        // 플레이어 체력을 초기화
         Health = 10;
 
         // ** 초기값 세팅
@@ -74,6 +80,9 @@ public class PlayerController : MonoBehaviour
         onDead = false;
         onDive = false;
         Direction = 1.0f;
+
+        DirLeft = false;
+        DirRight = false;
 
         for (int i = 0; i < 7; ++i)
             stageBack[i] = GameObject.Find(i.ToString());
@@ -92,22 +101,53 @@ public class PlayerController : MonoBehaviour
         float Hor = Input.GetAxisRaw("Horizontal");
         // float Ver = Input.GetAxisRaw("Vertical");
 
+        // ** 입력받은 값으로 플레이어를 움직인다.
+        // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
+        Movement = new Vector3(
+            Hor * Time.deltaTime * Speed,
+            0.0f,
+            0.0f);
+
         // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
         if (Hor != 0)
             Direction = Hor;
-        else
+
+        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            DirLeft = false;
-            DirRight = false;
+            // ** 플레이어의 좌표가 0 보다 작을 때 플레이어만 움직인다.
+            if (transform.position.x < 0)
+                // ** 실제 플레이어를 움직인다.
+                transform.position += Movement;
+            else
+            {
+                ControllerManager.GetInstance().DirRight = true;
+                ControllerManager.GetInstance().DirLeft = false;
+                // DirRight, DirLeft: 직관적인 표현을 위해 사용 / Hor 변수 하나만으로도 작성 가능
+            }
         }
 
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            ControllerManager.GetInstance().DirRight = false;
+            ControllerManager.GetInstance().DirLeft = true;
+            
+            // ** 플레이어의 좌표가 -15.0 보다 클 때 플레이어만 움직인다.
+            if(transform.position.x > -15.0f)
+                // ** 실제 플레이어를 움직인다.
+                transform.position += Movement;
+        }
+
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+        {
+            ControllerManager.GetInstance().DirRight = false;
+            ControllerManager.GetInstance().DirLeft = false;
+        }
+
+
         // ** 플레이어가 바라보고 있는 방향에 따라 이미지 반전(플립) 설정
-        if(Direction < 0)
+        if (Direction < 0)
         {
             spriteRenderer.flipX = DirLeft = true;
-
-            // ** 실제 플레이어를 움직인다.
-            transform.position += Movement;
         }
             
         else if (Direction > 0)
@@ -115,13 +155,6 @@ public class PlayerController : MonoBehaviour
             spriteRenderer.flipX = false;
             DirRight = true;
         }
-
-        // ** 입력받은 값으로 플레이어를 움직인다.
-        // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
-        Movement = new Vector3(
-            Hor * Time.deltaTime * Speed,
-            0.0f, 
-            0.0f);
 
         // ** 좌측 컨트롤키를 입력한다면
         if (Input.GetKey(KeyCode.LeftControl))

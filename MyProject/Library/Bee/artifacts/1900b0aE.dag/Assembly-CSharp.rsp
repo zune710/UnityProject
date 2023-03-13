@@ -367,6 +367,7 @@
 "Assets/Script/BackgroundController.cs"
 "Assets/Script/BulletController.cs"
 "Assets/Script/CameraController.cs"
+"Assets/Script/ControllerManager.cs"
 "Assets/Script/MyGizmo.cs"
 "Assets/Script/PlayerController.cs"
 -langversion:9.0

@@ -44,7 +44,7 @@ public class BackgroundController : MonoBehaviour
         // ** 현재 이미지를 담고 있는 구성요소를 받아온다.
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ** 플레이어 이미지를 담고 있는 구성요소를 받아온다.
+        // ** 플레이어 구성요소를 받아온다. ??
         playerController = player.GetComponent<PlayerController>();
     }
 
@@ -64,32 +64,39 @@ public class BackgroundController : MonoBehaviour
 
     void Update()
     {
-        //// ** 플레이어가 바라보고 있는 방향에 따라 분기됨
-        //if (playerController.Dir)
-        //{
-        //    // ** 좌측 이동
-        //    // ** 이동 정보 세팅
-        //    movement = new Vector3(
-        //        Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** 나중에 singleton으로 변경
-        //        player.transform.position.y + offset.y,
-        //        0.0f + offset.z);
-        //}
-        //else
-        //{
-        //    // ** 우측 이동
+        // ** 이동 정보 세팅
+        movement = new Vector3(
+            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** 나중에 singleton으로 변경해야 함
+            player.transform.position.y + offset.y,
+            0.0f + offset.z);
 
-        //}
+        // ** Singleton
+        // ** 플레이어가 바라보고 있는 방향에 따라 분기됨
+        if (ControllerManager.GetInstance().DirLeft)
+        {
+            // ** 좌측 이동
+            // ** 이동 정보 적용
+            endPoint -= movement.x;
+        }
 
-        // ** 이동 정보 적용
-        transform.position -= movement;
-        endPoint -= movement.x;
+        if (ControllerManager.GetInstance().DirRight)
+        {
+            // ** 우측 이동
+            // ** 이동 정보 적용
+            transform.position -= movement;
+        }
+
+        
+
+        
+        
 
         // ** 동일한 이미지 복사
         if (player.transform.position.x + (sprite.bounds.size.x * 0.5f) + 1 > endPoint)
         {
             // ** 이미지를 복제한다.
             GameObject Obj = Instantiate(this.gameObject);
-
+            
             // ** 복제된 이미지의 부모를 설정한다.
             Obj.transform.parent = parent.transform;
             
