@@ -64,32 +64,23 @@ public class BackgroundController : MonoBehaviour
 
     void Update()
     {
+        offset.y = player.transform.position.y * -1;
+
         // ** 이동 정보 세팅
         movement = new Vector3(
             Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** 나중에 singleton으로 변경해야 함
             player.transform.position.y + offset.y,
             0.0f + offset.z);
 
-        // ** Singleton
-        // ** 플레이어가 바라보고 있는 방향에 따라 분기됨
-        if (ControllerManager.GetInstance().DirLeft)
-        {
-            // ** 좌측 이동
-            // ** 이동 정보 적용
-            endPoint -= movement.x;
-        }
-
+        // ** singleton
+        // ** 플레이어가 바라보고 있는 방향에 따라 분기됨(플레이어가 오른쪽으로 갈 때만 맵이 움직임)
         if (ControllerManager.GetInstance().DirRight)
         {
             // ** 우측 이동
             // ** 이동 정보 적용
             transform.position -= movement;
+            endPoint -= movement.x;
         }
-
-        
-
-        
-        
 
         // ** 동일한 이미지 복사
         if (player.transform.position.x + (sprite.bounds.size.x * 0.5f) + 1 > endPoint)

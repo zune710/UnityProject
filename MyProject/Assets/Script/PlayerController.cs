@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerController : MonoBehaviour
-{
+{ 
     // public은 유니티 Inspector 창에 노출이 된다.
 
     // ** 움직이는 속도
@@ -35,7 +36,9 @@ public class PlayerController : MonoBehaviour
     // ** 복제할 FX 원본
     private GameObject fxPrefab;
 
-    public GameObject[] stageBack = new GameObject[7];
+    // ** 추후에 list로 변경해야 함
+    // public GameObject[] stageBack = new GameObject[7];
+    public List<GameObject> stageBack = new List<GameObject>();
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -56,15 +59,30 @@ public class PlayerController : MonoBehaviour
         // ** Player의 SpriteRenderer를 받아온다.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-        // ** [Resources] 폴더에서 사용할 리소스를 들고온다.
+        // 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
+//#if UNITY_EDITOR
+//        print("test");
+//#else
+//    print("???");
+//#endif
+
+        // ** [Resources] 폴더에서, 사용할 리소스를 들고온다.
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
+
+        // 플레이어 inspector의 script 안에 안 들어가는데?
+        stageBack.Add(Resources.Load("Backgrounds/0") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/1") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/2") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/3") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/4") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/5") as GameObject);
+        stageBack.Add(Resources.Load("Backgrounds/6") as GameObject);
     }
 
-
-    // ** 유니티 기본 제공 함수
-    // ** 초기값을 설정할 때 사용
-    void Start()
+        // ** 유니티 기본 제공 함수
+        // ** 초기값을 설정할 때 사용
+        void Start()
     {
         // ** 속도를 초기화
         Speed = 5.0f;
@@ -84,9 +102,10 @@ public class PlayerController : MonoBehaviour
         DirLeft = false;
         DirRight = false;
 
-        for (int i = 0; i < 7; ++i)
-            stageBack[i] = GameObject.Find(i.ToString());
-    }
+         // 이게 효율적이지만 Resource를 Load하는 방법(70줄~)을 권장한다.
+         //for (int i = 0; i < 7; ++i)
+         //    stageBack[i] = GameObject.Find(i.ToString());
+        }
 
 
     // ** 유니티 기본 제공 함수
@@ -99,7 +118,7 @@ public class PlayerController : MonoBehaviour
         // ** Input.GetAxis는 -1과 1 사이의 값을 실수로 반환(소수점 단위) / PC, 콘솔 / 움직임 서서히 멈출 때 사용 / 실수 연산 - 부하↑
         // ** Input.GetAxisRaw는 -1, 0, 1 셋 중 하나를 반환 / 모바일, 2D / 게임 만들 때 주로 사용(최적화)
         float Hor = Input.GetAxisRaw("Horizontal");
-        // float Ver = Input.GetAxisRaw("Vertical");
+        float Ver = Input.GetAxisRaw("Vertical");
 
         // ** 입력받은 값으로 플레이어를 움직인다.
         // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
@@ -108,13 +127,15 @@ public class PlayerController : MonoBehaviour
             0.0f,
             0.0f);
 
+        transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
+
         // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
         if (Hor != 0)
             Direction = Hor;
 
         if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            // ** 플레이어의 좌표가 0 보다 작을 때 플레이어만 움직인다.
+            // ** 플레이어의 좌표가 0.0 보다 작을 때 플레이어만 움직인다.
             if (transform.position.x < 0)
                 // ** 실제 플레이어를 움직인다.
                 transform.position += Movement;
@@ -350,6 +371,10 @@ public class PlayerController : MonoBehaviour
             Controller.Direction = new Vector3(Hor, 0.0f, 0.0f);
 
         Bullets.Add(Obj);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+            print("111");
     }
 }
 
