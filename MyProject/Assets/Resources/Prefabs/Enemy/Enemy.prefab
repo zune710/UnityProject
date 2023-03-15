@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1972305223799295484}
   - component: {fileID: 1972305223799295485}
   - component: {fileID: 1972305223799295482}
+  - component: {fileID: 7712714590649408403}
+  - component: {fileID: 3580262666970675711}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -74,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -669991173
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -750047184722822154, guid: ee4793e5a4dc7634981299b15c12274c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,6 +108,36 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!70 &7712714590649408403
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972305223799295483}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.35, y: -0.44}
+  m_Size: {x: 0.39, y: 0.19}
+  m_Direction: 1
+--- !u!114 &3580262666970675711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972305223799295483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae5a3bd49debce043afe7cff53a2a374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: 0
+  HP: 0
 --- !u!1 &8645605369734633486
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8645605369734633486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.35, y: -0.446, z: 0}
+  m_LocalPosition: {x: 0.35, y: -0.459, z: 0}
   m_LocalScale: {x: 0.7, y: 0.74, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

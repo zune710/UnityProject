@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ControllerManager
 {
+    // 코드의 안정성 위해 필수!
+    private ControllerManager() { }
+
     private static ControllerManager Instance = null;
 
     public static ControllerManager GetInstance()
@@ -15,10 +18,4 @@ public class ControllerManager
 
     public bool DirLeft;
     public bool DirRight;
-
-    // 코드의 안정성 위해 필수!
-    private ControllerManager()
-    {
-
-    }
 }

@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     private float shakeTime = 0.15f;
 
     //** 카메라의 진동 범위
-    private Vector3 offset = new Vector3(0.15f, 0.15f, 0.0f);
+    private Vector3 offset = new Vector3(0.05f, 0.05f, 0.0f);
     private Vector3 OldPosition;
     
     // ** 코루틴 함수 실행

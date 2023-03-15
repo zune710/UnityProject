@@ -38,7 +38,12 @@ public class PlayerController : MonoBehaviour
 
     // ** 추후에 list로 변경해야 함
     // public GameObject[] stageBack = new GameObject[7];
-    public List<GameObject> stageBack = new List<GameObject>();
+    public List<GameObject> stageBack;
+
+    /*
+     Dictionary<string, Object> dic1;
+     Dictionary<string, GameObject> dic2;
+    */
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -46,8 +51,11 @@ public class PlayerController : MonoBehaviour
     // ** 플레이어가 마지막으로 바라본 방향
     private float Direction;
 
+    [Header("방향")]
     // ** 플레이어가 바라보는 방향
+    [Tooltip("왼쪽")]
     public bool DirLeft;
+    [Tooltip("오른쪽")]
     public bool DirRight;
 
 
@@ -59,7 +67,7 @@ public class PlayerController : MonoBehaviour
         // ** Player의 SpriteRenderer를 받아온다.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-        // 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
+// 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
 //#if UNITY_EDITOR
 //        print("test");
 //#else
@@ -68,16 +76,10 @@ public class PlayerController : MonoBehaviour
 
         // ** [Resources] 폴더에서, 사용할 리소스를 들고온다.
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
-        fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
+        //fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
+        fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
 
-        // 플레이어 inspector의 script 안에 안 들어가는데?
-        stageBack.Add(Resources.Load("Backgrounds/0") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/1") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/2") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/3") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/4") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/5") as GameObject);
-        stageBack.Add(Resources.Load("Backgrounds/6") as GameObject);
+        stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds"));
     }
 
         // ** 유니티 기본 제공 함수
@@ -102,7 +104,7 @@ public class PlayerController : MonoBehaviour
         DirLeft = false;
         DirRight = false;
 
-         // 이게 효율적이지만 Resource를 Load하는 방법(70줄~)을 권장한다.
+         // 이게 효율적이지만 Resource를 Load하는 방법(81줄)을 권장한다.
          //for (int i = 0; i < 7; ++i)
          //    stageBack[i] = GameObject.Find(i.ToString());
         }
@@ -158,7 +160,8 @@ public class PlayerController : MonoBehaviour
                 transform.position += Movement;
         }
 
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || 
+            Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
         {
             ControllerManager.GetInstance().DirRight = false;
             ControllerManager.GetInstance().DirLeft = false;
@@ -374,7 +377,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-            print("111");
+            print("collision");
     }
 }
 

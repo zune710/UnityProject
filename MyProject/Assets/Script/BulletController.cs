@@ -64,38 +64,32 @@ public class BulletController : MonoBehaviour
     // Enter: 처음 부딪힌 순간 / Stay: 충돌체 안에 있을 때 / Exit: 충돌체에서 빠져나오기 직전의 순간
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //// 예외처리 (총알이 카메라 밖을 벗어나 보이지 않는 벽에 충돌하면 삭제됨)
-        //if (collision.transform.tag == "Wall")
-        //{
-        //    Destroy(this.gameObject);
-        //    return;
-        //}
-
         // ** 충돌 횟수 차감
         --hp;
 
         // ** 이펙트 효과 복제
         GameObject Obj = Instantiate(fxPrefab);
 
-        // ** 진동 효과를 생성할 관리자 생성
-        GameObject camera = new GameObject("Camera Test");
-
-        // ** 진동 효과 컨트롤러 생성
-        camera.AddComponent<CameraController>();
-
         // ** 이펙트 효과의 위치를 지정
         Obj.transform.position = transform.position;
 
         // ** collision = 충돌한 대상
-        // ** 충돌한 대상을 삭제한다.
-        if (collision.transform.tag != "Wall")
-            Destroy(collision.transform.gameObject);
-        else
+        // ** 충돌한 대상을 삭제한다. ??
+        // (총알이 카메라 밖을 벗어나 보이지 않는 벽에 충돌하면 삭제됨)
+        if (collision.transform.tag == "Wall")
             Destroy(this.gameObject);
+        else
+        {
+            // ** 진동 효과를 생성할 관리자 생성
+            GameObject camera = new GameObject("Camera Test");
+
+            // ** 진동 효과 컨트롤러 생성
+            camera.AddComponent<CameraController>();
+        }
 
         // ** 총알의 충돌 횟수가 0이 되면(충돌 가능 횟수를 모두 소진하면) 총알 삭제
         if (hp == 0)
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, 0.016f);
     }
 }
 
