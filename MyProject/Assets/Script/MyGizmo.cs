@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class MyGizmo : MonoBehaviour
 {
+    public Color color = Color.red;
+    
     private void OnDrawGizmos()
     {
-        // ** GizmosÀÇ »öÀ» º¯°æÇÑ´Ù.
-        Gizmos.color = Color.red;
+        // ** Gizmosì˜ ìƒ‰ì„ ë³€ê²½í•œë‹¤.
+        Gizmos.color = color;
 
-        // ** Gizmos¸¦ ±×¸°´Ù.
+        // ** Gizmosë¥¼ ê·¸ë¦°ë‹¤.
         Gizmos.DrawSphere(this.transform.position, 0.2f);
     }
 }

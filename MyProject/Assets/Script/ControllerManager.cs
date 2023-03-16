@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ControllerManager
 {
-    // ÄÚµåÀÇ ¾ÈÁ¤¼º À§ÇØ ÇÊ¼ö!
+    // ì½”ë“œì˜ ì•ˆì •ì„± ìœ„í•´ í•„ìˆ˜!
     private ControllerManager() { }
 
     private static ControllerManager Instance = null;

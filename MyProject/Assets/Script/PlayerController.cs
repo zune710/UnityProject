@@ -5,38 +5,38 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 { 
-    // publicÀº À¯´ÏÆ¼ Inspector Ã¢¿¡ ³ëÃâÀÌ µÈ´Ù.
+    // publicì€ ìœ ë‹ˆí‹° Inspector ì°½ì— ë…¸ì¶œì´ ëœë‹¤.
 
-    // ** ¿òÁ÷ÀÌ´Â ¼Óµµ
+    // ** ì›€ì§ì´ëŠ” ì†ë„
     private float Speed;
 
-    // ** ¿òÁ÷ÀÓÀ» ÀúÀåÇÏ´Â º¤ÅÍ
+    // ** ì›€ì§ì„ì„ ì €ì¥í•˜ëŠ” ë²¡í„°
     private Vector3 Movement;
 
-    // ÇÃ·¹ÀÌ¾î Ã¼·Â
+    // í”Œë ˆì´ì–´ ì²´ë ¥
     private int Health;
 
-    // ** ÇÃ·¹ÀÌ¾îÀÇ Animator ±¸¼º¿ä¼Ò¸¦ ¹Ş¾Æ¿À±â À§ÇØ
+    // ** í”Œë ˆì´ì–´ì˜ Animator êµ¬ì„±ìš”ì†Œë¥¼ ë°›ì•„ì˜¤ê¸° ìœ„í•´
     private Animator animator;
 
-    // ** ÇÃ·¹ÀÌ¾îÀÇ SpriteRenderer ±¸¼º¿ä¼Ò¸¦ ¹Ş¾Æ¿À±â À§ÇØ
+    // ** í”Œë ˆì´ì–´ì˜ SpriteRenderer êµ¬ì„±ìš”ì†Œë¥¼ ë°›ì•„ì˜¤ê¸° ìœ„í•´
     private SpriteRenderer spriteRenderer;
 
-    // ** [»óÅÂ Ã¼Å©]
-    private bool onAttack;  // °ø°İ»óÅÂ
-    private bool onHit;     // ÇÇ°İ»óÅÂ
-    private bool onJump;    // Á¡ÇÁ
-    private bool onRoll;    // ±¸¸£±â
-    private bool onDead;    // »ç¸Á
-    private bool onDive;    // ÂøÁö
+    // ** [ìƒíƒœ ì²´í¬]
+    private bool onAttack;  // ê³µê²©ìƒíƒœ
+    private bool onHit;     // í”¼ê²©ìƒíƒœ
+    private bool onJump;    // ì í”„
+    private bool onRoll;    // êµ¬ë¥´ê¸°
+    private bool onDead;    // ì‚¬ë§
+    private bool onDive;    // ì°©ì§€
 
-    // ** º¹Á¦ÇÒ ÃÑ¾Ë ¿øº»
+    // ** ë³µì œí•  ì´ì•Œ ì›ë³¸
     private GameObject BulletPrefab;
 
-    // ** º¹Á¦ÇÒ FX ¿øº»
+    // ** ë³µì œí•  FX ì›ë³¸
     private GameObject fxPrefab;
 
-    // ** ÃßÈÄ¿¡ list·Î º¯°æÇØ¾ß ÇÔ
+    // ** ì¶”í›„ì— listë¡œ ë³€ê²½í•´ì•¼ í•¨
     // public GameObject[] stageBack = new GameObject[7];
     public List<GameObject> stageBack;
 
@@ -45,36 +45,36 @@ public class PlayerController : MonoBehaviour
      Dictionary<string, GameObject> dic2;
     */
 
-    // ** º¹Á¦µÈ ÃÑ¾ËÀÇ ÀúÀå°ø°£
+    // ** ë³µì œëœ ì´ì•Œì˜ ì €ì¥ê³µê°„
     private List<GameObject> Bullets = new List<GameObject>();
 
-    // ** ÇÃ·¹ÀÌ¾î°¡ ¸¶Áö¸·À¸·Î ¹Ù¶óº» ¹æÇâ
+    // ** í”Œë ˆì´ì–´ê°€ ë§ˆì§€ë§‰ìœ¼ë¡œ ë°”ë¼ë³¸ ë°©í–¥
     private float Direction;
 
-    [Header("¹æÇâ")]
-    // ** ÇÃ·¹ÀÌ¾î°¡ ¹Ù¶óº¸´Â ¹æÇâ
-    [Tooltip("¿ŞÂÊ")]
+    [Header("ë°©í–¥")]
+    // ** í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥
+    [Tooltip("ì™¼ìª½")]
     public bool DirLeft;
-    [Tooltip("¿À¸¥ÂÊ")]
+    [Tooltip("ì˜¤ë¥¸ìª½")]
     public bool DirRight;
 
 
-    private void Awake()  // Startº¸´Ù ¸ÕÀú ½ÇÇàµÇ°í ´ú ½ÇÇàµÊ
+    private void Awake()  // Startë³´ë‹¤ ë¨¼ì € ì‹¤í–‰ë˜ê³  ëœ ì‹¤í–‰ë¨
     {
-        // ** PlayerÀÇ Animator¸¦ ¹Ş¾Æ¿Â´Ù.
-        animator = this.GetComponent<Animator>();  // 'this.' »ı·« °¡´É
+        // ** Playerì˜ Animatorë¥¼ ë°›ì•„ì˜¨ë‹¤.
+        animator = this.GetComponent<Animator>();  // 'this.' ìƒëµ ê°€ëŠ¥
 
-        // ** PlayerÀÇ SpriteRenderer¸¦ ¹Ş¾Æ¿Â´Ù.
+        // ** Playerì˜ SpriteRendererë¥¼ ë°›ì•„ì˜¨ë‹¤.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-// Å×½ºÆ®ÇÒ ¶§´Â ÀÌ·¸°Ô! ¿¡µğÅÍ ¸ğµå¿¡¼­¸¸ ¶ß±â ¶§¹®ÀÌ´Ù.
+// í…ŒìŠ¤íŠ¸í•  ë•ŒëŠ” ì´ë ‡ê²Œ! ì—ë””í„° ëª¨ë“œì—ì„œë§Œ ëœ¨ê¸° ë•Œë¬¸ì´ë‹¤.
 //#if UNITY_EDITOR
 //        print("test");
 //#else
 //    print("???");
 //#endif
 
-        // ** [Resources] Æú´õ¿¡¼­, »ç¿ëÇÒ ¸®¼Ò½º¸¦ µé°í¿Â´Ù.
+        // ** [Resources] í´ë”ì—ì„œ, ì‚¬ìš©í•  ë¦¬ì†ŒìŠ¤ë¥¼ ë“¤ê³ ì˜¨ë‹¤.
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
         //fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
@@ -82,17 +82,17 @@ public class PlayerController : MonoBehaviour
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds"));
     }
 
-        // ** À¯´ÏÆ¼ ±âº» Á¦°ø ÇÔ¼ö
-        // ** ÃÊ±â°ªÀ» ¼³Á¤ÇÒ ¶§ »ç¿ë
+        // ** ìœ ë‹ˆí‹° ê¸°ë³¸ ì œê³µ í•¨ìˆ˜
+        // ** ì´ˆê¸°ê°’ì„ ì„¤ì •í•  ë•Œ ì‚¬ìš©
         void Start()
     {
-        // ** ¼Óµµ¸¦ ÃÊ±âÈ­
+        // ** ì†ë„ë¥¼ ì´ˆê¸°í™”
         Speed = 5.0f;
 
-        // ÇÃ·¹ÀÌ¾î Ã¼·ÂÀ» ÃÊ±âÈ­
+        // í”Œë ˆì´ì–´ ì²´ë ¥ì„ ì´ˆê¸°í™”
         Health = 10;
 
-        // ** ÃÊ±â°ª ¼¼ÆÃ
+        // ** ì´ˆê¸°ê°’ ì„¸íŒ…
         onAttack = false;
         onHit = false;
         onJump = false;
@@ -104,26 +104,26 @@ public class PlayerController : MonoBehaviour
         DirLeft = false;
         DirRight = false;
 
-         // ÀÌ°Ô È¿À²ÀûÀÌÁö¸¸ Resource¸¦ LoadÇÏ´Â ¹æ¹ı(81ÁÙ)À» ±ÇÀåÇÑ´Ù.
+         // ì´ê²Œ íš¨ìœ¨ì ì´ì§€ë§Œ Resourceë¥¼ Loadí•˜ëŠ” ë°©ë²•(81ì¤„)ì„ ê¶Œì¥í•œë‹¤.
          //for (int i = 0; i < 7; ++i)
          //    stageBack[i] = GameObject.Find(i.ToString());
         }
 
 
-    // ** À¯´ÏÆ¼ ±âº» Á¦°ø ÇÔ¼ö
-    // ** ÇÁ·¹ÀÓ¸¶´Ù ¹İº¹ÀûÀ¸·Î ½ÇÇàµÇ´Â ÇÔ¼ö
-    // ÃÊ´ç 60¹ø(º¸Åë) ~ ¼öÃµ¹ø ¾÷µ¥ÀÌÆ®
+    // ** ìœ ë‹ˆí‹° ê¸°ë³¸ ì œê³µ í•¨ìˆ˜
+    // ** í”„ë ˆì„ë§ˆë‹¤ ë°˜ë³µì ìœ¼ë¡œ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜
+    // ì´ˆë‹¹ 60ë²ˆ(ë³´í†µ) ~ ìˆ˜ì²œë²ˆ ì—…ë°ì´íŠ¸
     void Update()
     {
-        // ** [½Ç¼ö ¿¬»ê IEEE754]
+        // ** [ì‹¤ìˆ˜ ì—°ì‚° IEEE754]
 
-        // ** Input.GetAxis´Â -1°ú 1 »çÀÌÀÇ °ªÀ» ½Ç¼ö·Î ¹İÈ¯(¼Ò¼öÁ¡ ´ÜÀ§) / PC, ÄÜ¼Ö / ¿òÁ÷ÀÓ ¼­¼­È÷ ¸ØÃâ ¶§ »ç¿ë / ½Ç¼ö ¿¬»ê - ºÎÇÏ¡è
-        // ** Input.GetAxisRaw´Â -1, 0, 1 ¼Â Áß ÇÏ³ª¸¦ ¹İÈ¯ / ¸ğ¹ÙÀÏ, 2D / °ÔÀÓ ¸¸µé ¶§ ÁÖ·Î »ç¿ë(ÃÖÀûÈ­)
+        // ** Input.GetAxisëŠ” -1ê³¼ 1 ì‚¬ì´ì˜ ê°’ì„ ì‹¤ìˆ˜ë¡œ ë°˜í™˜(ì†Œìˆ˜ì  ë‹¨ìœ„) / PC, ì½˜ì†” / ì›€ì§ì„ ì„œì„œíˆ ë©ˆì¶œ ë•Œ ì‚¬ìš© / ì‹¤ìˆ˜ ì—°ì‚° - ë¶€í•˜â†‘
+        // ** Input.GetAxisRawëŠ” -1, 0, 1 ì…‹ ì¤‘ í•˜ë‚˜ë¥¼ ë°˜í™˜ / ëª¨ë°”ì¼, 2D / ê²Œì„ ë§Œë“¤ ë•Œ ì£¼ë¡œ ì‚¬ìš©(ìµœì í™”)
         float Hor = Input.GetAxisRaw("Horizontal");
         float Ver = Input.GetAxisRaw("Vertical");
 
-        // ** ÀÔ·Â¹ŞÀº °ªÀ¸·Î ÇÃ·¹ÀÌ¾î¸¦ ¿òÁ÷ÀÎ´Ù.
-        // Time.deltaTime: ÇÁ·¹ÀÓ°ú ÇÁ·¹ÀÓ »çÀÌÀÇ °£°İÀ» ÀÌ¿ëÇØ¼­ ÄÄÇ»ÅÍ ¼º´É°ú »ó°ü¾øÀÌ ¸ğµç ÄÄÇ»ÅÍ¿¡¼­ µ¿ÀÏÇÏ°Ô ÀÛµ¿µÇµµ·Ï ÇÏ±â À§ÇÑ °Í
+        // ** ì…ë ¥ë°›ì€ ê°’ìœ¼ë¡œ í”Œë ˆì´ì–´ë¥¼ ì›€ì§ì¸ë‹¤.
+        // Time.deltaTime: í”„ë ˆì„ê³¼ í”„ë ˆì„ ì‚¬ì´ì˜ ê°„ê²©ì„ ì´ìš©í•´ì„œ ì»´í“¨í„° ì„±ëŠ¥ê³¼ ìƒê´€ì—†ì´ ëª¨ë“  ì»´í“¨í„°ì—ì„œ ë™ì¼í•˜ê²Œ ì‘ë™ë˜ë„ë¡ í•˜ê¸° ìœ„í•œ ê²ƒ
         Movement = new Vector3(
             Hor * Time.deltaTime * Speed,
             0.0f,
@@ -131,21 +131,21 @@ public class PlayerController : MonoBehaviour
 
         transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
 
-        // ** HorÀÌ 0ÀÌ¶ó¸é ¸ØÃç ÀÖ´Â »óÅÂÀÌ¹Ç·Î ¿¹¿ÜÃ³¸®¸¦ ÇØÁØ´Ù.
+        // ** Horì´ 0ì´ë¼ë©´ ë©ˆì¶° ìˆëŠ” ìƒíƒœì´ë¯€ë¡œ ì˜ˆì™¸ì²˜ë¦¬ë¥¼ í•´ì¤€ë‹¤.
         if (Hor != 0)
             Direction = Hor;
 
         if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            // ** ÇÃ·¹ÀÌ¾îÀÇ ÁÂÇ¥°¡ 0.0 º¸´Ù ÀÛÀ» ¶§ ÇÃ·¹ÀÌ¾î¸¸ ¿òÁ÷ÀÎ´Ù.
+            // ** í”Œë ˆì´ì–´ì˜ ì¢Œí‘œê°€ 0.0 ë³´ë‹¤ ì‘ì„ ë•Œ í”Œë ˆì´ì–´ë§Œ ì›€ì§ì¸ë‹¤.
             if (transform.position.x < 0)
-                // ** ½ÇÁ¦ ÇÃ·¹ÀÌ¾î¸¦ ¿òÁ÷ÀÎ´Ù.
+                // ** ì‹¤ì œ í”Œë ˆì´ì–´ë¥¼ ì›€ì§ì¸ë‹¤.
                 transform.position += Movement;
             else
             {
                 ControllerManager.GetInstance().DirRight = true;
                 ControllerManager.GetInstance().DirLeft = false;
-                // DirRight, DirLeft: Á÷°üÀûÀÎ Ç¥ÇöÀ» À§ÇØ »ç¿ë / Hor º¯¼ö ÇÏ³ª¸¸À¸·Îµµ ÀÛ¼º °¡´É
+                // DirRight, DirLeft: ì§ê´€ì ì¸ í‘œí˜„ì„ ìœ„í•´ ì‚¬ìš© / Hor ë³€ìˆ˜ í•˜ë‚˜ë§Œìœ¼ë¡œë„ ì‘ì„± ê°€ëŠ¥
             }
         }
 
@@ -154,9 +154,9 @@ public class PlayerController : MonoBehaviour
             ControllerManager.GetInstance().DirRight = false;
             ControllerManager.GetInstance().DirLeft = true;
             
-            // ** ÇÃ·¹ÀÌ¾îÀÇ ÁÂÇ¥°¡ -15.0 º¸´Ù Å¬ ¶§ ÇÃ·¹ÀÌ¾î¸¸ ¿òÁ÷ÀÎ´Ù.
+            // ** í”Œë ˆì´ì–´ì˜ ì¢Œí‘œê°€ -15.0 ë³´ë‹¤ í´ ë•Œ í”Œë ˆì´ì–´ë§Œ ì›€ì§ì¸ë‹¤.
             if(transform.position.x > -15.0f)
-                // ** ½ÇÁ¦ ÇÃ·¹ÀÌ¾î¸¦ ¿òÁ÷ÀÎ´Ù.
+                // ** ì‹¤ì œ í”Œë ˆì´ì–´ë¥¼ ì›€ì§ì¸ë‹¤.
                 transform.position += Movement;
         }
 
@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        // ** ÇÃ·¹ÀÌ¾î°¡ ¹Ù¶óº¸°í ÀÖ´Â ¹æÇâ¿¡ µû¶ó ÀÌ¹ÌÁö ¹İÀü(ÇÃ¸³) ¼³Á¤
+        // ** í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ê³  ìˆëŠ” ë°©í–¥ì— ë”°ë¼ ì´ë¯¸ì§€ ë°˜ì „(í”Œë¦½) ì„¤ì •
         if (Direction < 0)
         {
             spriteRenderer.flipX = DirLeft = true;
@@ -180,14 +180,14 @@ public class PlayerController : MonoBehaviour
             DirRight = true;
         }
 
-        // ** ÁÂÃø ÄÁÆ®·ÑÅ°¸¦ ÀÔ·ÂÇÑ´Ù¸é
+        // ** ì¢Œì¸¡ ì»¨íŠ¸ë¡¤í‚¤ë¥¼ ì…ë ¥í•œë‹¤ë©´
         if (Input.GetKey(KeyCode.LeftControl))
-            // ** °ø°İ
+            // ** ê³µê²©
             OnAttack();
 
-        // ** ÁÂÃø ½¬ÇÁÆ®Å°¸¦ ÀÔ·ÂÇÑ´Ù¸é
+        // ** ì¢Œì¸¡ ì‰¬í”„íŠ¸í‚¤ë¥¼ ì…ë ¥í•œë‹¤ë©´
         if (Input.GetKey(KeyCode.LeftShift))
-           // ** ÇÇ°İ
+           // ** í”¼ê²©
            OnHit();
         
         //if (Input.GetButtonDown("Jump"))      
@@ -202,77 +202,77 @@ public class PlayerController : MonoBehaviour
         if (Health <= 0)
             OnDead();
 
-        // ** ½ºÆäÀÌ½º¹Ù¸¦ ÀÔ·ÂÇÑ´Ù¸é
+        // ** ìŠ¤í˜ì´ìŠ¤ë°”ë¥¼ ì…ë ¥í•œë‹¤ë©´
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // ** ÃÑ¾Ë ¿øº»À» º¹Á¦ÇÑ´Ù.
+            // ** ì´ì•Œ ì›ë³¸ì„ ë³µì œí•œë‹¤.
             GameObject Obj = Instantiate(BulletPrefab);
             // Obj.transform.name = "";
 
-            //** º¹Á¦µÈ ÃÑ¾ËÀÇ À§Ä¡¸¦ ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡·Î ÃÊ±âÈ­ÇÑ´Ù.
-            Obj.transform.position = transform.position;  // ÇÃ·¹ÀÌ¾î position À§Ä¡¿¡ ³õÀ½
+            //** ë³µì œëœ ì´ì•Œì˜ ìœ„ì¹˜ë¥¼ í˜„ì¬ í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ë¡œ ì´ˆê¸°í™”í•œë‹¤.
+            Obj.transform.position = transform.position;  // í”Œë ˆì´ì–´ position ìœ„ì¹˜ì— ë†“ìŒ
 
-            // ** ÃÑ¾ËÀÇ BulletController ½ºÅ©¸³Æ®¸¦ ¹Ş¾Æ¿Â´Ù.
+            // ** ì´ì•Œì˜ BulletController ìŠ¤í¬ë¦½íŠ¸ë¥¼ ë°›ì•„ì˜¨ë‹¤.
             BulletController Controller = Obj.AddComponent<BulletController>();
 
-            // ** ÃÑ¾Ë ½ºÅ©¸³Æ® ³»ºÎÀÇ ¹æÇâ º¯¼ö¸¦ ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ ¹æÇâ º¯¼ö·Î ¼³Á¤ÇÑ´Ù.
+            // ** ì´ì•Œ ìŠ¤í¬ë¦½íŠ¸ ë‚´ë¶€ì˜ ë°©í–¥ ë³€ìˆ˜ë¥¼ í˜„ì¬ í”Œë ˆì´ì–´ì˜ ë°©í–¥ ë³€ìˆ˜ë¡œ ì„¤ì •í•œë‹¤.
             Controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
 
-            // ** ÃÑ¾Ë ½ºÅ©¸³Æ® ³»ºÎÀÇ FX PrefabÀ» ¼³Á¤ÇÑ´Ù.
+            // ** ì´ì•Œ ìŠ¤í¬ë¦½íŠ¸ ë‚´ë¶€ì˜ FX Prefabì„ ì„¤ì •í•œë‹¤.
             Controller.fxPrefab = fxPrefab;
 
-            // ** ÃÑ¾ËÀÇ SpriteRenderer¸¦ ¹Ş¾Æ¿Â´Ù.
+            // ** ì´ì•Œì˜ SpriteRendererë¥¼ ë°›ì•„ì˜¨ë‹¤.
             SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
 
-            // ** ÃÑ¾ËÀÇ ÀÌ¹ÌÁö ¹İÀü »óÅÂ¸¦ ÇÃ·¹ÀÌ¾îÀÇ ÀÌ¹ÌÁö ¹İÀü »óÅÂ·Î ¼³Á¤ÇÑ´Ù.
+            // ** ì´ì•Œì˜ ì´ë¯¸ì§€ ë°˜ì „ ìƒíƒœë¥¼ í”Œë ˆì´ì–´ì˜ ì´ë¯¸ì§€ ë°˜ì „ ìƒíƒœë¡œ ì„¤ì •í•œë‹¤.
             bulletRenderer.flipY = spriteRenderer.flipX;
 
-            // ** ¸ğµç ¼³Á¤ÀÌ Á¾·áµÇ¾ú´Ù¸é ÀúÀå¼Ò¿¡ º¸°üÇÑ´Ù.
+            // ** ëª¨ë“  ì„¤ì •ì´ ì¢…ë£Œë˜ì—ˆë‹¤ë©´ ì €ì¥ì†Œì— ë³´ê´€í•œë‹¤.
             Bullets.Add(Obj);
         }
 
-        // ** ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ¿¡ µû¶ó ÀÌµ¿ ¸ğ¼ÇÀ» ½ÇÇàÇÑ´Ù.
+        // ** í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ì— ë”°ë¼ ì´ë™ ëª¨ì…˜ì„ ì‹¤í–‰í•œë‹¤.
         animator.SetFloat("Speed", Hor);
 
         // ** offset box
-        // transform.position += Movement;  // ¿ø·¡ FixedUpdate¿¡ ½á¾ß ÇÔ
+        // transform.position += Movement;  // ì›ë˜ FixedUpdateì— ì¨ì•¼ í•¨
     }
 
 
     private void OnAttack()
     {
-        // ** ÀÌ¹Ì °ø°İ ¸ğ¼ÇÀÌ ÁøÇà ÁßÀÌ¶ó¸é
+        // ** ì´ë¯¸ ê³µê²© ëª¨ì…˜ì´ ì§„í–‰ ì¤‘ì´ë¼ë©´
         if (onAttack)
-            // ** ÇÔ¼ö¸¦ Á¾·á½ÃÅ²´Ù.
+            // ** í•¨ìˆ˜ë¥¼ ì¢…ë£Œì‹œí‚¨ë‹¤.
             return;
 
-        // ** ÇÔ¼ö°¡ Á¾·áµÇÁö ¾Ê¾Ò´Ù¸é
-        // ** °ø°İ »óÅÂ¸¦ È°¼ºÈ­ÇÏ°í
+        // ** í•¨ìˆ˜ê°€ ì¢…ë£Œë˜ì§€ ì•Šì•˜ë‹¤ë©´
+        // ** ê³µê²© ìƒíƒœë¥¼ í™œì„±í™”í•˜ê³ 
         onAttack = true;
 
-        // ** °ø°İ ¸ğ¼ÇÀ» ½ÇÇà½ÃÅ²´Ù.
+        // ** ê³µê²© ëª¨ì…˜ì„ ì‹¤í–‰ì‹œí‚¨ë‹¤.
         animator.SetTrigger("Attack");
     }
 
     private void SetAttack()
     {
-        // ** ÇÔ¼ö°¡ ½ÇÇàµÇ¸é °ø°İ ¸ğ¼ÇÀÌ ºñÈ°¼ºÈ­µÈ´Ù.
-        // ** ÇÔ¼ö´Â ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³ÀÇ ÀÌº¥Æ® ÇÁ·¹ÀÓÀ¸·Î »ğÀÔµÈ´Ù.
+        // ** í•¨ìˆ˜ê°€ ì‹¤í–‰ë˜ë©´ ê³µê²© ëª¨ì…˜ì´ ë¹„í™œì„±í™”ëœë‹¤.
+        // ** í•¨ìˆ˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì˜ ì´ë²¤íŠ¸ í”„ë ˆì„ìœ¼ë¡œ ì‚½ì…ëœë‹¤.
         onAttack = false;
     }
 
     private void OnHit()
     {
-        // ** ÀÌ¹Ì ÇÇ°İ ¸ğ¼ÇÀÌ ÁøÇà ÁßÀÌ¶ó¸é
+        // ** ì´ë¯¸ í”¼ê²© ëª¨ì…˜ì´ ì§„í–‰ ì¤‘ì´ë¼ë©´
         if (onHit)
-            // ** ÇÔ¼ö¸¦ Á¾·á½ÃÅ²´Ù.
+            // ** í•¨ìˆ˜ë¥¼ ì¢…ë£Œì‹œí‚¨ë‹¤.
             return;
 
-        // ** ÇÔ¼ö°¡ Á¾·áµÇÁö ¾Ê¾Ò´Ù¸é
-        // ** ÇÇ°İ »óÅÂ¸¦ È°¼ºÈ­ÇÏ°í
+        // ** í•¨ìˆ˜ê°€ ì¢…ë£Œë˜ì§€ ì•Šì•˜ë‹¤ë©´
+        // ** í”¼ê²© ìƒíƒœë¥¼ í™œì„±í™”í•˜ê³ 
         onHit = true;
 
-        // ** ÇÇ°İ ¸ğ¼ÇÀ» ½ÇÇà½ÃÅ²´Ù.
+        // ** í”¼ê²© ëª¨ì…˜ì„ ì‹¤í–‰ì‹œí‚¨ë‹¤.
         animator.SetTrigger("Hit");
 
         Health -= 5;
@@ -280,8 +280,8 @@ public class PlayerController : MonoBehaviour
 
     private void SetHit()
     {
-        // ** ÇÔ¼ö°¡ ½ÇÇàµÇ¸é ÇÇ°İ ¸ğ¼ÇÀÌ ºñÈ°¼ºÈ­µÈ´Ù.
-        // ** ÇÔ¼ö´Â ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³ÀÇ ÀÌº¥Æ® ÇÁ·¹ÀÓÀ¸·Î »ğÀÔµÈ´Ù.
+        // ** í•¨ìˆ˜ê°€ ì‹¤í–‰ë˜ë©´ í”¼ê²© ëª¨ì…˜ì´ ë¹„í™œì„±í™”ëœë‹¤.
+        // ** í•¨ìˆ˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì˜ ì´ë²¤íŠ¸ í”„ë ˆì„ìœ¼ë¡œ ì‚½ì…ëœë‹¤.
         onHit = false;
     }
 
@@ -354,11 +354,11 @@ public class PlayerController : MonoBehaviour
 
         GameObject Obj = Instantiate(BulletPrefab);
         // Obj.transform.name = "";
-        Obj.transform.position = transform.position;  // ÇÃ·¹ÀÌ¾î position À§Ä¡¿¡ ³õÀ½
+        Obj.transform.position = transform.position;  // í”Œë ˆì´ì–´ position ìœ„ì¹˜ì— ë†“ìŒ
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
 
-        // ** ÃÑ¾Ë ½ºÅ©¸³Æ® ³»ºÎÀÇ FX PrefabÀ» ¼³Á¤ÇÑ´Ù.
+        // ** ì´ì•Œ ìŠ¤í¬ë¦½íŠ¸ ë‚´ë¶€ì˜ FX Prefabì„ ì„¤ì •í•œë‹¤.
         Controller.fxPrefab = fxPrefab;
 
         renderer.flipY = spriteRenderer.flipX;

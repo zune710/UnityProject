@@ -368,10 +368,12 @@
 "Assets/Script/BulletController.cs"
 "Assets/Script/CameraController.cs"
 "Assets/Script/ControllerManager.cs"
+"Assets/Script/EnemyBulletController.cs"
 "Assets/Script/EnemyController.cs"
 "Assets/Script/EnemyManager.cs"
 "Assets/Script/MyGizmo.cs"
 "Assets/Script/PlayerController.cs"
+"Assets/Script/Test.cs"
 -langversion:9.0
 
 /deterministic

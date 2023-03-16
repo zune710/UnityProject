@@ -18,10 +18,10 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    // ** »ı¼ºµÇ´Â Enemy¸¦ ´ã¾ÆµÑ »óÀ§ °´Ã¼
+    // ** ìƒì„±ë˜ëŠ” Enemyë¥¼ ë‹´ì•„ë‘˜ ìƒìœ„ ê°ì²´
     private GameObject Parent;
 
-    // ** Enemy·Î »ç¿ëÇÒ ¿øÇü °´Ã¼
+    // ** Enemyë¡œ ì‚¬ìš©í•  ì›í˜• ê°ì²´
     private GameObject Prefab;
 
 
@@ -31,41 +31,62 @@ public class EnemyManager : MonoBehaviour
         {
             instance = this;
 
-            // ** ¾ÀÀÌ º¯°æµÇ¾îµµ °è¼Ó À¯ÁöµÉ ¼ö ÀÖ°Ô ÇØÁØ´Ù.
-            DontDestroyOnLoad(this.gameObject);  // this »ı·« °¡´É(»öÀÌ ¾îµÎ¿ì¸é »ı·«ÇØµµ µÈ´Ù´Â ¶æ!)
+            // ** ì”¬ì´ ë³€ê²½ë˜ì–´ë„ ê³„ì† ìœ ì§€ë  ìˆ˜ ìˆê²Œ í•´ì¤€ë‹¤.
+            DontDestroyOnLoad(this.gameObject);  // this ìƒëµ ê°€ëŠ¥(ìƒ‰ì´ ì–´ë‘ìš°ë©´ ìƒëµí•´ë„ ëœë‹¤ëŠ” ëœ»!)
 
-            // ** »ı¼ºµÇ´Â Enemy¸¦ ´ã¾ÆµÑ »óÀ§ °´Ã¼
+            // ** ìƒì„±ë˜ëŠ” Enemyë¥¼ ë‹´ì•„ë‘˜ ìƒìœ„ ê°ì²´
             Parent = new GameObject("EnemyList");
 
-            // ** Enemy·Î »ç¿ëÇÒ ¿øÇü °´Ã¼
+            // ** Enemyë¡œ ì‚¬ìš©í•  ì›í˜• ê°ì²´
             Prefab = Resources.Load("Prefabs/Enemy/Enemy") as GameObject;
         }
     }
 
 
-    // ** ½ÃÀÛÇÏÀÚ¸¶ÀÚ Start ÇÔ¼ö¸¦ ÄÚ·çÆ¾ ÇÔ¼ö·Î ½ÇÇà
+    // ** ì‹œì‘í•˜ìë§ˆì Start í•¨ìˆ˜ë¥¼ ì½”ë£¨í‹´ í•¨ìˆ˜ë¡œ ì‹¤í–‰
     private IEnumerator Start()
     {
-        while(true)
+        while (true)
         {
-            // ** Enemy ¿øÇü °´Ã¼¸¦ º¹Á¦ÇÑ´Ù.
+            // ** Enemy ì›í˜• ê°ì²´ë¥¼ ë³µì œí•œë‹¤.
             GameObject Obj = Instantiate(Prefab);
 
-            // ** Enemy ÀÛµ¿ ½ºÅ©¸³Æ® Æ÷ÇÔ
-            //Obj.AddComponent<EnemyController>();  // ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ® ÇÔ¼ö°¡ ¾È ¶°¼­ ÀÌ·¸°Ô ¾È ÇÏ°í Enemy¿¡ script ¹Ù·Î ³Ö¾îÁÜ
+            // ** Enemy ì‘ë™ ìŠ¤í¬ë¦½íŠ¸ í¬í•¨
+            //Obj.AddComponent<EnemyController>();  // ì• ë‹ˆë©”ì´ì…˜ ì´ë²¤íŠ¸ í•¨ìˆ˜ê°€ ì•ˆ ë– ì„œ ì´ë ‡ê²Œ ì•ˆ í•˜ê³  Enemyì— script ë°”ë¡œ ë„£ì–´ì¤Œ
 
-            // ** Å¬·ĞÀÇ À§Ä¡¸¦ ÃÊ±âÈ­
+            // ** í´ë¡ ì˜ ìœ„ì¹˜ë¥¼ ì´ˆê¸°í™”
             Obj.transform.position = new Vector3(
                 18.0f, Random.Range(-8.2f, -5.5f), 0.0f);
 
-            // ** Å¬·ĞÀÇ ÀÌ¸§ ÃÊ±âÈ­
+            // ** í´ë¡ ì˜ ì´ë¦„ ì´ˆê¸°í™”
             Obj.transform.name = "Enemy";
 
-            // ** Å¬·ĞÀÇ °èÃş±¸Á¶ ¼³Á¤
+            // ** í´ë¡ ì˜ ê³„ì¸µêµ¬ì¡° ì„¤ì •
             Obj.transform.parent = Parent.transform;
 
-            // ** 1.5ÃÊ ÈŞ½Ä
+            // ** 1.5ì´ˆ íœ´ì‹
             yield return new WaitForSeconds(1.5f);
         }
     }
+
+    //private void Start()  // 1ê°œ ìƒì„±
+    //{
+
+    //        // ** Enemy ì›í˜• ê°ì²´ë¥¼ ë³µì œí•œë‹¤.
+    //        GameObject Obj = Instantiate(Prefab);
+
+    //        // ** Enemy ì‘ë™ ìŠ¤í¬ë¦½íŠ¸ í¬í•¨
+    //        //Obj.AddComponent<EnemyController>();  // ì• ë‹ˆë©”ì´ì…˜ ì´ë²¤íŠ¸ í•¨ìˆ˜ê°€ ì•ˆ ë– ì„œ ì´ë ‡ê²Œ ì•ˆ í•˜ê³  Enemyì— script ë°”ë¡œ ë„£ì–´ì¤Œ
+
+    //        // ** í´ë¡ ì˜ ìœ„ì¹˜ë¥¼ ì´ˆê¸°í™”
+    //        Obj.transform.position = new Vector3(
+    //            18.0f, Random.Range(-8.2f, -5.5f), 0.0f);
+
+    //        // ** í´ë¡ ì˜ ì´ë¦„ ì´ˆê¸°í™”
+    //        Obj.transform.name = "Enemy";
+
+    //        // ** í´ë¡ ì˜ ê³„ì¸µêµ¬ì¡° ì„¤ì •
+    //        Obj.transform.parent = Parent.transform;
+
+    //}
 }

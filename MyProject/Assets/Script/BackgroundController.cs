@@ -4,60 +4,60 @@ using UnityEngine;
 
 public class BackgroundController : MonoBehaviour
 {
-    // ** Background°¡ ¸ğ¿©ÀÖ´Â °èÃş±¸Á¶ÀÇ ÃÖ»óÀ§ °´Ã¼(ºÎ¸ğ)
+    // ** Backgroundê°€ ëª¨ì—¬ìˆëŠ” ê³„ì¸µêµ¬ì¡°ì˜ ìµœìƒìœ„ ê°ì²´(ë¶€ëª¨)
     private Transform parent;
     
-    // ** Sprite¸¦ Æ÷ÇÔÇÏ°í ÀÖ´Â ±¸¼º¿ä¼Ò 
+    // ** Spriteë¥¼ í¬í•¨í•˜ê³  ìˆëŠ” êµ¬ì„±ìš”ì†Œ 
     private SpriteRenderer spriteRenderer;
     
-    // ** ÀÌ¹ÌÁö
+    // ** ì´ë¯¸ì§€
     private Sprite sprite;
 
-    // ** »ı¼º ÁöÁ¡
+    // ** ìƒì„± ì§€ì 
     private float endPoint;
 
-    // ** »èÁ¦ ÁöÁ¡
+    // ** ì‚­ì œ ì§€ì 
     private float exitPoint;
 
-    // ** ÀÌ¹ÌÁö ÀÌµ¿ ¼Óµµ
+    // ** ì´ë¯¸ì§€ ì´ë™ ì†ë„
     public float Speed;
 
-    // ** ÇÃ·¹ÀÌ¾î Á¤º¸
+    // ** í”Œë ˆì´ì–´ ì •ë³´
     private GameObject player;
     private PlayerController playerController;
 
-    // ** ¿òÁ÷ÀÓ Á¤º¸
+    // ** ì›€ì§ì„ ì •ë³´
     private Vector3 movement;
     
-    // ** ÀÌ¹ÌÁö°¡ Áß¾Ó À§Ä¡¿¡ Á¤»óÀûÀ¸·Î ³ëÃâµÉ ¼ö ÀÖµµ·Ï ÇÏ±â À§ÇÑ ¿ÏÃæ ¿ªÇÒ(¹öÆÛ) 
+    // ** ì´ë¯¸ì§€ê°€ ì¤‘ì•™ ìœ„ì¹˜ì— ì •ìƒì ìœ¼ë¡œ ë…¸ì¶œë  ìˆ˜ ìˆë„ë¡ í•˜ê¸° ìœ„í•œ ì™„ì¶© ì—­í• (ë²„í¼) 
     private Vector3 offset = new Vector3(0.0f, 7.5f, 0.0f);
 
 
     private void Awake()
     {
-        // ** ÇÃ·¹ÀÌ¾îÀÇ ±âº» Á¤º¸¸¦ ¹Ş¾Æ¿Â´Ù.
-        player = GameObject.Find("Player").gameObject;  // gameObject ¾È ½áµµ µé¾î°¡Áö³ª °¡µ¶¼º À§ÇØ ¾¸
+        // ** í”Œë ˆì´ì–´ì˜ ê¸°ë³¸ ì •ë³´ë¥¼ ë°›ì•„ì˜¨ë‹¤.
+        player = GameObject.Find("Player").gameObject;  // gameObject ì•ˆ ì¨ë„ ë“¤ì–´ê°€ì§€ë‚˜ ê°€ë…ì„± ìœ„í•´ ì”€
 
-        // ** ºÎ¸ğ°´Ã¼¸¦ ¹Ş¾Æ¿Â´Ù.
+        // ** ë¶€ëª¨ê°ì²´ë¥¼ ë°›ì•„ì˜¨ë‹¤.
         parent = GameObject.Find("Background").transform;
 
-        // ** ÇöÀç ÀÌ¹ÌÁö¸¦ ´ã°í ÀÖ´Â ±¸¼º¿ä¼Ò¸¦ ¹Ş¾Æ¿Â´Ù.
+        // ** í˜„ì¬ ì´ë¯¸ì§€ë¥¼ ë‹´ê³  ìˆëŠ” êµ¬ì„±ìš”ì†Œë¥¼ ë°›ì•„ì˜¨ë‹¤.
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ** ÇÃ·¹ÀÌ¾î ±¸¼º¿ä¼Ò¸¦ ¹Ş¾Æ¿Â´Ù. ??
+        // ** í”Œë ˆì´ì–´ êµ¬ì„±ìš”ì†Œë¥¼ ë°›ì•„ì˜¨ë‹¤. ??
         playerController = player.GetComponent<PlayerController>();
     }
 
 
     void Start()
     {
-        // ** ±¸¼º¿ä¼Ò¿¡ Æ÷ÇÔµÈ ÀÌ¹ÌÁö¸¦ ¹Ş¾Æ¿Â´Ù.
+        // ** êµ¬ì„±ìš”ì†Œì— í¬í•¨ëœ ì´ë¯¸ì§€ë¥¼ ë°›ì•„ì˜¨ë‹¤.
         sprite = spriteRenderer.sprite;
 
-        // ** ½ÃÀÛ ÁöÁ¡À» ¼³Á¤
+        // ** ì‹œì‘ ì§€ì ì„ ì„¤ì •
         endPoint = sprite.bounds.size.x * 0.5f + transform.position.x;
         
-        // ** Á¾·á ÁöÁ¡À» ¼³Á¤
+        // ** ì¢…ë£Œ ì§€ì ì„ ì„¤ì •
         exitPoint = -(sprite.bounds.size.x * 0.5f) + player.transform.position.x;
     }
 
@@ -66,44 +66,44 @@ public class BackgroundController : MonoBehaviour
     {
         offset.y = player.transform.position.y * -1;
 
-        // ** ÀÌµ¿ Á¤º¸ ¼¼ÆÃ
+        // ** ì´ë™ ì •ë³´ ì„¸íŒ…
         movement = new Vector3(
-            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** ³ªÁß¿¡ singletonÀ¸·Î º¯°æÇØ¾ß ÇÔ
+            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** ë‚˜ì¤‘ì— singletonìœ¼ë¡œ ë³€ê²½í•´ì•¼ í•¨
             player.transform.position.y + offset.y,
             0.0f + offset.z);
 
         // ** singleton
-        // ** ÇÃ·¹ÀÌ¾î°¡ ¹Ù¶óº¸°í ÀÖ´Â ¹æÇâ¿¡ µû¶ó ºĞ±âµÊ(ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊÀ¸·Î °¥ ¶§¸¸ ¸ÊÀÌ ¿òÁ÷ÀÓ)
+        // ** í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ê³  ìˆëŠ” ë°©í–¥ì— ë”°ë¼ ë¶„ê¸°ë¨(í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ê°ˆ ë•Œë§Œ ë§µì´ ì›€ì§ì„)
         if (ControllerManager.GetInstance().DirRight)
         {
-            // ** ¿ìÃø ÀÌµ¿
-            // ** ÀÌµ¿ Á¤º¸ Àû¿ë
+            // ** ìš°ì¸¡ ì´ë™
+            // ** ì´ë™ ì •ë³´ ì ìš©
             transform.position -= movement;
             endPoint -= movement.x;
         }
 
-        // ** µ¿ÀÏÇÑ ÀÌ¹ÌÁö º¹»ç
+        // ** ë™ì¼í•œ ì´ë¯¸ì§€ ë³µì‚¬
         if (player.transform.position.x + (sprite.bounds.size.x * 0.5f) + 1 > endPoint)
         {
-            // ** ÀÌ¹ÌÁö¸¦ º¹Á¦ÇÑ´Ù.
+            // ** ì´ë¯¸ì§€ë¥¼ ë³µì œí•œë‹¤.
             GameObject Obj = Instantiate(this.gameObject);
             
-            // ** º¹Á¦µÈ ÀÌ¹ÌÁöÀÇ ºÎ¸ğ¸¦ ¼³Á¤ÇÑ´Ù.
+            // ** ë³µì œëœ ì´ë¯¸ì§€ì˜ ë¶€ëª¨ë¥¼ ì„¤ì •í•œë‹¤.
             Obj.transform.parent = parent.transform;
             
-            // ** º¹Á¦µÈ ÀÌ¹ÌÁöÀÇ ÀÌ¸§À» ¼³Á¤ÇÑ´Ù.
+            // ** ë³µì œëœ ì´ë¯¸ì§€ì˜ ì´ë¦„ì„ ì„¤ì •í•œë‹¤.
             Obj.transform.name = transform.name;
 
-            // ** º¹Á¦µÈ ÀÌ¹ÌÁöÀÇ À§Ä¡¸¦ ¼³Á¤ÇÑ´Ù.
+            // ** ë³µì œëœ ì´ë¯¸ì§€ì˜ ìœ„ì¹˜ë¥¼ ì„¤ì •í•œë‹¤.
             Obj.transform.position = new Vector3(
                 endPoint + 25.0f,
                 0.0f, 0.0f);
 
-            // ** ½ÃÀÛ ÁöÁ¡À» º¯°æÇÑ´Ù.
+            // ** ì‹œì‘ ì§€ì ì„ ë³€ê²½í•œë‹¤.
             endPoint += endPoint + 25.0f;
         }
 
-        // ** Á¾·á ÁöÁ¡¿¡ µµ´ŞÇÏ¸é »èÁ¦ÇÑ´Ù.
+        // ** ì¢…ë£Œ ì§€ì ì— ë„ë‹¬í•˜ë©´ ì‚­ì œí•œë‹¤.
         if (transform.position.x + (sprite.bounds.size.x * 0.5f) -2 < exitPoint)
             Destroy(this.gameObject);
     }

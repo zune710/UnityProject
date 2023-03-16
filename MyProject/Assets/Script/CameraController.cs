@@ -4,42 +4,42 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    // »ı¼ºÀÚ È£ÃâµÉ ¶§ ÃÊ±âÈ­µÊ
-    // ** Ä«¸Ş¶óÀÇ Áøµ¿ ½Ã°£
+    // ìƒì„±ì í˜¸ì¶œë  ë•Œ ì´ˆê¸°í™”ë¨
+    // ** ì¹´ë©”ë¼ì˜ ì§„ë™ ì‹œê°„
     private float shakeTime = 0.15f;
 
-    //** Ä«¸Ş¶óÀÇ Áøµ¿ ¹üÀ§
+    //** ì¹´ë©”ë¼ì˜ ì§„ë™ ë²”ìœ„
     private Vector3 offset = new Vector3(0.05f, 0.05f, 0.0f);
     private Vector3 OldPosition;
     
-    // ** ÄÚ·çÆ¾ ÇÔ¼ö ½ÇÇà
-    // IEnumerator: Coroutine ÇÔ¼ö(¼ø¼­µéÀ» ¹«½ÃÇÏ´Â ÇÔ¼ö, »ç¿ëÀÚ Á¤ÀÇ ÇÔ¼ö)
+    // ** ì½”ë£¨í‹´ í•¨ìˆ˜ ì‹¤í–‰
+    // IEnumerator: Coroutine í•¨ìˆ˜(ìˆœì„œë“¤ì„ ë¬´ì‹œí•˜ëŠ” í•¨ìˆ˜, ì‚¬ìš©ì ì •ì˜ í•¨ìˆ˜)
     IEnumerator Start()
     {
-        // ** Ä«¸Ş¶óÀÇ Áøµ¿È¿°ú¸¦ ÁÖ±â Àü Ä«¸Ş¶ó À§Ä¡¸¦ ¹Ş¾Æ¿Â´Ù.
+        // ** ì¹´ë©”ë¼ì˜ ì§„ë™íš¨ê³¼ë¥¼ ì£¼ê¸° ì „ ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ë°›ì•„ì˜¨ë‹¤.
         OldPosition = new Vector3(0.0f, -1.9f, -10.0f);
 
-        // ** 0.15ÃÊ µ¿¾È ½ÇÇà
+        // ** 0.15ì´ˆ ë™ì•ˆ ì‹¤í–‰
         while (shakeTime > 0.0f)
         {
             shakeTime -= Time.deltaTime;
 
-            // ** ¹İº¹¹®ÀÌ ½ÇÇàµÇ´Â µ¿¾È ¹İº¹ÀûÀ¸·Î È£Ãâ
-            // nullÀ» ÁÖ¸é ±âº» ÇÁ·¹ÀÓÅ¸ÀÓ(deltaTime)À» °®´Â´Ù. deltaTime¸¸Å­ ÀÚ·¯ °¬´Ù°¡ ´Ù½Ã ÀÌ À§Ä¡·Î µ¹¾Æ¿Í¼­ ¾Æ·¡ ÀÌ¾î¼­ ½ÇÇà. 
+            // ** ë°˜ë³µë¬¸ì´ ì‹¤í–‰ë˜ëŠ” ë™ì•ˆ ë°˜ë³µì ìœ¼ë¡œ í˜¸ì¶œ
+            // nullì„ ì£¼ë©´ ê¸°ë³¸ í”„ë ˆì„íƒ€ì„(deltaTime)ì„ ê°–ëŠ”ë‹¤. deltaTimeë§Œí¼ ìëŸ¬ ê°”ë‹¤ê°€ ë‹¤ì‹œ ì´ ìœ„ì¹˜ë¡œ ëŒì•„ì™€ì„œ ì•„ë˜ ì´ì–´ì„œ ì‹¤í–‰. 
             yield return null;
-            // ¿¹) yield return new WaitForSeconds(2.0f); // 2ÃÊ µÚ ¹İº¹ - »ç¿ëÀÚ°¡ ·çÇÁ¸¦ ¿øÇÏ´Â ´ë·Î Á¤ÇÒ ¼ö ÀÖ´Ù. 
+            // ì˜ˆ) yield return new WaitForSeconds(2.0f); // 2ì´ˆ ë’¤ ë°˜ë³µ - ì‚¬ìš©ìê°€ ë£¨í”„ë¥¼ ì›í•˜ëŠ” ëŒ€ë¡œ ì •í•  ìˆ˜ ìˆë‹¤. 
 
-            // ** Ä«¸Ş¶ó¸¦ Áøµ¿ ¹üÀ§¸¸Å­ Áøµ¿½ÃÅ²´Ù.
+            // ** ì¹´ë©”ë¼ë¥¼ ì§„ë™ ë²”ìœ„ë§Œí¼ ì§„ë™ì‹œí‚¨ë‹¤.
             Camera.main.transform.position = new Vector3(
             Random.Range(OldPosition.x - offset.x, OldPosition.x + offset.x),
             Random.Range(OldPosition.y - offset.y, OldPosition.y + offset.y),
             -10.0f);
         }
 
-        // ** ¹İº¹¹®ÀÌ Á¾·áµÇ¸é Ä«¸Ş¶ó À§Ä¡¸¦ ´Ù½Ã ¿øÁ¡¿¡ ³õ´Â´Ù.
+        // ** ë°˜ë³µë¬¸ì´ ì¢…ë£Œë˜ë©´ ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ë‹¤ì‹œ ì›ì ì— ë†“ëŠ”ë‹¤.
         Camera.main.transform.position = OldPosition;
         
-        // ** Å¬·¡½º¸¦ Á¾·áÇÑ´Ù.
+        // ** í´ë˜ìŠ¤ë¥¼ ì¢…ë£Œí•œë‹¤.
         Destroy(this.gameObject);
     }
 }

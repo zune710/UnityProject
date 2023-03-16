@@ -6,20 +6,20 @@ public class BulletController : MonoBehaviour
 {
     // private SpriteRenderer spriteRenderer;
 
-    // ** ÃÑ¾ËÀÌ ³¯¾Æ°¡´Â ¼Óµµ
+    // ** ì´ì•Œì´ ë‚ ì•„ê°€ëŠ” ì†ë„
     private float Speed;
 
-    // ** ÃÑ¾ËÀÌ Ãæµ¹ÇÑ È½¼ö
+    // ** ì´ì•Œì´ ì¶©ëŒí•œ íšŸìˆ˜
     private int hp;
 
-    // ** ÀÌÆåÆ® È¿°ú ¿øº»
+    // ** ì´í™íŠ¸ íš¨ê³¼ ì›ë³¸
     public GameObject fxPrefab;
 
 
-    // private float DefaultX;  // »ı¼ºµÉ ¶§ position.x °ª
+    // private float DefaultX;  // ìƒì„±ë  ë•Œ position.x ê°’
 
-    // ** ÃÑ¾ËÀÌ ³¯¾Æ°¡¾ß ÇÒ ¹æÇâ
-    public Vector3 Direction { get; set; } // °ú µ¿ÀÏ
+    // ** ì´ì•Œì´ ë‚ ì•„ê°€ì•¼ í•  ë°©í–¥
+    public Vector3 Direction { get; set; } // ê³¼ ë™ì¼
     //public Vector3 Direction
     //{
     //    get
@@ -30,16 +30,16 @@ public class BulletController : MonoBehaviour
     //    {
     //        Direction = value;
     //    }
-    //}  // stack overflow ¹ß»ı(¿Ö?)
+    //}  // stack overflow ë°œìƒ(ì™œ?)
 
     private void Start()
     {
         // spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-        // ** ¼Óµµ ÃÊ±â°ª
+        // ** ì†ë„ ì´ˆê¸°ê°’
         Speed = 10.0f;
 
-        // ** Ãæµ¹ È½¼ö¸¦ 3À¸·Î ÁöÁ¤ÇÑ´Ù.
+        // ** ì¶©ëŒ íšŸìˆ˜ë¥¼ 3ìœ¼ë¡œ ì§€ì •í•œë‹¤.
         hp = 3;
 
         // DefaultX = transform.position.x;
@@ -52,45 +52,45 @@ public class BulletController : MonoBehaviour
         //else
         //    spriteRenderer.flipY = false;
 
-        // ** ¹æÇâÀ¸·Î ¼Óµµ¸¸Å­ À§Ä¡¸¦ º¯°æ
+        // ** ë°©í–¥ìœ¼ë¡œ ì†ë„ë§Œí¼ ìœ„ì¹˜ë¥¼ ë³€ê²½
         transform.position += Direction * Speed * Time.deltaTime;
 
-        //if(Mathf.Abs(DefaultX - transform.position.x) > 5)  // Ã³À½ À§Ä¡º¸´Ù ÀÏÁ¤ °Å¸®¸¸Å­ ¸Ö¾îÁö¸é »ç¶óÁø´Ù.
+        //if(Mathf.Abs(DefaultX - transform.position.x) > 5)  // ì²˜ìŒ ìœ„ì¹˜ë³´ë‹¤ ì¼ì • ê±°ë¦¬ë§Œí¼ ë©€ì–´ì§€ë©´ ì‚¬ë¼ì§„ë‹¤.
         //    Destroy(this.gameObject);
     }
 
-    // ** Ãæµ¹Ã¼(Collider2D)¿Í ¹°¸®¿£Áø(Rigidbody2D)ÀÌ Æ÷ÇÔµÈ ¿ÀºêÁ§Æ®°¡ ´Ù¸¥ Ãæµ¹Ã¼¿Í Ãæµ¹ÇÑ´Ù¸é ½ÇÇàµÇ´Â ÇÔ¼ö
-    // Trigger: Ãæµ¹ÇÏÁö¸¸ Åë°úµÊ / Collider: Ãæµ¹ÇÏ¸é ¿òÁ÷ÀÓÀÌ ¸·Èû
-    // Enter: Ã³À½ ºÎµúÈù ¼ø°£ / Stay: Ãæµ¹Ã¼ ¾È¿¡ ÀÖÀ» ¶§ / Exit: Ãæµ¹Ã¼¿¡¼­ ºüÁ®³ª¿À±â Á÷ÀüÀÇ ¼ø°£
+    // ** ì¶©ëŒì²´(Collider2D)ì™€ ë¬¼ë¦¬ì—”ì§„(Rigidbody2D)ì´ í¬í•¨ëœ ì˜¤ë¸Œì íŠ¸ê°€ ë‹¤ë¥¸ ì¶©ëŒì²´ì™€ ì¶©ëŒí•œë‹¤ë©´ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜
+    // Trigger: ì¶©ëŒí•˜ì§€ë§Œ í†µê³¼ë¨ / Collider: ì¶©ëŒí•˜ë©´ ì›€ì§ì„ì´ ë§‰í˜
+    // Enter: ì²˜ìŒ ë¶€ë”ªíŒ ìˆœê°„ / Stay: ì¶©ëŒì²´ ì•ˆì— ìˆì„ ë•Œ / Exit: ì¶©ëŒì²´ì—ì„œ ë¹ ì ¸ë‚˜ì˜¤ê¸° ì§ì „ì˜ ìˆœê°„
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ** Ãæµ¹ È½¼ö Â÷°¨
+        // ** ì¶©ëŒ íšŸìˆ˜ ì°¨ê°
         --hp;
 
-        // ** ÀÌÆåÆ® È¿°ú º¹Á¦
+        // ** ì´í™íŠ¸ íš¨ê³¼ ë³µì œ
         GameObject Obj = Instantiate(fxPrefab);
 
-        // ** ÀÌÆåÆ® È¿°úÀÇ À§Ä¡¸¦ ÁöÁ¤
+        // ** ì´í™íŠ¸ íš¨ê³¼ì˜ ìœ„ì¹˜ë¥¼ ì§€ì •
         Obj.transform.position = transform.position;
 
-        // ** collision = Ãæµ¹ÇÑ ´ë»ó
-        // ** Ãæµ¹ÇÑ ´ë»óÀ» »èÁ¦ÇÑ´Ù. ??
-        // (ÃÑ¾ËÀÌ Ä«¸Ş¶ó ¹ÛÀ» ¹ş¾î³ª º¸ÀÌÁö ¾Ê´Â º®¿¡ Ãæµ¹ÇÏ¸é »èÁ¦µÊ)
+        // ** collision = ì¶©ëŒí•œ ëŒ€ìƒ
+        // ** ì¶©ëŒí•œ ëŒ€ìƒì„ ì‚­ì œí•œë‹¤. ??
+        // (ì´ì•Œì´ ì¹´ë©”ë¼ ë°–ì„ ë²—ì–´ë‚˜ ë³´ì´ì§€ ì•ŠëŠ” ë²½ì— ì¶©ëŒí•˜ë©´ ì‚­ì œë¨)
         if (collision.transform.tag == "Wall")
             Destroy(this.gameObject);
         else
         {
-            // ** Áøµ¿ È¿°ú¸¦ »ı¼ºÇÒ °ü¸®ÀÚ »ı¼º
+            // ** ì§„ë™ íš¨ê³¼ë¥¼ ìƒì„±í•  ê´€ë¦¬ì ìƒì„±
             GameObject camera = new GameObject("Camera Test");
 
-            // ** Áøµ¿ È¿°ú ÄÁÆ®·Ñ·¯ »ı¼º
+            // ** ì§„ë™ íš¨ê³¼ ì»¨íŠ¸ë¡¤ëŸ¬ ìƒì„±
             camera.AddComponent<CameraController>();
         }
 
-        // ** ÃÑ¾ËÀÇ Ãæµ¹ È½¼ö°¡ 0ÀÌ µÇ¸é(Ãæµ¹ °¡´É È½¼ö¸¦ ¸ğµÎ ¼ÒÁøÇÏ¸é) ÃÑ¾Ë »èÁ¦
+        // ** ì´ì•Œì˜ ì¶©ëŒ íšŸìˆ˜ê°€ 0ì´ ë˜ë©´(ì¶©ëŒ ê°€ëŠ¥ íšŸìˆ˜ë¥¼ ëª¨ë‘ ì†Œì§„í•˜ë©´) ì´ì•Œ ì‚­ì œ
         if (hp == 0)
             Destroy(this.gameObject, 0.016f);
     }
 }
 
-// À¯´ÏÆ¼¿¡¼­´Â ¾È ¾²´Â ÇÔ¼öµµ ½ÇÇàµÇ¸é¼­ ½ºÅÃÀÌ ½×ÀÌ±â ¶§¹®¿¡ ÁÖ¼® Ã³¸®ÇÏÁö ¾Ê°í Áö¿ì´Â °ÍÀÌ ÁÁ´Ù.
+// ìœ ë‹ˆí‹°ì—ì„œëŠ” ì•ˆ ì“°ëŠ” í•¨ìˆ˜ë„ ì‹¤í–‰ë˜ë©´ì„œ ìŠ¤íƒì´ ìŒ“ì´ê¸° ë•Œë¬¸ì— ì£¼ì„ ì²˜ë¦¬í•˜ì§€ ì•Šê³  ì§€ìš°ëŠ” ê²ƒì´ ì¢‹ë‹¤.

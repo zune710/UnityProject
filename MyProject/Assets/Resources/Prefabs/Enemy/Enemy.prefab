@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1972305223799295482}
   - component: {fileID: 7712714590649408403}
   - component: {fileID: 3580262666970675711}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,6 +138,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 0
   HP: 0
+  Player: {fileID: 0}
+  EnemyBullet: {fileID: 7940915837875220427, guid: ee6773ad598427a4a922b8f456058259, type: 3}
 --- !u!1 &8645605369734633486
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2745438207203062860}
   - component: {fileID: 5200485267871783599}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
