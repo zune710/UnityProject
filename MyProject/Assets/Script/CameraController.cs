@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     private Vector3 OldPosition;
     
     // ** 코루틴 함수 실행
-    // IEnumerator: Coroutine 함수(순서들을 무시하는 함수, 사용자 정의 함수)
+    // IEnumerator: Coroutine 함수(순서들을 무시하는 함수, 사용자 정의 함수, 별도의 개념, 따로 도는 함수)
     IEnumerator Start()
     {
         // ** 카메라의 진동효과를 주기 전 카메라 위치를 받아온다.

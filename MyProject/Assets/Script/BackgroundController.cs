@@ -72,9 +72,9 @@ public class BackgroundController : MonoBehaviour
             player.transform.position.y + offset.y,
             0.0f + offset.z);
 
-        // ** singleton
-        // ** 플레이어가 바라보고 있는 방향에 따라 분기됨(플레이어가 오른쪽으로 갈 때만 맵이 움직임)
-        if (ControllerManager.GetInstance().DirRight)
+            // ** singleton
+            // ** 플레이어가 바라보고 있는 방향에 따라 분기됨(플레이어가 오른쪽으로 갈 때만 맵이 움직임)
+            if (ControllerManager.GetInstance().DirRight)
         {
             // ** 우측 이동
             // ** 이동 정보 적용

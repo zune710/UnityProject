@@ -139,7 +139,6 @@ MonoBehaviour:
   Speed: 0
   HP: 0
   Player: {fileID: 0}
-  EnemyBullet: {fileID: 7940915837875220427, guid: ee6773ad598427a4a922b8f456058259, type: 3}
 --- !u!1 &8645605369734633486
 GameObject:
   m_ObjectHideFlags: 0

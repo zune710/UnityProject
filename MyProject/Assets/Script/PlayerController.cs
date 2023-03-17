@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         DirLeft = false;
         DirRight = false;
 
-         // 이게 효율적이지만 Resource를 Load하는 방법(81줄)을 권장한다.
+         // 이게 효율적이지만 Resource를 Load하는 방법(82줄)을 권장한다.
          //for (int i = 0; i < 7; ++i)
          //    stageBack[i] = GameObject.Find(i.ToString());
         }

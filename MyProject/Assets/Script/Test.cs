@@ -58,7 +58,7 @@ public class Test : MonoBehaviour
 
         test.transform.position += Direction * Time.deltaTime * 2.0f;
 
-        // 유니티 제공 함수
+        // 유니티 제공 함수(거리 구하기)
         //float distance = Vector3.Distance(
         //    Player.transform.position,
         //    test.transform.position);

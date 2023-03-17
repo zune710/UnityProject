@@ -24,12 +24,17 @@ public class EnemyManager : MonoBehaviour
     // ** Enemy로 사용할 원형 객체
     private GameObject Prefab;
 
+    // ** 플레이어의 누적 이동 거리
+    public float Distance;
+
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
+
+            Distance = 0.0f;
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
@@ -69,24 +74,11 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    //private void Start()  // 1개 생성
-    //{
-
-    //        // ** Enemy 원형 객체를 복제한다.
-    //        GameObject Obj = Instantiate(Prefab);
-
-    //        // ** Enemy 작동 스크립트 포함
-    //        //Obj.AddComponent<EnemyController>();  // 애니메이션 이벤트 함수가 안 떠서 이렇게 안 하고 Enemy에 script 바로 넣어줌
-
-    //        // ** 클론의 위치를 초기화
-    //        Obj.transform.position = new Vector3(
-    //            18.0f, Random.Range(-8.2f, -5.5f), 0.0f);
-
-    //        // ** 클론의 이름 초기화
-    //        Obj.transform.name = "Enemy";
-
-    //        // ** 클론의 계층구조 설정
-    //        Obj.transform.parent = Parent.transform;
-
-    //}
+    private void Update()
+    {
+        if (ControllerManager.GetInstance().DirRight)
+        {
+            Distance += Input.GetAxisRaw("Horizontal") * Time.deltaTime;
+        }
+    }
 }

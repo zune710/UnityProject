@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour
 
     public GameObject Player;
     private GameObject EnemyBullet;
-    private GameObject Obj;
     private bool onAttack;
     private bool onMagic;
     private float CoolTime;
@@ -35,7 +34,7 @@ public class EnemyController : MonoBehaviour
         onAttack = false;
         onMagic = false;
         CoolTime = 10.0f;
-        MagicCool = CoolTime;
+        MagicCool = 0.0f;
     }
 
     void Update()
@@ -44,8 +43,8 @@ public class EnemyController : MonoBehaviour
                 Player.transform.position,
                 transform.position);
 
-        if (MagicCool < CoolTime)
-            MagicCool += Time.deltaTime;
+        if (MagicCool > 0.0f)
+            MagicCool -= Time.deltaTime;
 
         if (distance < 2.0f)
         {
@@ -56,7 +55,7 @@ public class EnemyController : MonoBehaviour
 
             OnAttack();
         }
-        else if (distance < 5.0f && MagicCool >= CoolTime)
+        else if (distance < 5.0f && MagicCool <= 0.0f)
         {
             Movement = ControllerManager.GetInstance().DirRight ?
             new Vector3(1.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f);
@@ -110,7 +109,7 @@ public class EnemyController : MonoBehaviour
             return;
 
         onMagic = true;
-        MagicCool = 0.0f;
+        MagicCool = CoolTime;
 
         Anim.SetTrigger("Magic");
 
@@ -124,7 +123,7 @@ public class EnemyController : MonoBehaviour
 
     private void CreateEnemyBullet()
     {
-        Obj = Instantiate(EnemyBullet);
+        GameObject Obj = Instantiate(EnemyBullet);
         Obj.transform.position = new Vector3(
             Player.transform.position.x,
             Player.transform.position.y + 0.5f,
