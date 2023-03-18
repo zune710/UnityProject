@@ -11,10 +11,12 @@ public class EnemyController : MonoBehaviour
 
     public GameObject Player;
     private GameObject EnemyBullet;
+
     private bool onAttack;
     private bool onMagic;
+
     private float CoolTime;
-    private float MagicCool;
+    private float MagicCoolDown;
 
     private void Awake()
     {
@@ -33,8 +35,9 @@ public class EnemyController : MonoBehaviour
 
         onAttack = false;
         onMagic = false;
+
         CoolTime = 10.0f;
-        MagicCool = 0.0f;
+        MagicCoolDown = 0.0f;
     }
 
     void Update()
@@ -43,8 +46,8 @@ public class EnemyController : MonoBehaviour
                 Player.transform.position,
                 transform.position);
 
-        if (MagicCool > 0.0f)
-            MagicCool -= Time.deltaTime;
+        if (MagicCoolDown > 0.0f)
+            MagicCoolDown -= Time.deltaTime;
 
         if (distance < 2.0f)
         {
@@ -55,7 +58,7 @@ public class EnemyController : MonoBehaviour
 
             OnAttack();
         }
-        else if (distance < 5.0f && MagicCool <= 0.0f)
+        else if (distance < 5.0f && MagicCoolDown <= 0.0f)
         {
             Movement = ControllerManager.GetInstance().DirRight ?
             new Vector3(1.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f);
@@ -79,6 +82,7 @@ public class EnemyController : MonoBehaviour
         if (collision.tag == "Bullet")
         {
             --HP;
+            Anim.SetTrigger("Hit");
 
             if (HP <= 0)
             {
@@ -109,7 +113,7 @@ public class EnemyController : MonoBehaviour
             return;
 
         onMagic = true;
-        MagicCool = CoolTime;
+        MagicCoolDown = CoolTime;
 
         Anim.SetTrigger("Magic");
 

@@ -45,7 +45,7 @@ public class BossController : MonoBehaviour
         Speed = 0.5f;
         HP = 30000;
 
-        active = true;
+        active = false;
 
         SkillAttack = false;
         Attack = false;
@@ -68,20 +68,14 @@ public class BossController : MonoBehaviour
 
         if (active)
         {
-            active = false;
-            choice = OnController();
-            //StartCoroutine(OnCoolDown());
-        }
-        else
-        {
             switch (choice)
             {
-                case STATE_ATTACK:
-                    OnAttack();
-                    break;
-
                 case STATE_WALK:
                     OnWalk();
+                    break;
+
+                case STATE_ATTACK:
+                    OnAttack();
                     break;
 
                 case STATE_SLIDE:
@@ -89,8 +83,14 @@ public class BossController : MonoBehaviour
                     break;
             }
         }
+        else
+        {
+            //active = true;
+            choice = OnController();
+            StartCoroutine(OnCoolDown());
+        }
     }
-    
+
     private int OnController()
     {
         // ** 행동 패턴에 대한 내용을 추가합니다.
@@ -104,11 +104,14 @@ public class BossController : MonoBehaviour
                 Walk = false;
             }
 
-            if(SkillAttack)
-                SkillAttack = false;
-
-            if(Attack)
+            if (Attack)
                 Attack = false;
+
+            if (SkillAttack)
+            {
+                Anim.SetBool("Slide", false);
+                SkillAttack = false;
+            }
         }
         // ** 로직
 
@@ -129,36 +132,17 @@ public class BossController : MonoBehaviour
 
         while(fTime > 0.0f)
         {
+            print("CoolTime: " + fTime);
             fTime -= Time.deltaTime;
             yield return null;
         }
-    }
 
-    private void OnAttack()
-    {
-        if (Attack)
-            return;
-
-        Attack = true;
-        Anim.SetTrigger("Attack");
-
-
-
-
-
-        active = true;
-
-        // StartCoroutine(OnCoolDown());
-        // 3. 다른 코루틴 실행(이전에 실행한 코루틴과 일시적으로 잠깐 동시에 존재)
-        //    이전 코루틴은 OnAttack 함수 빠져나가고 switch문의 break 실행되면서 종료됨
-        // active 사용한 지금 스크립트는 중복(동시 존재) X
+        active = true;  // 88줄
     }
 
     private void OnWalk()
     {
-        print("OnWalk");
         Walk = true;
-        // Movement = new Vector3(Speed, 0.0f, 0.0f);
 
         // ** 목적지에 도착할 때까지
         float Distance = Vector3.Distance(EndPoint, transform.position);
@@ -175,18 +159,84 @@ public class BossController : MonoBehaviour
             transform.position += Movement * Time.deltaTime;
 
             Anim.SetFloat("Speed", Mathf.Abs(Movement.x));
-
         }
         else
-            active = true;
+            active = false;
+    }
+
+    private void OnAttack()
+    {
+        if(Attack)
+        {
+            active = false;
+            return;
+        }
+
+        float Distance = Vector3.Distance(Target.transform.position, transform.position);
+
+        if (Distance <= 0.5f)
+        {
+            Attack = true;
+
+            Movement = new Vector3(0.0f, 0.0f, 0.0f);
+            Anim.SetFloat("Speed", Movement.x);
+
+            Anim.SetTrigger("Attack");
+        }
+        
+        active = false;
+
+        // StartCoroutine(OnCoolDown());
+        // 3. 다른 코루틴 실행(이전에 실행한 코루틴과 일시적으로 잠깐 동시에 존재)
+        //    이전 코루틴은 OnAttack 함수 빠져나가고 switch문의 break 실행되면서 종료됨
+        // active 사용한 지금 스크립트는 중복(동시 존재) X
     }
 
     private void OnSlide()
     {
+        SkillAttack = true;
 
+        float Distance = Vector3.Distance(EndPoint, transform.position);
 
+        if (Distance > 0.5f)
+        {
+            Vector3 Direction = (EndPoint - transform.position).normalized;
 
+            Movement = new Vector3(
+                Speed * 7.0f * Direction.x,
+                Speed * 7.0f * Direction.y,
+                0.0f);
 
-        active = true;
+            transform.position += Movement * Time.deltaTime;
+
+            if (!Anim.GetBool("Slide"))
+            {
+                Anim.SetBool("Slide", true);
+                Anim.SetTrigger("Preslide");
+            }
+        }
+        else
+            active = false;
+    }
+
+    private void SetPreslide()
+    {
+        if (!Anim.GetBool("Slide"))
+            Anim.Play("Idle");
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Bullet")
+        {
+            --HP;
+            //Anim.SetTrigger("Hit");
+
+            if (HP <= 0)
+            {
+                //Anim.SetTrigger("Die");
+                GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
+            }
+        }
     }
 }
