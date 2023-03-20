@@ -69,5 +69,7 @@ public class Test : MonoBehaviour
         //    test.GetComponent<MyGizmo>().color = Color.green;
         //else
         //    test.GetComponent<MyGizmo>().color = Color.red;
+
+        ui.text = "HP: " + ControllerManager.GetInstance().PlayerHP.ToString();
     }
 }

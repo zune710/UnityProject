@@ -149,7 +149,7 @@ public class BossController : MonoBehaviour
     {
         Walk = true;
 
-        // ** 목적지에 도착할 때까지
+        // ** Player 따라가기
         float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
         if (Distance > 3.0f)
@@ -163,6 +163,7 @@ public class BossController : MonoBehaviour
 
             transform.position += Movement * Time.deltaTime;
 
+            // 위, 아래로 갈 때도 Walk 애니메이션 나오도록 Movement.y 추가
             Anim.SetFloat("Speed", Mathf.Abs(Movement.x) + Mathf.Abs(Movement.y));
         }
         else
@@ -179,7 +180,7 @@ public class BossController : MonoBehaviour
 
         float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
-        if (Distance <= 2.0f)
+        if (Distance <= 3.0f)
         {
             Attack = true;
 
@@ -201,9 +202,10 @@ public class BossController : MonoBehaviour
     {
         SkillAttack = true;
 
+        // ** 목적지에 도착할 때까지
         float Distance = Vector3.Distance(EndPoint, transform.position);
 
-        if (Distance > 0.5f)
+        if (Distance > 0.3f)
         {
             Vector3 Direction = (EndPoint - transform.position).normalized;
 
@@ -214,7 +216,7 @@ public class BossController : MonoBehaviour
 
             transform.position += Movement * Time.deltaTime;
 
-
+            // Preslide 실행 중일 때 반복 실행하지 않기 위해
             if(!Anim.GetBool("Slide"))
             {
                 Anim.SetBool("Slide", true);

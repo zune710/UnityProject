@@ -20,5 +20,6 @@ public class ControllerManager
     public bool DirRight;
 
     public float BulletSpeed = 10.0f;
+    public int PlayerMaxHP = 100;
     public int PlayerHP = 100;
 }
