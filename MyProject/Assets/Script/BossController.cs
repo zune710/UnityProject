@@ -26,6 +26,7 @@ public class BossController : MonoBehaviour
     private bool Attack;
     private bool Walk;
     private bool active;
+    private bool cool;
 
     private int choice;
 
@@ -46,6 +47,7 @@ public class BossController : MonoBehaviour
         HP = 30000;
 
         active = false;
+        cool = true;
 
         SkillAttack = false;
         Attack = false;
@@ -83,9 +85,10 @@ public class BossController : MonoBehaviour
                     break;
             }
         }
-        else
+        else if(cool)
         {
             //active = true;
+            cool = false;
             choice = OnController();
             StartCoroutine(OnCoolDown());
         }
@@ -123,6 +126,8 @@ public class BossController : MonoBehaviour
         // * 1: 이동      STATE_WALK
         // * 2: 공격      STATE_ATTACK
         // * 3: 슬라이딩  STATE_SLIDE
+
+
         return Random.Range(STATE_WALK, STATE_SLIDE + 1);
     }
 
@@ -132,12 +137,12 @@ public class BossController : MonoBehaviour
 
         while(fTime > 0.0f)
         {
-            print("CoolTime: " + fTime);
             fTime -= Time.deltaTime;
             yield return null;
         }
 
         active = true;  // 88줄
+        cool = true; 
     }
 
     private void OnWalk()
@@ -145,11 +150,11 @@ public class BossController : MonoBehaviour
         Walk = true;
 
         // ** 목적지에 도착할 때까지
-        float Distance = Vector3.Distance(EndPoint, transform.position);
+        float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
-        if (Distance > 0.5f)
+        if (Distance > 3.0f)
         {
-            Vector3 Direction = (EndPoint - transform.position).normalized;
+            Vector3 Direction = (Target.transform.position - transform.position).normalized;
 
             Movement = new Vector3(
                 Speed * Direction.x, 
@@ -158,7 +163,7 @@ public class BossController : MonoBehaviour
 
             transform.position += Movement * Time.deltaTime;
 
-            Anim.SetFloat("Speed", Mathf.Abs(Movement.x));
+            Anim.SetFloat("Speed", Mathf.Abs(Movement.x) + Mathf.Abs(Movement.y));
         }
         else
             active = false;
@@ -174,7 +179,7 @@ public class BossController : MonoBehaviour
 
         float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
-        if (Distance <= 0.5f)
+        if (Distance <= 2.0f)
         {
             Attack = true;
 
@@ -203,27 +208,25 @@ public class BossController : MonoBehaviour
             Vector3 Direction = (EndPoint - transform.position).normalized;
 
             Movement = new Vector3(
-                Speed * 7.0f * Direction.x,
-                Speed * 7.0f * Direction.y,
+                Speed * 8.0f * Direction.x,
+                Speed * 8.0f * Direction.y,
                 0.0f);
 
             transform.position += Movement * Time.deltaTime;
 
-            if (!Anim.GetBool("Slide"))
+
+            if(!Anim.GetBool("Slide"))
             {
                 Anim.SetBool("Slide", true);
                 Anim.SetTrigger("Preslide");
             }
         }
+
         else
             active = false;
     }
 
-    private void SetPreslide()
-    {
-        if (!Anim.GetBool("Slide"))
-            Anim.Play("Idle");
-    }
+
     
     private void OnTriggerEnter2D(Collider2D collision)
     {

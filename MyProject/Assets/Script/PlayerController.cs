@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 Movement;
 
     // 플레이어 체력
-    private int Health;
+    private int HP;
 
     // ** 플레이어의 Animator 구성요소를 받아오기 위해
     private Animator animator;
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         Speed = 5.0f;
 
         // 플레이어 체력을 초기화
-        Health = 10;
+        HP = ControllerManager.GetInstance().PlayerHP;
 
         // ** 초기값 세팅
         onAttack = false;
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.Q))
             OnRoll();
 
-        if (Health <= 0)
+        if (HP <= 0)
             OnDead();
 
         // ** 스페이스바를 입력한다면
@@ -275,7 +275,7 @@ public class PlayerController : MonoBehaviour
         // ** 피격 모션을 실행시킨다.
         animator.SetTrigger("Hit");
 
-        Health -= 5;
+        HP -= 50;
     }
 
     private void SetHit()
@@ -334,13 +334,13 @@ public class PlayerController : MonoBehaviour
     {
         if (onDead)
         {
-            Health = 10;
+            HP = 100;
             return;
         }
 
         onDead = true;
         animator.SetTrigger("Dead");
-        Health = 10;
+        HP = 100;
     }
 
     private void SetDead()

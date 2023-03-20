@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour
     // private SpriteRenderer spriteRenderer;
 
     // ** 총알이 날아가는 속도
-    private float Speed;
+    private float Speed;  // [HideInInspector] public float Speed;
 
     // ** 총알이 충돌한 횟수
     private int hp;
@@ -37,7 +37,7 @@ public class BulletController : MonoBehaviour
         // spriteRenderer = this.GetComponent<SpriteRenderer>();
 
         // ** 속도 초기값
-        Speed = 10.0f;
+        Speed = ControllerManager.GetInstance().BulletSpeed;
 
         // ** 충돌 횟수를 3으로 지정한다.
         hp = 3;
