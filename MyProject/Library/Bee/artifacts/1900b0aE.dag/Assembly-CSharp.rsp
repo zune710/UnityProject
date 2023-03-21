@@ -375,6 +375,8 @@
 "Assets/Script/EnemyManager.cs"
 "Assets/Script/MyGizmo.cs"
 "Assets/Script/PlayerController.cs"
+"Assets/Script/UI/EnemyHPBar.cs"
+"Assets/Script/UI/PlayerHPBar.cs"
 "Assets/Script/UI/SidebarController.cs"
 "Assets/Script/UI/SkillTest.cs"
 "Assets/Script/UI/Test.cs"
