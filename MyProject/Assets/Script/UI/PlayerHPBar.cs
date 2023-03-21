@@ -29,7 +29,7 @@ public class PlayerHPBar : MonoBehaviour
 
         if (Input.GetMouseButton(1))
         {
-            if(ControllerManager.GetInstance().Player_HP > 0)
+            if(ControllerManager.GetInstance().Player_HP < 100)
                 ControllerManager.GetInstance().Player_HP += 1;
         }
 

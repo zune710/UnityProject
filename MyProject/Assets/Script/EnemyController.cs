@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public float Speed;
+    public int HP;
     private Animator Anim;
     private Vector3 Movement;
 
@@ -29,6 +30,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         Speed = 0.2f;
+        HP = 3;
         Movement = new Vector3(1.0f, 0.0f, 0.0f);
 
         onAttack = false;
@@ -79,10 +81,10 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.tag == "Bullet")
         {
-            --ControllerManager.GetInstance().Enemy_HP;
+            --HP;
             Anim.SetTrigger("Hit");
 
-            if (ControllerManager.GetInstance().Enemy_HP <= 0)
+            if (HP <= 0)
             {
                 Anim.SetTrigger("Die");
                 GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기

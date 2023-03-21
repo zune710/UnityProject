@@ -21,10 +21,4 @@ public class ControllerManager
 
     public float BulletSpeed = 10.0f;
     public int Player_HP = 100;
-
-    public int Enemy_HP = 3;
-
-
-    public int PlayerMaxHP = 100;
-    public int PlayerHP = 100;
 }

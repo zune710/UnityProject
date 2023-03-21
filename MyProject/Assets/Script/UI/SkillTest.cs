@@ -10,6 +10,7 @@ public class SkillTest : MonoBehaviour
     private List<Image> ButtonImages = new List<Image>();
     private float cooldown;
     private int slot;
+    private int maxHP;
 
     private GameObject BulletPrefab;
     private GameObject fxPrefab;
@@ -37,6 +38,7 @@ public class SkillTest : MonoBehaviour
             ButtonImages.Add(Buttons[i].transform.GetComponent<Image>());
 
         cooldown = 0.0f;
+        maxHP = ControllerManager.GetInstance().Player_HP;
     }
 
     public void PushButton()
@@ -81,7 +83,7 @@ public class SkillTest : MonoBehaviour
 
     }
 
-    public void Testcase4()  // 광역 공격
+    public void Testcase4()  // Big Bullet
     {
         slot = 4;
         cooldown = 0.5f;
@@ -95,10 +97,10 @@ public class SkillTest : MonoBehaviour
 
         int value = 10;
 
-        if (ControllerManager.GetInstance().PlayerHP + value > ControllerManager.GetInstance().PlayerMaxHP)
-            ControllerManager.GetInstance().PlayerHP = ControllerManager.GetInstance().PlayerMaxHP;
+        if (ControllerManager.GetInstance().Player_HP + value > maxHP)
+            ControllerManager.GetInstance().Player_HP = maxHP;
         else
-            ControllerManager.GetInstance().PlayerHP += value;
+            ControllerManager.GetInstance().Player_HP += value;
     }
 
     private void BulletTest()
@@ -110,7 +112,12 @@ public class SkillTest : MonoBehaviour
         GameObject Obj = Instantiate(BulletPrefab);
 
         Obj.transform.position = Player.transform.position;
+        // Bullet 크기 조정
         Obj.transform.localScale = new Vector3(5.0f, 5.0f, 5.0f);
+        // 그림자 위치 조정
+        Obj.transform.GetChild(0).transform.position += new Vector3(0.0f, 1.0f, 0.0f);
+        // Collider 위치 조정
+        Obj.GetComponent<CapsuleCollider2D>().offset = new Vector2(0.42f, -0.03f);
 
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
@@ -130,43 +137,39 @@ public class SkillTest : MonoBehaviour
             Controller.Direction = new Vector3(Hor, 0.0f, 0.0f);
     }
 
-    private void ThrowBullet()  // 수정 필요
-    {
-        SpriteRenderer spriteRenderer = Player.GetComponent<SpriteRenderer>();
+    //private void ThrowBullet()  // 수정 필요
+    //{
+    //    SpriteRenderer spriteRenderer = Player.GetComponent<SpriteRenderer>();
 
-        float Hor = Input.GetAxisRaw("Horizontal");
+    //    float Hor = Input.GetAxisRaw("Horizontal");
 
-        List<GameObject> Bullets = new List<GameObject>();
-        GameObject Obj = Instantiate(BulletPrefab);
+    //    List<GameObject> Bullets = new List<GameObject>();
+    //    GameObject Obj = Instantiate(BulletPrefab);
 
-        Obj.transform.position = Player.transform.position;
+    //    Obj.transform.position = Player.transform.position;
 
-        for (int i = 0; i < 5; ++i)
-        {
-            Bullets.Add(Obj);
-            Bullets[i].transform.position = Player.transform.position;
-            Bullets[i].transform.localEulerAngles = new Vector3(0.0f, 0.0f, -(30.0f + 30.0f * i));
+    //    for (int i = 0; i < 5; ++i)
+    //    {
+    //        Bullets.Add(Obj);
+    //        Bullets[i].transform.position = Player.transform.position;
+    //        Bullets[i].transform.localEulerAngles = new Vector3(0.0f, 0.0f, -(30.0f + 30.0f * i));
             
-            BulletController Controller = Bullets[i].AddComponent<BulletController>();
-            SpriteRenderer renderer = Bullets[i].GetComponent<SpriteRenderer>();
+    //        BulletController Controller = Bullets[i].AddComponent<BulletController>();
+    //        SpriteRenderer renderer = Bullets[i].GetComponent<SpriteRenderer>();
 
-            Controller.fxPrefab = fxPrefab;
+    //        Controller.fxPrefab = fxPrefab;
 
-            renderer.flipY = spriteRenderer.flipX;
+    //        renderer.flipY = spriteRenderer.flipX;
 
-            if (Hor == 0)
-            {
-                if (spriteRenderer.flipX)
-                    Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * Vector3.down;
-                else
-                    Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * Vector3.up;
-            }
-            else
-                Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * new Vector3(Hor, 0.0f, 0.0f);
-        }
-
-        
-
-        
-    }
+    //        if (Hor == 0)
+    //        {
+    //            if (spriteRenderer.flipX)
+    //                Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * Vector3.down;
+    //            else
+    //                Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * Vector3.up;
+    //        }
+    //        else
+    //            Controller.Direction = Quaternion.Euler(0.0f, 0.0f, -(30.0f + 30.0f * i)) * new Vector3(Hor, 0.0f, 0.0f);
+    //    }
+    //}
 }

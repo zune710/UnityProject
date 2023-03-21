@@ -13,9 +13,14 @@ public class EnemyHPBar : MonoBehaviour
 
     private Slider HPBar;
 
+    private EnemyController controller;
+
+
     private void Awake()
     {
         HPBar = GetComponent<Slider>();
+
+
     }
 
     private void Start()
@@ -23,7 +28,9 @@ public class EnemyHPBar : MonoBehaviour
         // ** 위치 세팅
         offset = new Vector3(0.6f, 0.4f, 0.0f);  // Enemy 머리 위
 
-        HPBar.maxValue = ControllerManager.GetInstance().Enemy_HP;
+        controller = Target.GetComponent<EnemyController>();
+
+        HPBar.maxValue = controller.HP;
         HPBar.value = HPBar.maxValue;
     }
 
@@ -33,6 +40,11 @@ public class EnemyHPBar : MonoBehaviour
         // ** 월드상에 있는 타깃의 좌표를 카메라 좌표로 변환하여 UI에 세팅한다.
         transform.position = Camera.main.WorldToScreenPoint(Target.transform.position + offset);
 
-        HPBar.value = ControllerManager.GetInstance().Enemy_HP;
+        HPBar.value = controller.HP;
+        
+        if (controller.HP <= 0)  // !Target
+        {
+            Destroy(gameObject, 0.016f);
+        }
     }
 }
