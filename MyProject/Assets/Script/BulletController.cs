@@ -10,7 +10,7 @@ public class BulletController : MonoBehaviour
     private float Speed;  // [HideInInspector] public float Speed;
 
     // ** 총알이 충돌한 횟수
-    private int hp;
+    public int hp;
 
     // ** 이펙트 효과 원본
     public GameObject fxPrefab;
@@ -40,7 +40,7 @@ public class BulletController : MonoBehaviour
         Speed = ControllerManager.GetInstance().BulletSpeed;
 
         // ** 충돌 횟수를 3으로 지정한다.
-        hp = 3;
+        //hp = 3;
 
         // DefaultX = transform.position.x;
     }

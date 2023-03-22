@@ -123,6 +123,8 @@ public class SkillTest : MonoBehaviour
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
 
         Controller.fxPrefab = fxPrefab;
+        Controller.hp = 50;
+        print(Controller.hp);
 
         renderer.flipY = spriteRenderer.flipX;
 

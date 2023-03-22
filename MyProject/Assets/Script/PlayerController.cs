@@ -221,6 +221,8 @@ public class PlayerController : MonoBehaviour
             // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
             Controller.fxPrefab = fxPrefab;
 
+            Controller.hp = 3;
+
             // ** 총알의 SpriteRenderer를 받아온다.
             SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
 

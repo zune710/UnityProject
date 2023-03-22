@@ -62,7 +62,8 @@ public class EnemyManager : MonoBehaviour
             GameObject Bar = Instantiate(HPPrefab);
 
             // ** 복제된 UI를 캔버스에 위치시킨다.
-            Bar.transform.parent = GameObject.Find("EnemyHPCanvas").transform;
+            // Bar.transform.parent = GameObject.Find("EnemyHPCanvas").transform;  // 경고 뜸
+            Bar.transform.SetParent(GameObject.Find("EnemyHPCanvas").transform);
 
             // ** Enemy 작동 스크립트 포함
             //Obj.AddComponent<EnemyController>();  // 애니메이션 이벤트 함수가 안 떠서 이렇게 안 하고 Enemy에 script 바로 넣어줌
@@ -75,7 +76,7 @@ public class EnemyManager : MonoBehaviour
             Obj.transform.name = "Enemy";
 
             // ** 클론의 계층구조 설정
-            Obj.transform.parent = Parent.transform;
+            Obj.transform.SetParent(Parent.transform);
 
             // ** UI 객체가 들고 있는 스크립트에 접근
             EnemyHPBar EnemyHPBar = Bar.GetComponent<EnemyHPBar>();

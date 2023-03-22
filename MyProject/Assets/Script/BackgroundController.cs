@@ -89,7 +89,7 @@ public class BackgroundController : MonoBehaviour
             GameObject Obj = Instantiate(this.gameObject);
             
             // ** 복제된 이미지의 부모를 설정한다.
-            Obj.transform.parent = parent.transform;
+            Obj.transform.SetParent(parent.transform);
             
             // ** 복제된 이미지의 이름을 설정한다.
             Obj.transform.name = transform.name;
