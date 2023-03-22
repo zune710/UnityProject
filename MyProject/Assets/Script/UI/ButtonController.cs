@@ -6,13 +6,14 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
-public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Text text;
     private RectTransform rectTransform;
 
     private Color OldColor;
 
+    private bool onHover;
 
     private void Awake()
     {
@@ -23,33 +24,46 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private void Start()
     {
         text.text = transform.name;
+
+        onHover = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        print(eventData.position.x);
 
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        print(eventData.position.x);
-        
         text.color = OldColor;
 
-        // Down, Up 위치 같아야(버튼 위에 마우스 있는 상태로 뗴야) LoadScene하도록 하기(예외처리)
+        // 버튼 위에 마우스 있는 상태로 떼야 LoadScene하도록 하기(예외처리)
         //if(eventData.position.x)
-        if (transform.name == "Game Start")
-            SceneManager.LoadScene(text.text);
-        //else if (transform.name == "Quit")
-            
+        if(onHover)
+        {
+            if (transform.name == "Game Start")
+                SceneManager.LoadScene(text.text);
+            else if (transform.name == "Quit")
+            {
+                Application.Quit();  // 에디터에서는 무시됨
+                UnityEditor.EditorApplication.ExitPlaymode();
+            }
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        print(eventData.position.x);
-
         OldColor = text.color;
         text.color = Color.white;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        onHover = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        onHover = false;
     }
 }
