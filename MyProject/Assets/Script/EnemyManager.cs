@@ -38,7 +38,7 @@ public class EnemyManager : MonoBehaviour
             Distance = 0.0f;
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
-            DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
+            //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
 
             // ** 생성되는 Enemy를 담아둘 상위 객체
             Parent = new GameObject("EnemyList");

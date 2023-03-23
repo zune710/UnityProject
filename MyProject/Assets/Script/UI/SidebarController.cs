@@ -21,7 +21,6 @@ public class SidebarController : MonoBehaviour
         //test = 0.0f;
     }
 
-
     private void Update()
     {
         /*
@@ -47,6 +46,12 @@ public class SidebarController : MonoBehaviour
         check = !check;
         Anim.SetBool("Move", check);
 
+        //if (check)
+        //    Time.timeScale = 0.0f;
+        //else
+        //    Time.timeScale = 1.0f;
+
         //test = 0.0f;
     }
+
 }
