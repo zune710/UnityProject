@@ -20,7 +20,7 @@ public class BossController : MonoBehaviour
 
     private float CoolDown;
     private float Speed;
-    private int HP;
+    public int HP;
 
     private bool SkillAttack;
     private bool Attack;
@@ -38,13 +38,16 @@ public class BossController : MonoBehaviour
         Anim = GetComponent<Animator>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        HP = 300;
+
     }
 
     void Start()
     {
         CoolDown = 1.5f;
         Speed = 0.5f;
-        HP = 30000;
+        //HP = 300;  // HPBar의 maxValue에 안 들어감..
 
         active = false;
         cool = true;

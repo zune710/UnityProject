@@ -1,14 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class SidebarController : MonoBehaviour
+
+public class SidebarController : MonoBehaviour  // IDeselectHandler
 {
     public GameObject sidebar;
+    public GameObject Xbutton;
+    public GameObject Skillbutton;
+
     private Animator Anim;
     public bool check;
 
     public float test;
+
+    private Navigation xNavNone;
+    private Navigation xNavExplicit;
 
     private void Awake()
     {
@@ -18,6 +27,18 @@ public class SidebarController : MonoBehaviour
     void Start()
     {
         check = false;
+
+        Time.timeScale = 1.0f;
+
+        xNavNone = new Navigation();
+        xNavNone.mode = Navigation.Mode.None;
+
+        xNavExplicit = new Navigation();
+        xNavExplicit.mode = Navigation.Mode.Explicit;
+
+        xNavExplicit.selectOnDown = Skillbutton.GetComponent<Button>();
+        xNavExplicit.selectOnLeft = Skillbutton.GetComponent<Button>();
+
         //test = 0.0f;
     }
 
@@ -46,12 +67,24 @@ public class SidebarController : MonoBehaviour
         check = !check;
         Anim.SetBool("Move", check);
 
-        //if (check)
-        //    Time.timeScale = 0.0f;
-        //else
-        //    Time.timeScale = 1.0f;
+        if (check)
+        {
+            Time.timeScale = 0.0f;
+            Xbutton.GetComponent<Button>().navigation = xNavExplicit;
+
+            // sidebar 화면 안으로 들어간 후 X 버튼 선택 상태로 만들기
+            EventSystem.current.SetSelectedGameObject(Xbutton);
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
+            Xbutton.GetComponent<Button>().navigation = xNavNone;
+            
+            // sidebar 화면 밖으로 나간 후 X 버튼 선택 상태 해제하기
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+        
 
         //test = 0.0f;
     }
-
 }

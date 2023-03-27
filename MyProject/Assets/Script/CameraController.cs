@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
         // ** 0.15초 동안 실행
         while (shakeTime > 0.0f)
         {
-            shakeTime -= Time.deltaTime;
+            shakeTime -= Time.unscaledDeltaTime;
 
             // ** 반복문이 실행되는 동안 반복적으로 호출
             // null을 주면 기본 프레임타임(deltaTime)을 갖는다. deltaTime만큼 자러 갔다가 다시 이 위치로 돌아와서 아래 이어서 실행. 

@@ -40,6 +40,7 @@ public class UIController : MonoBehaviour
     public void onMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1.0f;
     }
 
     public void onScrollViewCanvasActive()

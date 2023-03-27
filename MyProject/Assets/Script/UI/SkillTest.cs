@@ -43,8 +43,11 @@ public class SkillTest : MonoBehaviour
 
     public void PushButton()
     {
-        ButtonImages[slot - 1].fillAmount = 0;
-        Buttons[slot - 1].GetComponent<Button>().enabled = false;
+        if (Time.timeScale > 0)
+        {
+            ButtonImages[slot - 1].fillAmount = 0;
+            Buttons[slot - 1].GetComponent<Button>().enabled = false;
+        }
 
         StartCoroutine(Testcase_Coroutine());
     }
@@ -60,14 +63,17 @@ public class SkillTest : MonoBehaviour
         }
 
         Buttons[slot - 1].GetComponent<Button>().enabled = true;
-    }
+    } // 두 스킬 연달아 누르면 이전에 돌던 쿨이 멈추는 문제!
 
     public void Testcase1()  // Bullet Speed 증가
     {
-        slot = 1;
-        cooldown = 0.5f;
+        if (Time.timeScale > 0)
+        {
+            slot = 1;
+            cooldown = 0.5f;
 
-        ControllerManager.GetInstance().BulletSpeed += 1.0f;
+            ControllerManager.GetInstance().BulletSpeed += 1.0f;
+        }
     }
 
     public void Testcase2()  // 방어(보호막)
@@ -85,22 +91,28 @@ public class SkillTest : MonoBehaviour
 
     public void Testcase4()  // Big Bullet
     {
-        slot = 4;
-        cooldown = 0.5f;
-        BulletTest();
+        if (Time.timeScale > 0)
+        {
+            slot = 4;
+            cooldown = 0.5f;
+            BulletTest();
+        }
     }
 
     public void Testcase5()  // 회복
     {
-        slot = 5;
-        cooldown = 0.5f;
+        if (Time.timeScale > 0)
+        {
+            slot = 5;
+            cooldown = 0.5f;
 
-        int value = 10;
+            int value = 10;
 
-        if (ControllerManager.GetInstance().Player_HP + value > maxHP)
-            ControllerManager.GetInstance().Player_HP = maxHP;
-        else
-            ControllerManager.GetInstance().Player_HP += value;
+            if (ControllerManager.GetInstance().Player_HP + value > maxHP)
+                ControllerManager.GetInstance().Player_HP = maxHP;
+            else
+                ControllerManager.GetInstance().Player_HP += value;
+        }
     }
 
     private void BulletTest()

@@ -115,129 +115,132 @@ public class PlayerController : MonoBehaviour
     // 초당 60번(보통) ~ 수천번 업데이트
     void Update()
     {
-        // ** [실수 연산 IEEE754]
-
-        // ** Input.GetAxis는 -1과 1 사이의 값을 실수로 반환(소수점 단위) / PC, 콘솔 / 움직임 서서히 멈출 때 사용 / 실수 연산 - 부하↑
-        // ** Input.GetAxisRaw는 -1, 0, 1 셋 중 하나를 반환 / 모바일, 2D / 게임 만들 때 주로 사용(최적화)
-        float Hor = Input.GetAxisRaw("Horizontal");
-        float Ver = Input.GetAxisRaw("Vertical");
-
-        // ** 입력받은 값으로 플레이어를 움직인다.
-        // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
-        Movement = new Vector3(
-            Hor * Time.deltaTime * Speed,
-            0.0f,
-            0.0f);
-
-        transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
-
-        // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
-        if (Hor != 0)
-            Direction = Hor;
-
-        if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        if (Time.timeScale > 0)
         {
-            // ** 플레이어의 좌표가 0.0 보다 작을 때 플레이어만 움직인다.
-            if (transform.position.x < 0)
-                // ** 실제 플레이어를 움직인다.
-                transform.position += Movement;
-            else
+            // ** [실수 연산 IEEE754]
+
+            // ** Input.GetAxis는 -1과 1 사이의 값을 실수로 반환(소수점 단위) / PC, 콘솔 / 움직임 서서히 멈출 때 사용 / 실수 연산 - 부하↑
+            // ** Input.GetAxisRaw는 -1, 0, 1 셋 중 하나를 반환 / 모바일, 2D / 게임 만들 때 주로 사용(최적화)
+            float Hor = Input.GetAxisRaw("Horizontal");
+            float Ver = Input.GetAxisRaw("Vertical");
+
+            // ** 입력받은 값으로 플레이어를 움직인다.
+            // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
+            Movement = new Vector3(
+                Hor * Time.deltaTime * Speed,
+                0.0f,
+                0.0f);
+
+            transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
+
+            // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
+            if (Hor != 0)
+                Direction = Hor;
+
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
-                ControllerManager.GetInstance().DirRight = true;
-                ControllerManager.GetInstance().DirLeft = false;
-                // DirRight, DirLeft: 직관적인 표현을 위해 사용 / Hor 변수 하나만으로도 작성 가능
+                // ** 플레이어의 좌표가 0.0 보다 작을 때 플레이어만 움직인다.
+                if (transform.position.x < 0)
+                    // ** 실제 플레이어를 움직인다.
+                    transform.position += Movement;
+                else
+                {
+                    ControllerManager.GetInstance().DirRight = true;
+                    ControllerManager.GetInstance().DirLeft = false;
+                    // DirRight, DirLeft: 직관적인 표현을 위해 사용 / Hor 변수 하나만으로도 작성 가능
+                }
             }
+
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                ControllerManager.GetInstance().DirRight = false;
+                ControllerManager.GetInstance().DirLeft = true;
+
+                // ** 플레이어의 좌표가 -15.0 보다 클 때 플레이어만 움직인다.
+                if (transform.position.x > -15.0f)
+                    // ** 실제 플레이어를 움직인다.
+                    transform.position += Movement;
+            }
+
+            if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) ||
+                Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+            {
+                ControllerManager.GetInstance().DirRight = false;
+                ControllerManager.GetInstance().DirLeft = false;
+            }
+
+
+            // ** 플레이어가 바라보고 있는 방향에 따라 이미지 반전(플립) 설정
+            if (Direction < 0)
+            {
+                spriteRenderer.flipX = DirLeft = true;
+            }
+
+            else if (Direction > 0)
+            {
+                spriteRenderer.flipX = false;
+                DirRight = true;
+            }
+
+            // ** 좌측 컨트롤키를 입력한다면
+            if (Input.GetKey(KeyCode.LeftControl))
+                // ** 공격
+                OnAttack();
+
+            // ** 좌측 쉬프트키를 입력한다면
+            if (Input.GetKey(KeyCode.LeftShift))
+                // ** 피격
+                OnHit();
+
+            //if (Input.GetButtonDown("Jump"))      
+            //    OnJump();
+
+            //if (transform.position.y > 0)
+            //    OnDive();
+
+            if (Input.GetKey(KeyCode.Q))
+                OnRoll();
+
+            if (ControllerManager.GetInstance().Player_HP <= 0)
+                OnDead();
+
+            // ** 스페이스바를 입력한다면
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                // ** 총알 원본을 복제한다.
+                GameObject Obj = Instantiate(BulletPrefab);
+                // Obj.transform.name = "";
+
+                //** 복제된 총알의 위치를 현재 플레이어의 위치로 초기화한다.
+                Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
+
+                // ** 총알의 BulletController 스크립트를 받아온다.
+                BulletController Controller = Obj.AddComponent<BulletController>();
+
+                // ** 총알 스크립트 내부의 방향 변수를 현재 플레이어의 방향 변수로 설정한다.
+                Controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
+
+                // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
+                Controller.fxPrefab = fxPrefab;
+
+                Controller.hp = 3;
+
+                // ** 총알의 SpriteRenderer를 받아온다.
+                SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
+
+                // ** 총알의 이미지 반전 상태를 플레이어의 이미지 반전 상태로 설정한다.
+                bulletRenderer.flipY = spriteRenderer.flipX;
+
+                // ** 모든 설정이 종료되었다면 저장소에 보관한다.
+                Bullets.Add(Obj);
+            }
+
+            // ** 플레이어의 움직임에 따라 이동 모션을 실행한다.
+            animator.SetFloat("Speed", Hor);
+
+            // ** offset box
+            // transform.position += Movement;  // 원래 FixedUpdate에 써야 함
         }
-
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            ControllerManager.GetInstance().DirRight = false;
-            ControllerManager.GetInstance().DirLeft = true;
-            
-            // ** 플레이어의 좌표가 -15.0 보다 클 때 플레이어만 움직인다.
-            if(transform.position.x > -15.0f)
-                // ** 실제 플레이어를 움직인다.
-                transform.position += Movement;
-        }
-
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) || 
-            Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
-        {
-            ControllerManager.GetInstance().DirRight = false;
-            ControllerManager.GetInstance().DirLeft = false;
-        }
-
-
-        // ** 플레이어가 바라보고 있는 방향에 따라 이미지 반전(플립) 설정
-        if (Direction < 0)
-        {
-            spriteRenderer.flipX = DirLeft = true;
-        }
-            
-        else if (Direction > 0)
-        {
-            spriteRenderer.flipX = false;
-            DirRight = true;
-        }
-
-        // ** 좌측 컨트롤키를 입력한다면
-        if (Input.GetKey(KeyCode.LeftControl))
-            // ** 공격
-            OnAttack();
-
-        // ** 좌측 쉬프트키를 입력한다면
-        if (Input.GetKey(KeyCode.LeftShift))
-           // ** 피격
-           OnHit();
-        
-        //if (Input.GetButtonDown("Jump"))      
-        //    OnJump();
-
-        //if (transform.position.y > 0)
-        //    OnDive();
-
-        if (Input.GetKey(KeyCode.Q))
-            OnRoll();
-
-        if (ControllerManager.GetInstance().Player_HP <= 0)
-            OnDead();
-
-        // ** 스페이스바를 입력한다면
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // ** 총알 원본을 복제한다.
-            GameObject Obj = Instantiate(BulletPrefab);
-            // Obj.transform.name = "";
-
-            //** 복제된 총알의 위치를 현재 플레이어의 위치로 초기화한다.
-            Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
-
-            // ** 총알의 BulletController 스크립트를 받아온다.
-            BulletController Controller = Obj.AddComponent<BulletController>();
-
-            // ** 총알 스크립트 내부의 방향 변수를 현재 플레이어의 방향 변수로 설정한다.
-            Controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
-
-            // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
-            Controller.fxPrefab = fxPrefab;
-
-            Controller.hp = 3;
-
-            // ** 총알의 SpriteRenderer를 받아온다.
-            SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
-
-            // ** 총알의 이미지 반전 상태를 플레이어의 이미지 반전 상태로 설정한다.
-            bulletRenderer.flipY = spriteRenderer.flipX;
-
-            // ** 모든 설정이 종료되었다면 저장소에 보관한다.
-            Bullets.Add(Obj);
-        }
-
-        // ** 플레이어의 움직임에 따라 이동 모션을 실행한다.
-        animator.SetFloat("Speed", Hor);
-
-        // ** offset box
-        // transform.position += Movement;  // 원래 FixedUpdate에 써야 함
     }
 
 
