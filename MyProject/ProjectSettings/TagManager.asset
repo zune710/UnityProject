@@ -50,3 +50,6 @@ TagManager:
   - name: Unit
     uniqueID: 3624976123
     locked: 0
+  - name: Foreground
+    uniqueID: 3079860469
+    locked: 0

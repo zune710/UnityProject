@@ -39,7 +39,7 @@ public class BossController : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        HP = 300;
+        HP = 10;
 
     }
 
@@ -242,8 +242,12 @@ public class BossController : MonoBehaviour
 
             if (HP <= 0)
             {
-                //Anim.SetTrigger("Die");
-                GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
+                //Anim.SetTrigger("Die
+                // 죽고 있는 Enemy의 Collider 끄기
+                GetComponent<CapsuleCollider2D>().enabled = false;
+
+                // 다음 라운드로 넘어가기
+                RoundManager.GetInstance.Next = true;
             }
         }
     }

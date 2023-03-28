@@ -7,10 +7,13 @@ public class PlayerHPBar : MonoBehaviour
 {
     private Slider HPBar;
 
+    private Text HPText;
+
 
     private void Awake()
     {
         HPBar = GetComponent<Slider>();
+        HPText = transform.Find("HPText").GetComponent<Text>();
     }
 
     private void Start()
@@ -41,5 +44,6 @@ public class PlayerHPBar : MonoBehaviour
             // Die
         }
 
+        HPText.text = ControllerManager.GetInstance().Player_HP.ToString();
     }
 }

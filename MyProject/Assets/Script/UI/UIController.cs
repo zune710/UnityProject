@@ -7,8 +7,10 @@ public class UIController : MonoBehaviour
 {
     public GameObject SkillCanvas;
     public GameObject ScrollViewCanvas;
+
     public bool SkillCanvasActive;
     public bool ScrollViewCanvasActive;
+
 
     private void Awake()
     {
@@ -17,7 +19,6 @@ public class UIController : MonoBehaviour
 
         // SkillCanvas = GameObject.Find("SkillCanvas");
         // ScrollViewCanvas = GameObject.Find("ScrollViewCanvas");
-        
     }
     void Start()
     {

@@ -39,7 +39,7 @@ public class BackgroundController : MonoBehaviour
         player = GameObject.Find("Player").gameObject;  // gameObject 안 써도 들어가지나 가독성 위해 씀
 
         // ** 부모객체를 받아온다.
-        parent = GameObject.Find("Background").transform;
+        parent = GameObject.Find("BackgroundList").transform;
 
         // ** 현재 이미지를 담고 있는 구성요소를 받아온다.
         spriteRenderer = GetComponent<SpriteRenderer>();

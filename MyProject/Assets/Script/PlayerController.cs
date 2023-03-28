@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     private float Speed;
 
     // ** 움직임을 저장하는 벡터
-    private Vector3 Movement;
+    private Vector3 HorMovement;
+    private Vector3 VerMovement;
 
     // 플레이어 최대 체력
     private int maxHP;
@@ -126,13 +127,16 @@ public class PlayerController : MonoBehaviour
 
             // ** 입력받은 값으로 플레이어를 움직인다.
             // Time.deltaTime: 프레임과 프레임 사이의 간격을 이용해서 컴퓨터 성능과 상관없이 모든 컴퓨터에서 동일하게 작동되도록 하기 위한 것
-            Movement = new Vector3(
+            HorMovement = new Vector3(
                 Hor * Time.deltaTime * Speed,
                 0.0f,
                 0.0f);
 
-            //if (-9.5f < transform.position.y && transform.position.y < -5.5f)
-            transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
+            //transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);  //UpArrow, DownArrow 따로 안 쓸 때 사용
+            VerMovement = new Vector3(
+                0.0f,
+                Ver * Time.deltaTime * Speed,
+                0.0f);
 
             // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
             if (Hor != 0)
@@ -143,11 +147,11 @@ public class PlayerController : MonoBehaviour
                 // ** 플레이어의 좌표가 0.0 보다 작을 때 플레이어만 움직인다.
                 if (transform.position.x < 0)
                     // ** 실제 플레이어를 움직인다.
-                    transform.position += Movement;
+                    transform.position += HorMovement;
                 else if (ControllerManager.GetInstance().onBoss) // 보스전일 때 화면 고정
                 {
                     if (transform.position.x < 15.0f)
-                        transform.position += Movement;
+                        transform.position += HorMovement;
                 }
                 else
                 {
@@ -157,7 +161,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 ControllerManager.GetInstance().DirRight = false;
@@ -166,7 +169,7 @@ public class PlayerController : MonoBehaviour
                 // ** 플레이어의 좌표가 -15.0 보다 클 때 플레이어만 움직인다.
                 if (transform.position.x > -15.0f)
                     // ** 실제 플레이어를 움직인다.
-                    transform.position += Movement;
+                    transform.position += HorMovement;
             }
 
             if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D) ||
@@ -176,6 +179,19 @@ public class PlayerController : MonoBehaviour
                 ControllerManager.GetInstance().DirLeft = false;
             }
 
+            if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                if (transform.position.y < -5.5f)
+                    transform.position += VerMovement;
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                if (transform.position.y > -9.0f)
+                    transform.position += VerMovement;
+            }
+
+            //if (-9.5f < transform.position.y && transform.position.y < -5.5f)
 
             // ** 플레이어가 바라보고 있는 방향에 따라 이미지 반전(플립) 설정
             if (Direction < 0)
@@ -404,15 +420,27 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
+            int value = 5;
+
             // Enemy와 충돌하면 HP 감소
-            ControllerManager.GetInstance().Player_HP -= 5;
+            if (ControllerManager.GetInstance().Player_HP - value < 0)
+                ControllerManager.GetInstance().Player_HP = 0;
+            else
+                ControllerManager.GetInstance().Player_HP -= value;
+
             OnHit();
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
+            int value = 10;
+
             // Boss와 충돌하면 HP 감소
-            ControllerManager.GetInstance().Player_HP -= 10;
+            if (ControllerManager.GetInstance().Player_HP - value < 0)
+                ControllerManager.GetInstance().Player_HP = 0;
+            else
+                ControllerManager.GetInstance().Player_HP -= value;
+
             OnHit();
         }
     }

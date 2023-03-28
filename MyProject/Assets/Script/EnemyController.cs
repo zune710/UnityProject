@@ -83,7 +83,7 @@ public class EnemyController : MonoBehaviour
             Anim.SetTrigger("Die");
             GetComponent<CapsuleCollider2D>().enabled = false;
 
-            ControllerManager.GetInstance().EnemyCount = 0;
+            //ControllerManager.GetInstance().EnemyCount = 0;
         }
     }
 
@@ -127,7 +127,7 @@ public class EnemyController : MonoBehaviour
         onMagic = true;
         MagicCoolDown = CoolTime;
 
-        Anim.SetTrigger("Magic");
+        //Anim.SetTrigger("Magic");
 
         CreateEnemyBullet();
     }
