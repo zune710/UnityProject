@@ -368,6 +368,7 @@
 "Assets/FX/Scripts/CFX_LightIntensityFade.cs"
 "Assets/Script/BackgroundController.cs"
 "Assets/Script/BossController.cs"
+"Assets/Script/BossManager.cs"
 "Assets/Script/BulletController.cs"
 "Assets/Script/BulletPattern/BulletControl.cs"
 "Assets/Script/BulletPattern/BulletPattern.cs"

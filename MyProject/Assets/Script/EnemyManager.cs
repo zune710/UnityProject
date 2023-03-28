@@ -53,7 +53,7 @@ public class EnemyManager : MonoBehaviour
     // ** 시작하자마자 Start 함수를 코루틴 함수로 실행
     private IEnumerator Start()
     {
-        while (true)
+        while (ControllerManager.GetInstance().onEnemy)
         {
             // ** Enemy 원형 객체를 복제한다.
             GameObject Obj = Instantiate(Prefab);
@@ -79,10 +79,10 @@ public class EnemyManager : MonoBehaviour
             Obj.transform.SetParent(Parent.transform);
 
             // ** UI 객체가 들고 있는 스크립트에 접근
-            EnemyHPBar EnemyHPBar = Bar.GetComponent<EnemyHPBar>();
+            EnemyHPBar enemyHPBar = Bar.GetComponent<EnemyHPBar>();
 
             // ** 스크립트의 Target을 지금 생성된 Enemy로 세팅
-            EnemyHPBar.Target = Obj;
+            enemyHPBar.Target = Obj;
 
             // ** 1.5초 휴식
             yield return new WaitForSeconds(1.5f);

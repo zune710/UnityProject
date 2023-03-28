@@ -76,17 +76,16 @@ public class SkillTest : MonoBehaviour
         }
     }
 
-    public void Testcase2()  // 방어(보호막)
+    public void Testcase2()
     {
         slot = 2;
         cooldown = 0.5f;
     }
 
-    public void Testcase3()  // 이속 증가
+    public void Testcase3()
     {
         slot = 3;
         cooldown = 0.5f;
-
     }
 
     public void Testcase4()  // Big Bullet
@@ -136,7 +135,6 @@ public class SkillTest : MonoBehaviour
 
         Controller.fxPrefab = fxPrefab;
         Controller.hp = 50;
-        print(Controller.hp);
 
         renderer.flipY = spriteRenderer.flipX;
 

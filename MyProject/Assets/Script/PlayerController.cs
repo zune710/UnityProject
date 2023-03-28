@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour
-{ 
+{
     // public은 유니티 Inspector 창에 노출이 된다.
 
     // ** 움직이는 속도
@@ -67,12 +67,12 @@ public class PlayerController : MonoBehaviour
         // ** Player의 SpriteRenderer를 받아온다.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-// 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
-//#if UNITY_EDITOR
-//        print("test");
-//#else
-//    print("???");
-//#endif
+        // 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
+        //#if UNITY_EDITOR
+        //        print("test");
+        //#else
+        //    print("???");
+        //#endif
 
         // ** [Resources] 폴더에서, 사용할 리소스를 들고온다.
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
@@ -82,9 +82,9 @@ public class PlayerController : MonoBehaviour
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds"));
     }
 
-        // ** 유니티 기본 제공 함수
-        // ** 초기값을 설정할 때 사용
-        void Start()
+    // ** 유니티 기본 제공 함수
+    // ** 초기값을 설정할 때 사용
+    void Start()
     {
         // ** 속도를 초기화
         Speed = 5.0f;
@@ -104,10 +104,10 @@ public class PlayerController : MonoBehaviour
         DirLeft = false;
         DirRight = false;
 
-         // 이게 효율적이지만 Resource를 Load하는 방법(82줄)을 권장한다.
-         //for (int i = 0; i < 7; ++i)
-         //    stageBack[i] = GameObject.Find(i.ToString());
-        }
+        // 이게 효율적이지만 Resource를 Load하는 방법(82줄)을 권장한다.
+        //for (int i = 0; i < 7; ++i)
+        //    stageBack[i] = GameObject.Find(i.ToString());
+    }
 
 
     // ** 유니티 기본 제공 함수
@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
                 0.0f,
                 0.0f);
 
+            //if (-9.5f < transform.position.y && transform.position.y < -5.5f)
             transform.position += new Vector3(0.0f, Ver * Time.deltaTime * Speed, 0.0f);
 
             // ** Hor이 0이라면 멈춰 있는 상태이므로 예외처리를 해준다.
@@ -143,6 +144,11 @@ public class PlayerController : MonoBehaviour
                 if (transform.position.x < 0)
                     // ** 실제 플레이어를 움직인다.
                     transform.position += Movement;
+                else if (ControllerManager.GetInstance().onBoss) // 보스전일 때 화면 고정
+                {
+                    if (transform.position.x < 15.0f)
+                        transform.position += Movement;
+                }
                 else
                 {
                     ControllerManager.GetInstance().DirRight = true;
@@ -150,6 +156,7 @@ public class PlayerController : MonoBehaviour
                     // DirRight, DirLeft: 직관적인 표현을 위해 사용 / Hor 변수 하나만으로도 작성 가능
                 }
             }
+
 
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
@@ -173,13 +180,13 @@ public class PlayerController : MonoBehaviour
             // ** 플레이어가 바라보고 있는 방향에 따라 이미지 반전(플립) 설정
             if (Direction < 0)
             {
-                spriteRenderer.flipX = DirLeft = true;
+                spriteRenderer.flipX = false;
+                DirLeft = true;
             }
 
             else if (Direction > 0)
             {
-                spriteRenderer.flipX = false;
-                DirRight = true;
+                spriteRenderer.flipX = DirRight = true;
             }
 
             // ** 좌측 컨트롤키를 입력한다면
@@ -207,12 +214,18 @@ public class PlayerController : MonoBehaviour
             // ** 스페이스바를 입력한다면
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                OnAttack();
+
                 // ** 총알 원본을 복제한다.
                 GameObject Obj = Instantiate(BulletPrefab);
                 // Obj.transform.name = "";
 
                 //** 복제된 총알의 위치를 현재 플레이어의 위치로 초기화한다.
-                Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
+                //Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
+                Obj.transform.position = new Vector3(
+                    transform.position.x, 
+                    transform.position.y - 0.15f, 
+                    transform.position.z);
 
                 // ** 총알의 BulletController 스크립트를 받아온다.
                 BulletController Controller = Obj.AddComponent<BulletController>();
@@ -229,7 +242,7 @@ public class PlayerController : MonoBehaviour
                 SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
 
                 // ** 총알의 이미지 반전 상태를 플레이어의 이미지 반전 상태로 설정한다.
-                bulletRenderer.flipY = spriteRenderer.flipX;
+                bulletRenderer.flipX = spriteRenderer.flipX;
 
                 // ** 모든 설정이 종료되었다면 저장소에 보관한다.
                 Bullets.Add(Obj);
@@ -237,11 +250,14 @@ public class PlayerController : MonoBehaviour
 
             // ** 플레이어의 움직임에 따라 이동 모션을 실행한다.
             animator.SetFloat("Speed", Hor);
+            if(Hor == 0)
+                animator.SetFloat("Speed", Ver);
 
             // ** offset box
             // transform.position += Movement;  // 원래 FixedUpdate에 써야 함
         }
     }
+
 
 
     private void OnAttack()
@@ -279,8 +295,6 @@ public class PlayerController : MonoBehaviour
 
         // ** 피격 모션을 실행시킨다.
         animator.SetTrigger("Hit");
-
-        ControllerManager.GetInstance().Player_HP -= 20;
     }
 
     private void SetHit()
@@ -297,8 +311,8 @@ public class PlayerController : MonoBehaviour
 
         onJump = true;
         animator.SetTrigger("Jump");
-        while(transform.position.y < 2)
-        transform.position += new Vector3(0.0f, 0.3f, 0.0f);
+        while (transform.position.y < 2)
+            transform.position += new Vector3(0.0f, 0.3f, 0.0f);
     }
 
     private void SetJump()
@@ -380,9 +394,27 @@ public class PlayerController : MonoBehaviour
 
         Bullets.Add(Obj);
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-            print("collision");
+        print("collision");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            // Enemy와 충돌하면 HP 감소
+            ControllerManager.GetInstance().Player_HP -= 5;
+            OnHit();
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            // Boss와 충돌하면 HP 감소
+            ControllerManager.GetInstance().Player_HP -= 10;
+            OnHit();
+        }
     }
 }
 

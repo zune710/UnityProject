@@ -19,6 +19,11 @@ public class ControllerManager
     public bool DirLeft;
     public bool DirRight;
 
+    public bool onEnemy = true;
+    public bool onBoss = false;
+
     public float BulletSpeed = 10.0f;
     public int Player_HP = 100;
+
+    public int EnemyCount = 0;
 }

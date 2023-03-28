@@ -75,6 +75,16 @@ public class EnemyController : MonoBehaviour
             transform.position -= Movement * Time.deltaTime;
             Anim.SetFloat("Speed", Movement.x);
         }
+
+        if(ControllerManager.GetInstance().onBoss)
+        {
+            HP = 0;
+
+            Anim.SetTrigger("Die");
+            GetComponent<CapsuleCollider2D>().enabled = false;
+
+            ControllerManager.GetInstance().EnemyCount = 0;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -88,6 +98,8 @@ public class EnemyController : MonoBehaviour
             {
                 Anim.SetTrigger("Die");
                 GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
+
+                ++ControllerManager.GetInstance().EnemyCount;
             }
         }
     }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7589596292362734631}
   - component: {fileID: 7589596292362734632}
   - component: {fileID: 5548472186455816576}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd09ad7007edaa4a941f395d1beeb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 0
 --- !u!70 &5548472186455816576
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -146,7 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 744011534425206699}
   - component: {fileID: 9091786436777536432}
-  m_Layer: 10
+  m_Layer: 11
   m_Name: Shadow0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
