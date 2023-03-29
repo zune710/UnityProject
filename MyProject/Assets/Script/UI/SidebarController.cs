@@ -5,39 +5,50 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 
-public class SidebarController : MonoBehaviour  // IDeselectHandler
+public class SidebarController : MonoBehaviour
 {
-    public GameObject sidebar;
-    public GameObject Xbutton;
-    public GameObject Skillbutton;
+    
+    public GameObject Menu;
+    public GameObject Dark;
+
+    //public GameObject sidebar;
+    //public GameObject Xbutton;
+    //public GameObject Skillbutton;
 
     private Animator Anim;
     public bool check;
 
-    public float test;
+    //public float test;
 
-    private Navigation xNavNone;
-    private Navigation xNavExplicit;
+    //private Navigation xNavNone;
+    //private Navigation xNavExplicit;
 
     private void Awake()
     {
-        Anim = sidebar.GetComponent<Animator>();
+        Menu = transform.Find("MenuFrame").gameObject;
+
+        Dark = transform.Find("DarkBackground").gameObject;
+
+        Anim = Menu.GetComponent<Animator>();
+
+        //Anim = sidebar.GetComponent<Animator>();
     }
 
     void Start()
     {
         check = false;
+        Dark.SetActive(false);
 
         Time.timeScale = 1.0f;
 
-        xNavNone = new Navigation();
-        xNavNone.mode = Navigation.Mode.None;
+        //xNavNone = new Navigation();
+        //xNavNone.mode = Navigation.Mode.None;
 
-        xNavExplicit = new Navigation();
-        xNavExplicit.mode = Navigation.Mode.Explicit;
+        //xNavExplicit = new Navigation();
+        //xNavExplicit.mode = Navigation.Mode.Explicit;
 
-        xNavExplicit.selectOnDown = Skillbutton.GetComponent<Button>();
-        xNavExplicit.selectOnLeft = Skillbutton.GetComponent<Button>();
+        //xNavExplicit.selectOnDown = Skillbutton.GetComponent<Button>();
+        //xNavExplicit.selectOnLeft = Skillbutton.GetComponent<Button>();
 
         //test = 0.0f;
     }
@@ -65,23 +76,26 @@ public class SidebarController : MonoBehaviour  // IDeselectHandler
     public void ClickButton()
     {
         check = !check;
+        Dark.SetActive(check);
         Anim.SetBool("Move", check);
-
+        Debug.Log(Anim.GetBool("Move"));
         if (check)
         {
             Time.timeScale = 0.0f;
-            Xbutton.GetComponent<Button>().navigation = xNavExplicit;
 
-            // sidebar 화면 안으로 들어간 후 X 버튼 선택 상태로 만들기
-            EventSystem.current.SetSelectedGameObject(Xbutton);
+            //Xbutton.GetComponent<Button>().navigation = xNavExplicit;
+
+            //// sidebar 화면 안으로 들어간 후 X 버튼 선택 상태로 만들기
+            //EventSystem.current.SetSelectedGameObject(Xbutton);
         }
         else
         {
             Time.timeScale = 1.0f;
-            Xbutton.GetComponent<Button>().navigation = xNavNone;
+
+            //Xbutton.GetComponent<Button>().navigation = xNavNone;
             
-            // sidebar 화면 밖으로 나간 후 X 버튼 선택 상태 해제하기
-            EventSystem.current.SetSelectedGameObject(null);
+            //// sidebar 화면 밖으로 나간 후 X 버튼 선택 상태 해제하기
+            //EventSystem.current.SetSelectedGameObject(null);
         }
         
 

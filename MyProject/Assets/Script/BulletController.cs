@@ -67,12 +67,6 @@ public class BulletController : MonoBehaviour
         // ** 충돌 횟수 차감
         --hp;
 
-        // ** 이펙트 효과 복제
-        GameObject Obj = Instantiate(fxPrefab);
-
-        // ** 이펙트 효과의 위치를 지정
-        Obj.transform.position = transform.position;
-
         // ** collision = 충돌한 대상
         // ** 충돌한 대상을 삭제한다. ??
         // (총알이 카메라 밖을 벗어나 보이지 않는 벽에 충돌하면 삭제됨)
@@ -80,6 +74,12 @@ public class BulletController : MonoBehaviour
             Destroy(this.gameObject);
         else
         {
+            // ** 이펙트 효과 복제
+            GameObject Obj = Instantiate(fxPrefab);
+
+            // ** 이펙트 효과의 위치를 지정
+            Obj.transform.position = transform.position;
+
             // ** 진동 효과를 생성할 관리자 생성
             GameObject camera = new GameObject("Camera Test");
 
