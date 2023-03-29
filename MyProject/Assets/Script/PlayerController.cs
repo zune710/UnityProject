@@ -420,28 +420,47 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            int value = 5;
+            int damage = 5;
+            print(ControllerManager.GetInstance().Player_HP);
 
             // Enemy와 충돌하면 HP 감소
-            if (ControllerManager.GetInstance().Player_HP - value < 0)
-                ControllerManager.GetInstance().Player_HP = 0;
-            else
-                ControllerManager.GetInstance().Player_HP -= value;
+            StartCoroutine(DecreaseHP(damage));
+            print(ControllerManager.GetInstance().Player_HP);
 
             OnHit();
         }
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
-            int value = 10;
+            int damage = 10;
 
             // Boss와 충돌하면 HP 감소
-            if (ControllerManager.GetInstance().Player_HP - value < 0)
-                ControllerManager.GetInstance().Player_HP = 0;
-            else
-                ControllerManager.GetInstance().Player_HP -= value;
+            StartCoroutine(DecreaseHP(damage));
 
             OnHit();
+        }
+    }
+
+    private IEnumerator DecreaseHP(int damage)
+    {
+        int goal = ControllerManager.GetInstance().Player_HP - damage;
+
+        if (goal < 0)
+        {
+            while (ControllerManager.GetInstance().Player_HP > 0)
+            {
+                --ControllerManager.GetInstance().Player_HP;
+                yield return null;
+            }
+
+        }
+        else
+        {
+            while (ControllerManager.GetInstance().Player_HP > goal)
+            {
+                --ControllerManager.GetInstance().Player_HP;
+                yield return null;
+            }
         }
     }
 }

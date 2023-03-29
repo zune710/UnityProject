@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class BossController : MonoBehaviour
 {
@@ -242,13 +244,21 @@ public class BossController : MonoBehaviour
 
             if (HP <= 0)
             {
-                //Anim.SetTrigger("Die
+                Anim.SetTrigger("Die");
                 // 죽고 있는 Enemy의 Collider 끄기
                 GetComponent<CapsuleCollider2D>().enabled = false;
 
                 // 다음 라운드로 넘어가기
                 RoundManager.GetInstance.Next = true;
+
+                //SceneManager.LoadScene("SelectRound");
+
             }
         }
+    }
+
+    private void DestroyEnemy()
+    {
+        Destroy(gameObject, 0.016f);
     }
 }

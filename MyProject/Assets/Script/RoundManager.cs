@@ -23,6 +23,8 @@ public class RoundManager : MonoBehaviour
     private Slider GoalBar;
     private Text RoundText;
 
+    //private List<GameObject> Enemies;
+
     public int Round;
     public bool Next;
 
@@ -39,6 +41,8 @@ public class RoundManager : MonoBehaviour
             RoundInfoCanvas = GameObject.Find("RoundInfoCanvas");
             GoalBar = RoundInfoCanvas.transform.Find("Slider").GetComponent<Slider>();
             RoundText = GameObject.Find("RoundText").GetComponent<Text>();
+
+            //Enemies = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/Enemies"));
         }
     }
    private void Start()
@@ -80,15 +84,17 @@ public class RoundManager : MonoBehaviour
 
         if (Next)
         {
-            ControllerManager.GetInstance().onBoss = false;
-            ControllerManager.GetInstance().onEnemy = true;
-
             ++Round;
             Goal *= 2;
 
-            RoundInfoCanvas.SetActive(false);
+            // Enemy Type 변경
+            EnemyManager.GetInstance.enemyType = EnemyManager.EnemyType.Plant;
+            // + 다음 Boss 변경
 
-            // + Enemy Type 변경, 다음 Boss 변경
+            ControllerManager.GetInstance().onBoss = false;
+            ControllerManager.GetInstance().onEnemy = true;
+
+            RoundInfoCanvas.SetActive(true);
         }
     }
 
