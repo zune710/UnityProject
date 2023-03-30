@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     {
         Chameleon,
         Plant,
-        Rock1, Rock2, Rock3
+        Rock
     };
 
     private EnemyManager() { }
@@ -40,8 +40,10 @@ public class EnemyManager : MonoBehaviour
     public int HP;
     public float Speed;
     public float AttackRange;
-
     private float Cooldown;
+
+    private Dictionary<int, EnemyType> EnemyList;
+    public int EnemyId;
 
     private void Awake()
     {
@@ -51,6 +53,10 @@ public class EnemyManager : MonoBehaviour
 
             Distance = 0.0f;
 
+            EnemyList = new Dictionary<int, EnemyType>();
+            GenerateEnemyData();
+
+            EnemyId = 1;
             enemyType = EnemyType.Chameleon;
             hasBullet = false;
             HP = 3;
@@ -127,6 +133,18 @@ public class EnemyManager : MonoBehaviour
 
         Prefab = Resources.Load("Prefabs/Enemies/" + enemyType.ToString()) as GameObject;
 
+        SetEnemyInfo();
+    }
+
+    private void GenerateEnemyData()
+    {
+        EnemyList.Add(1, EnemyType.Chameleon);
+        EnemyList.Add(2, EnemyType.Plant);
+        EnemyList.Add(3, EnemyType.Rock);
+    }
+
+    private void SetEnemyInfo()
+    {
         switch (enemyType)
         {
             case EnemyType.Chameleon:
@@ -145,26 +163,10 @@ public class EnemyManager : MonoBehaviour
                 Cooldown = 3.0f;
                 break;
 
-            case EnemyType.Rock1:
+            case EnemyType.Rock:
                 hasBullet = false;
                 HP = 10;
                 Speed = 0.2f;
-                AttackRange = 0.0f;
-                Cooldown = 3.0f;
-                break;
-
-            case EnemyType.Rock2:
-                hasBullet = false;
-                HP = 10;
-                Speed = 0.4f;
-                AttackRange = 0.0f;
-                Cooldown = 3.0f;
-                break;
-
-            case EnemyType.Rock3:
-                hasBullet = false;
-                HP = 10;
-                Speed = 0.6f;
                 AttackRange = 0.0f;
                 Cooldown = 3.0f;
                 break;
