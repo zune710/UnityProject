@@ -73,7 +73,7 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 1;
-            cooldown = 0.5f;
+            cooldown = 0.1f;  // 0.5f
             BulletTest();
         }
     }
@@ -83,10 +83,27 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 2;
-            cooldown = 0.5f;
+            cooldown = 0.05f;  // 0.5f
 
-            ControllerManager.GetInstance().BulletSpeed += 1.0f;
+            FillImages[slot - 1].fillAmount = 1;
+            SlotButtons[slot - 1].GetComponent<Button>().enabled = false;
+
+            StartCoroutine(UsingSpeedUp());
         }
+    }
+
+    private IEnumerator UsingSpeedUp()
+    {
+
+        float speed = ControllerManager.GetInstance().BulletSpeed;
+
+        ControllerManager.GetInstance().BulletSpeed += 5.0f;  // 1.0f
+
+        yield return new WaitForSeconds(5.0f);
+
+        ControllerManager.GetInstance().BulletSpeed = speed;  // 원래대로
+
+        PushButton();
     }
 
     public void Slot3_Heal()  // 회복
@@ -94,7 +111,8 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 3;
-            cooldown = 0.5f;
+            cooldown = 0.01f;  // 0.5f
+
 
             int value = 10;
             int goal = ControllerManager.GetInstance().Player_HP + value;
@@ -103,7 +121,6 @@ public class SkillController : MonoBehaviour
                 StartCoroutine(Healing(maxHP));
             else
                 StartCoroutine(Healing(goal));
-
         }
     }
 

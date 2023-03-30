@@ -78,7 +78,7 @@ public class SidebarController : MonoBehaviour
         check = !check;
         Dark.SetActive(check);
         Anim.SetBool("Move", check);
-        Debug.Log(Anim.GetBool("Move"));
+
         if (check)
         {
             Time.timeScale = 0.0f;

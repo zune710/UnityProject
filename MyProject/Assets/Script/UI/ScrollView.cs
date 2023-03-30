@@ -19,14 +19,14 @@ public class ScrollView : MonoBehaviour
 
     private void Start()
     {
-        sizeX = 1000.0f;
-        sizeY = 500.0f;
+        sizeX = 350.0f;
+        sizeY = 350.0f;
 
         //active = true;
 
         StartCoroutine(EffectUi());
     }
-
+    
     //private void Update()
     //{
     //    if(active)
@@ -52,7 +52,7 @@ public class ScrollView : MonoBehaviour
 
         while(uiTranspos.sizeDelta.y < sizeY)
         {
-            fTime += Time.unscaledDeltaTime * 4.0f;
+            fTime += Time.unscaledDeltaTime * 10.0f;
 
             uiTranspos.sizeDelta = Vector2.Lerp(
                 new Vector2(5.0f, 5.0f),
@@ -66,7 +66,7 @@ public class ScrollView : MonoBehaviour
 
         while (uiTranspos.sizeDelta.x < sizeX)
         {
-            fTime += Time.unscaledDeltaTime * 4.0f;
+            fTime += Time.unscaledDeltaTime * 7.0f;
 
             uiTranspos.sizeDelta = Vector2.Lerp(
                 new Vector2(5.0f, sizeY),

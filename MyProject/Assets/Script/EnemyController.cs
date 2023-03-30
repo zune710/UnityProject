@@ -153,6 +153,9 @@ public class EnemyController : MonoBehaviour
                 GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
 
                 ++ControllerManager.GetInstance().EnemyCount;
+
+                if (ControllerManager.GetInstance().EnemyCount == RoundManager.GetInstance.Goal)
+                    RoundManager.GetInstance.GoalClear = true;
             }
         }
     }
@@ -226,7 +229,35 @@ public class EnemyController : MonoBehaviour
         // ** 모든 설정이 종료되었다면 저장소에 보관한다.
         Bullets.Add(Obj);
 
-        yield return new WaitForSeconds(7.0f);
+        yield return new WaitForSeconds(3.0f);
+
+        SetAttack();
+    }
+
+    private void Rock1Test()
+    {
+        GameObject RockPrefab;
+        if (transform.name == "Rock1")
+        { 
+             // sprite 변경 후 하나 복제
+            RockPrefab = Resources.Load("Prefabs/Enemies/Rock2") as GameObject;
+            SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
+            renderer.sprite = RockPrefab.GetComponent<Sprite>();
+            //+이름 Rock2로 변경
+            //+복제
+        }
+
+        if (transform.name == "Rock2")
+        {
+            // sprite 변경 후 2개 복제
+            RockPrefab = Resources.Load("Prefabs/Enemies/Rock3") as GameObject;
+            SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
+            renderer.sprite = RockPrefab.GetComponent<Sprite>();
+            //+이름 Rock3로 변경
+            //+복제
+        }
+
+
     }
 
     private void DestroyEnemy()

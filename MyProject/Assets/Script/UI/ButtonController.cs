@@ -26,6 +26,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         text.text = transform.name;
 
         onHover = false;
+
+        print(Time.timeScale);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -41,8 +43,11 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         //if(eventData.position.x)
         if(onHover)
         {
-            if (transform.name == "Game Start")
-                SceneManager.LoadScene(text.text);
+            if (transform.name == "New Game")
+            {
+                Time.timeScale = 1.0f;
+                SceneManager.LoadScene("Game Start");
+            }
             else if (transform.name == "Quit")
             {
                 Application.Quit();  // 에디터에서는 무시됨

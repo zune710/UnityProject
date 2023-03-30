@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -549,9 +549,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SkillCanvas: {fileID: 2113261420}
-  ScrollViewCanvas: {fileID: 2113261420}
+  SettingMenu: {fileID: 1467329436}
   SkillCanvasActive: 0
-  ScrollViewCanvasActive: 0
+  SettingMenuActive: 0
 --- !u!4 &979451034
 Transform:
   m_ObjectHideFlags: 0
@@ -719,7 +719,7 @@ GameObject:
   - component: {fileID: 1425168746}
   - component: {fileID: 1425168747}
   m_Layer: 5
-  m_Name: Game Start
+  m_Name: New Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -778,7 +778,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Game Start
+  m_Text: New Game
 --- !u!222 &1425168745
 CanvasRenderer:
   m_ObjectHideFlags: 0

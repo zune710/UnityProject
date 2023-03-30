@@ -421,11 +421,9 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             int damage = 5;
-            print(ControllerManager.GetInstance().Player_HP);
 
             // Enemy와 충돌하면 HP 감소
             StartCoroutine(DecreaseHP(damage));
-            print(ControllerManager.GetInstance().Player_HP);
 
             OnHit();
         }

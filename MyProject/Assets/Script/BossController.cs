@@ -40,15 +40,13 @@ public class BossController : MonoBehaviour
         Anim = GetComponent<Animator>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        HP = 10;
-
     }
 
     void Start()
     {
         CoolDown = 1.5f;
         Speed = 0.5f;
+        HP = BossManager.GetInstance.bossHP;
         //HP = 300;  // HPBar의 maxValue에 안 들어감..
 
         active = false;
@@ -249,7 +247,7 @@ public class BossController : MonoBehaviour
                 GetComponent<CapsuleCollider2D>().enabled = false;
 
                 // 다음 라운드로 넘어가기
-                RoundManager.GetInstance.Next = true;
+                RoundManager.GetInstance.BossClear = true;
 
                 //SceneManager.LoadScene("SelectRound");
 

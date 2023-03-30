@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject SkillCanvas;
-    public GameObject ScrollViewCanvas;
+    //public GameObject SkillCanvas;
+    public GameObject SettingMenu;
 
-    public bool SkillCanvasActive;
-    public bool ScrollViewCanvasActive;
+    //public bool SkillCanvasActive;
+    public bool SettingMenuActive;
 
 
     private void Awake()
@@ -24,30 +24,30 @@ public class UIController : MonoBehaviour
     {
         //true 상태로만 두는 것은 좋지 않음
         //Scene이 넘어가도 UI가 그대로 떠 있는 등 문제가 발생할 수 있기 때문
-        SkillCanvasActive = true;
-        SkillCanvas.SetActive(SkillCanvasActive);
+        //SkillCanvasActive = true;
+        //SkillCanvas.SetActive(SkillCanvasActive);
 
-        ScrollViewCanvasActive = false;
-        ScrollViewCanvas.SetActive(ScrollViewCanvasActive);
+        SettingMenuActive = false;
+        SettingMenu.SetActive(SettingMenuActive);
 
     }
 
-    public void onSkillCanvasActive()
-    {
-        SkillCanvasActive = !SkillCanvasActive;
-        SkillCanvas.SetActive(SkillCanvasActive);
-    }
+    //public void onSkillCanvasActive()
+    //{
+    //    SkillCanvasActive = !SkillCanvasActive;
+    //    SkillCanvas.SetActive(SkillCanvasActive);
+    //}
 
     public void onMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
-        Time.timeScale = 1.0f;
+        //Time.timeScale = 1.0f;
     }
 
-    public void onScrollViewCanvasActive()
+    public void onSettingMenuActive()  // ScrollView
     {
-        ScrollViewCanvasActive = !ScrollViewCanvasActive;
-        ScrollViewCanvas.SetActive(ScrollViewCanvasActive);
+        SettingMenuActive = !SettingMenuActive;
+        SettingMenu.SetActive(SettingMenuActive);
     }
 
     public void onQuit()
