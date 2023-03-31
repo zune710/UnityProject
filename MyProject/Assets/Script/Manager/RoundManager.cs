@@ -22,17 +22,15 @@ public class RoundManager : MonoBehaviour
     
     private GameObject RoundInfoCanvas;
     private GameObject GoalBar;
-    private GameObject BossHPBar;
     private Slider GoalSlider;
-    private Slider BossHPSlider;
     private Text RoundText;
-    private Text BossText;
 
 
     //private List<GameObject> Enemies;
 
-    // Enemy 처치 수(목표)
-    public int Goal;
+    public int EnemyId;
+    public int BossId;
+    public int Goal; // Enemy 처치 수(목표)
 
     public int Round;
     public bool GoalClear;
@@ -48,11 +46,14 @@ public class RoundManager : MonoBehaviour
 
             RoundInfoCanvas = GameObject.Find("RoundInfoCanvas");
             GoalBar = RoundInfoCanvas.transform.Find("GoalSlider").gameObject;
-            BossHPBar = RoundInfoCanvas.transform.Find("BossHPSlider").gameObject;
             GoalSlider = GoalBar.GetComponent<Slider>();
-            BossHPSlider = BossHPBar.GetComponent<Slider>();
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
-            BossText = BossHPSlider.transform.Find("BossText").gameObject.GetComponent<Text>();
+
+            Round = 1;
+            EnemyId = 1;   // 1
+            BossId = 1;
+            
+            Goal = 3;  // 3
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
@@ -62,19 +63,13 @@ public class RoundManager : MonoBehaviour
     }
    private void Start()
     {
-        Round = 1;
-        Goal = 3;
         GoalClear = false;
         BossClear = false;
 
         RoundText.text = "Round " + Round.ToString();
-        BossText.text = BossManager.GetInstance.bossType.ToString();
 
         GoalSlider.maxValue = Goal;
         GoalSlider.value = 0;
-
-        BossHPSlider.maxValue = BossManager.GetInstance.bossHP;
-        BossHPSlider.value = BossHPSlider.maxValue;
     }
 
     private void Update()
@@ -83,12 +78,6 @@ public class RoundManager : MonoBehaviour
         {
             GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
         }
-
-        if (GameObject.Find("Boss"))
-        {
-            BossHPSlider.value = GameObject.Find("Boss").GetComponent<BossController>().HP;
-        }
-
 
         if (GoalClear || BossClear)
         {
@@ -126,21 +115,17 @@ public class RoundManager : MonoBehaviour
 
         // EnemyCount 리셋
         ControllerManager.GetInstance().EnemyCount = 0;
-        
+
+        // 플레이어 HP 리셋
+        ControllerManager.GetInstance().Player_HP = 100;
+
         yield return new WaitForSeconds(1.5f);
 
-        // Boss Type 변경
-        BossManager.GetInstance.bossType = BossManager.BossType.PENGUIN;
-        BossText.text = BossManager.GetInstance.bossType.ToString();
-        
-        BossHPSlider.maxValue = BossManager.GetInstance.bossHP;
-        BossHPSlider.value = BossHPSlider.maxValue;
+        // EnemyId 변경
+        ++EnemyId;
 
         // Boss On(2/2)
         BossManager.GetInstance.active = true;
-
-        //BossHPBar On
-        BossHPBar.SetActive(true);
     }
 
     private IEnumerator EnemyRoundSetting()
@@ -150,8 +135,8 @@ public class RoundManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        //BossHPBar Off
-        BossHPBar.SetActive(false);
+        // 플레이어 HP 리셋
+        ControllerManager.GetInstance().Player_HP = 100;
 
         yield return new WaitForSeconds(1.5f);
 
@@ -164,8 +149,8 @@ public class RoundManager : MonoBehaviour
         GoalSlider.maxValue = Goal;
         GoalSlider.value = 0;
 
-        // Enemy Type 변경
-        EnemyManager.GetInstance.enemyType = EnemyManager.EnemyType.Plant;
+        // BossId 변경
+        ++BossId;
 
         // Enemy On
         ControllerManager.GetInstance().onEnemy = true;

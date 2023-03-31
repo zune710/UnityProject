@@ -6,9 +6,9 @@ public class EnemyManager : MonoBehaviour
 {
     public enum EnemyType  // 이름 안 쓰고 다음으로 넘어갈 수 있도록 바꾸기
     {
-        Chameleon,
-        Plant,
-        Rock
+        Chameleon = 1,
+        Plant = 2,
+        Rock1 = 3
     };
 
     private EnemyManager() { }
@@ -36,14 +36,9 @@ public class EnemyManager : MonoBehaviour
     public float Distance;
 
     public EnemyType enemyType;
-    public bool hasBullet;
-    public int HP;
-    public float Speed;
-    public float AttackRange;
-    private float Cooldown;
 
-    private Dictionary<int, EnemyType> EnemyList;
-    public int EnemyId;
+    private float SpawnTime;
+
 
     private void Awake()
     {
@@ -53,32 +48,8 @@ public class EnemyManager : MonoBehaviour
 
             Distance = 0.0f;
 
-            EnemyList = new Dictionary<int, EnemyType>();
-            GenerateEnemyData();
-
-            EnemyId = 1;
-            enemyType = EnemyType.Chameleon;
-            hasBullet = false;
-            HP = 3;
-            Speed = 0.2f;
-            AttackRange = 2.0f;
-
-            Cooldown = 1.5f;
-
-            //enemyType = EnemyType.Plant;
-            //hasBullet = true;
-            //HP = 5;
-            //Speed = 0.0f;
-            //AttackRange = 14.5f;
-            //Cooldown = 3.0f;
-
             // ** 생성되는 Enemy를 담아둘 상위 객체
             Parent = new GameObject("EnemyList");
-
-            // ** Enemy로 사용할 원형 객체
-            //Prefab = Resources.Load("Prefabs/Enemy/Enemy") as GameObject;
-            Prefab = Resources.Load("Prefabs/Enemies/" + enemyType.ToString()) as GameObject;
-            HPPrefab = Resources.Load("Prefabs/EnemyHPSlider") as GameObject;
         }
     }
 
@@ -86,6 +57,12 @@ public class EnemyManager : MonoBehaviour
     // ** 시작하자마자 Start 함수를 코루틴 함수로 실행
     private IEnumerator Start()
     {
+        GetEnemyInfo();
+
+        // ** Enemy로 사용할 원형 객체
+        Prefab = Resources.Load("Prefabs/Enemies/" + enemyType.ToString()) as GameObject;
+        HPPrefab = Resources.Load("Prefabs/EnemyHPSlider") as GameObject;
+
         while (true)
         {
             if (ControllerManager.GetInstance().onEnemy) //  && ControllerManager.GetInstance().DirRight
@@ -120,7 +97,7 @@ public class EnemyManager : MonoBehaviour
                 enemyHPBar.Target = Obj;
             }
             // ** 1.5초 휴식
-            yield return new WaitForSeconds(Cooldown);
+            yield return new WaitForSeconds(SpawnTime);
         }
     }
 
@@ -133,42 +110,26 @@ public class EnemyManager : MonoBehaviour
 
         Prefab = Resources.Load("Prefabs/Enemies/" + enemyType.ToString()) as GameObject;
 
-        SetEnemyInfo();
+        GetEnemyInfo();
     }
 
-    private void GenerateEnemyData()
+    private void GetEnemyInfo()
     {
-        EnemyList.Add(1, EnemyType.Chameleon);
-        EnemyList.Add(2, EnemyType.Plant);
-        EnemyList.Add(3, EnemyType.Rock);
-    }
-
-    private void SetEnemyInfo()
-    {
-        switch (enemyType)
+        switch (RoundManager.GetInstance.EnemyId)
         {
-            case EnemyType.Chameleon:
-                hasBullet = false;
-                HP = 3;
-                Speed = 0.2f;
-                AttackRange = 2.0f;
-                Cooldown = 1.5f;
+            case 1:
+                enemyType = EnemyType.Chameleon;
+                SpawnTime = 1.5f;
                 break;
 
-            case EnemyType.Plant:
-                hasBullet = true;
-                HP = 5;
-                Speed = 0.0f;
-                AttackRange = 14.5f;
-                Cooldown = 3.0f;
+            case 2:
+                enemyType = EnemyType.Plant;
+                SpawnTime = 3.0f;
                 break;
 
-            case EnemyType.Rock:
-                hasBullet = false;
-                HP = 10;
-                Speed = 0.2f;
-                AttackRange = 0.0f;
-                Cooldown = 3.0f;
+            case 3:
+                enemyType = EnemyType.Rock1;
+                SpawnTime = 3.0f;
                 break;
         }
     }

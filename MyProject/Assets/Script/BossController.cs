@@ -21,11 +21,12 @@ public class BossController : MonoBehaviour
     private Vector3 EndPoint;
 
     private float CoolDown;
-    private float Speed;
+
     public int HP;
+    public float Speed;
 
     private bool SkillAttack;
-    private bool Attack;
+    public bool Attack;
     private bool Walk;
     private bool active;
     private bool cool;
@@ -45,10 +46,7 @@ public class BossController : MonoBehaviour
     void Start()
     {
         CoolDown = 1.5f;
-        Speed = 0.5f;
-        HP = BossManager.GetInstance.bossHP;
-        //HP = 300;  // HPBar의 maxValue에 안 들어감..
-
+ 
         active = false;
         cool = true;
 
@@ -231,12 +229,25 @@ public class BossController : MonoBehaviour
             active = false;
     }
 
+    private void RinoAttack()
+    {
+        // onAttack = true일 때 속도 증가, (돌진 중 무적 - OnTriggerEnter2D에)
+        float value = Speed;
+        Speed *= 3;
 
-    
+       
+
+
+        Speed = value;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Bullet")
         {
+            if(RoundManager.GetInstance.BossId == 2 && Attack)  // Rino 공격 중 무적상태
+                return;
+
             --HP;
             //Anim.SetTrigger("Hit");
 
@@ -250,6 +261,15 @@ public class BossController : MonoBehaviour
                 RoundManager.GetInstance.BossClear = true;
 
                 //SceneManager.LoadScene("SelectRound");
+
+            }
+        }
+
+        if(collision.tag == "Player")
+        {
+            if(RoundManager.GetInstance.BossId == 2 && Attack)  // Rino 공격으로 플레이어와 충돌
+            {
+                // 플레이어와 충돌하면 AttackHit bool true -> AttackHit 애니메이션
 
             }
         }

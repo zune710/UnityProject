@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1972305223799295482}
   - component: {fileID: 7712714590649408403}
   - component: {fileID: 3580262666970675711}
-  - component: {fileID: 6248602400465261598}
   m_Layer: 10
   m_Name: Plant
   m_TagString: Untagged
@@ -138,20 +137,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
-  HP: 0
+  hasBullet: 1
+  HP: 5
   Speed: 0
---- !u!114 &6248602400465261598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1972305223799295483}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd21723e907348140bae201c03a69507, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  AttackRange: 14.5
 --- !u!1 &8326164801005188890
 GameObject:
   m_ObjectHideFlags: 0

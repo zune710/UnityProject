@@ -6,7 +6,8 @@ public class BossManager : MonoBehaviour
 {
     public enum BossType  // 이름 안 쓰고 다음으로 넘어갈 수 있도록 바꾸기
     {
-        PENGUIN
+        PENGUIN = 1,
+        RINO = 2
     };
 
     private BossManager() { }
@@ -24,7 +25,7 @@ public class BossManager : MonoBehaviour
     }
 
     // ** 생성되는 Boss를 담아둘 상위 객체
-    private GameObject Parent;
+    public GameObject Parent;
 
     // ** Boss로 사용할 원형 객체
     private GameObject Prefab;
@@ -33,7 +34,6 @@ public class BossManager : MonoBehaviour
     public bool active;
 
     public BossType bossType;
-    public int bossHP;
 
 
     private void Awake()
@@ -44,18 +44,19 @@ public class BossManager : MonoBehaviour
 
             active = false;
 
-            bossType = BossType.PENGUIN;
-            bossHP = 10;
-
             // ** 생성되는 Boss를 담아둘 상위 객체
             Parent = new GameObject("BossList");
-
-            // ** Enemy로 사용할 원형 객체
-            Prefab = Resources.Load("Prefabs/Boss/" + bossType.ToString()) as GameObject;
-            HPPrefab = Resources.Load("Prefabs/BossHPSlider") as GameObject;
         }
     }
 
+    private void Start()
+    {
+        GetBossInfo();
+
+        // ** Enemy로 사용할 원형 객체
+        Prefab = Resources.Load("Prefabs/Boss/" + bossType.ToString()) as GameObject;
+        HPPrefab = Resources.Load("Prefabs/BossHPSlider") as GameObject;
+    }
 
     private void Update()
     {
@@ -68,11 +69,7 @@ public class BossManager : MonoBehaviour
             GameObject Bar = Instantiate(HPPrefab);
 
             // ** 복제된 UI를 캔버스에 위치시킨다.
-            // Bar.transform.parent = GameObject.Find("EnemyHPCanvas").transform;  // 경고 뜸
-            Bar.transform.SetParent(GameObject.Find("EnemyHPCanvas").transform);
-
-            // ** Enemy 작동 스크립트 포함
-            //Obj.AddComponent<EnemyController>();  // 애니메이션 이벤트 함수가 안 떠서 이렇게 안 하고 Enemy에 script 바로 넣어줌
+            Bar.transform.SetParent(GameObject.Find("RoundInfoCanvas").transform);
 
             // ** 클론의 위치를 초기화
             Obj.transform.position = new Vector3(
@@ -91,6 +88,22 @@ public class BossManager : MonoBehaviour
             bossHPBar.Target = Obj;
 
             active = false;  // 하나 생성되면 새로 생성 안 되게 함
+        }
+
+        GetBossInfo();
+    }
+
+    private void GetBossInfo()
+    {
+        switch (RoundManager.GetInstance.BossId)
+        {
+            case 1:
+                bossType = BossType.PENGUIN;
+                break;
+
+            case 2:
+                bossType = BossType.RINO;
+                break;
         }
     }
 }

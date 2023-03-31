@@ -26,8 +26,6 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         text.text = transform.name;
 
         onHover = false;
-
-        print(Time.timeScale);
     }
 
     public void OnDrag(PointerEventData eventData)

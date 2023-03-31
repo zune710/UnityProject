@@ -5,13 +5,12 @@ using UnityEngine.UI;
 
 public class BossHPBar : MonoBehaviour
 {
-    // ** 따라다닐 객체
     public GameObject Target;
 
-    // ** 세부위치 조정
-    private Vector3 offset;
-
     private Slider HPBar;
+    private Text BossName;
+
+    private RectTransform rectTransform;
 
     private BossController controller;
 
@@ -19,12 +18,17 @@ public class BossHPBar : MonoBehaviour
     private void Awake()
     {
         HPBar = GetComponent<Slider>();
+
+        BossName = transform.Find("BossText").gameObject.GetComponent<Text>();
+
+        rectTransform = GetComponent<RectTransform>();
     }
 
     private void Start()
     {
-        // ** 위치 세팅
-        offset = new Vector3(0.0f, 2.7f, 0.0f);  // Boss 머리 위
+        rectTransform.anchoredPosition = new Vector3(0.0f, -120.0f, 0.0f);
+        
+        BossName.text = BossManager.GetInstance.bossType.ToString();
 
         controller = Target.GetComponent<BossController>();
         
@@ -34,15 +38,11 @@ public class BossHPBar : MonoBehaviour
 
     private void Update()
     {
-        // ** WorldToScreenPoint = 월드 좌표를 카메라 좌표로 변환
-        // ** 월드상에 있는 타깃의 좌표를 카메라 좌표로 변환하여 UI에 세팅한다.
-        transform.position = Camera.main.WorldToScreenPoint(Target.transform.position + offset);
-
         HPBar.value = controller.HP;
         
-        if (controller.HP <= 0)  // !Target
+        if (controller.HP <= 0)
         {
-            Destroy(gameObject, 0.016f);
+            Destroy(gameObject, 3.0f);
         }
     }
 }

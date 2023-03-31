@@ -24,10 +24,11 @@ public class EnemyController : MonoBehaviour
     private float CoolDown;
 
     private string EnemyType;
-    private bool hasBullet;
+
+    public bool hasBullet;
     public int HP;
     public float Speed;
-    private float AttackRange;
+    public float AttackRange;
 
     private void Awake()
     {
@@ -37,21 +38,14 @@ public class EnemyController : MonoBehaviour
 
         EnemyType = EnemyManager.GetInstance.enemyType.ToString();
 
-        if(EnemyManager.GetInstance.hasBullet)
+        if(hasBullet)
             EnemyBullet = Resources.Load("Prefabs/Enemies/" + EnemyType + "Bullet") as GameObject;
 
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
-
     }
 
     void Start()
     {
-        EnemyType = EnemyManager.GetInstance.enemyType.ToString();
-        hasBullet = EnemyManager.GetInstance.hasBullet;
-        HP = EnemyManager.GetInstance.HP;
-        Speed = EnemyManager.GetInstance.Speed;
-        AttackRange = EnemyManager.GetInstance.AttackRange;
-
         Movement = new Vector3(1.0f, 0.0f, 0.0f);
 
         onAttack = false;
@@ -152,6 +146,9 @@ public class EnemyController : MonoBehaviour
                 Anim.SetTrigger("Die");
                 GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
 
+                //if (transform.name == "Rock2" || transform.name == "Rock3")
+                //    return;
+
                 ++ControllerManager.GetInstance().EnemyCount;
 
                 if (ControllerManager.GetInstance().EnemyCount == RoundManager.GetInstance.Goal)
@@ -234,27 +231,77 @@ public class EnemyController : MonoBehaviour
         SetAttack();
     }
 
-    private void Rock1Test()
+    private void RockSplit()
     {
         GameObject RockPrefab;
+        List<GameObject> SplitRock = new List<GameObject>();
+        Vector3 pos;
+
+        GameObject Parent = GameObject.Find("EnemyList");
+
         if (transform.name == "Rock1")
-        { 
-             // sprite 변경 후 하나 복제
+        {
             RockPrefab = Resources.Load("Prefabs/Enemies/Rock2") as GameObject;
-            SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
-            renderer.sprite = RockPrefab.GetComponent<Sprite>();
-            //+이름 Rock2로 변경
-            //+복제
+
+            SplitRock.Add(Instantiate(RockPrefab));
+            SplitRock.Add(Instantiate(RockPrefab));
+
+            int i = 0;
+
+            while(i < 2)
+            {
+                pos = new Vector3(
+                    Random.Range(transform.position.x - 0.5f, transform.position.x + 0.5f),
+                    Random.Range(transform.position.y - 0.5f, transform.position.y + 0.5f),
+                    0.0f);
+
+                if (pos.y > -6.0f || pos.y < -9.0f)
+                    continue;
+
+                // ** 클론의 위치 초기화
+                SplitRock[i].transform.position = pos;
+                
+                // ** 클론의 이름 초기화
+                SplitRock[i].transform.name = "Rock2";
+
+                // ** 클론의 계층구조 설정
+                SplitRock[i].transform.SetParent(Parent.transform);
+
+                ++i;
+            }
         }
 
         if (transform.name == "Rock2")
         {
-            // sprite 변경 후 2개 복제
             RockPrefab = Resources.Load("Prefabs/Enemies/Rock3") as GameObject;
-            SpriteRenderer renderer = gameObject.GetComponent<SpriteRenderer>();
-            renderer.sprite = RockPrefab.GetComponent<Sprite>();
-            //+이름 Rock3로 변경
-            //+복제
+
+            SplitRock.Add(Instantiate(RockPrefab));
+            SplitRock.Add(Instantiate(RockPrefab));
+            SplitRock.Add(Instantiate(RockPrefab));
+
+            int i = 0;
+
+            while (i < 3)
+            {
+                pos = new Vector3(
+                    Random.Range(transform.position.x - 0.5f, transform.position.x + 0.5f),
+                    Random.Range(transform.position.y - 0.5f, transform.position.y + 0.5f),
+                    0.0f);
+
+                if (pos.y > -6.0f || pos.y < -9.0f)
+                    continue;
+
+                // ** 클론의 위치 초기화
+                SplitRock[i].transform.position = pos;
+
+                // ** 클론의 이름 초기화
+                SplitRock[i].transform.name = "Rock3";
+
+                // ** 클론의 계층구조 설정
+                SplitRock[i].transform.SetParent(Parent.transform);
+
+                ++i;
+            }
         }
 
 

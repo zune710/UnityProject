@@ -26,10 +26,10 @@ public class PlayerController : MonoBehaviour
     // ** [상태 체크]
     private bool onAttack;  // 공격상태
     private bool onHit;     // 피격상태
-    private bool onJump;    // 점프
-    private bool onRoll;    // 구르기
+    //private bool onJump;    // 점프
+    //private bool onRoll;    // 구르기
     private bool onDead;    // 사망
-    private bool onDive;    // 착지
+    //private bool onDive;    // 착지
 
     // ** 복제할 총알 원본
     private GameObject BulletPrefab;
@@ -96,10 +96,10 @@ public class PlayerController : MonoBehaviour
         // ** 초기값 세팅
         onAttack = false;
         onHit = false;
-        onJump = false;
-        onRoll = false;
+        //onJump = false;
+        //onRoll = false;
         onDead = false;
-        onDive = false;
+        //onDive = false;
         Direction = 1.0f;
 
         DirLeft = false;
@@ -150,6 +150,8 @@ public class PlayerController : MonoBehaviour
                     transform.position += HorMovement;
                 else if (ControllerManager.GetInstance().onBoss) // 보스전일 때 화면 고정
                 {
+                    ControllerManager.GetInstance().DirRight = false;
+
                     if (transform.position.x < 15.0f)
                         transform.position += HorMovement;
                 }
@@ -205,15 +207,15 @@ public class PlayerController : MonoBehaviour
                 spriteRenderer.flipX = DirRight = true;
             }
 
-            // ** 좌측 컨트롤키를 입력한다면
-            if (Input.GetKey(KeyCode.LeftControl))
-                // ** 공격
-                OnAttack();
+            //// ** 좌측 컨트롤키를 입력한다면
+            //if (Input.GetKey(KeyCode.LeftControl))
+            //    // ** 공격
+            //    OnAttack();
 
-            // ** 좌측 쉬프트키를 입력한다면
-            if (Input.GetKey(KeyCode.LeftShift))
-                // ** 피격
-                OnHit();
+            //// ** 좌측 쉬프트키를 입력한다면
+            //if (Input.GetKey(KeyCode.LeftShift))
+            //    // ** 피격
+            //    OnHit();
 
             //if (Input.GetButtonDown("Jump"))      
             //    OnJump();
@@ -221,8 +223,8 @@ public class PlayerController : MonoBehaviour
             //if (transform.position.y > 0)
             //    OnDive();
 
-            if (Input.GetKey(KeyCode.Q))
-                OnRoll();
+            //if (Input.GetKey(KeyCode.Q))
+            //    OnRoll();
 
             if (ControllerManager.GetInstance().Player_HP <= 0)
                 OnDead();
@@ -320,50 +322,50 @@ public class PlayerController : MonoBehaviour
         onHit = false;
     }
 
-    private void OnJump()
-    {
-        if (onJump)
-            return;
+    //private void OnJump()
+    //{
+    //    if (onJump)
+    //        return;
 
-        onJump = true;
-        animator.SetTrigger("Jump");
-        while (transform.position.y < 2)
-            transform.position += new Vector3(0.0f, 0.3f, 0.0f);
-    }
+    //    onJump = true;
+    //    animator.SetTrigger("Jump");
+    //    while (transform.position.y < 2)
+    //        transform.position += new Vector3(0.0f, 0.3f, 0.0f);
+    //}
 
-    private void SetJump()
-    {
-        onJump = false;
-    }
+    //private void SetJump()
+    //{
+    //    onJump = false;
+    //}
 
-    private void OnDive()
-    {
-        if (onDive)
-            return;
+    //private void OnDive()
+    //{
+    //    if (onDive)
+    //        return;
 
-        onDive = true;
-        animator.SetTrigger("Dive");
-        transform.position -= new Vector3(0.0f, 0.3f, 0.0f);
-    }
+    //    onDive = true;
+    //    animator.SetTrigger("Dive");
+    //    transform.position -= new Vector3(0.0f, 0.3f, 0.0f);
+    //}
 
-    private void SetDive()
-    {
-        onDive = false;
-    }
+    //private void SetDive()
+    //{
+    //    onDive = false;
+    //}
 
-    private void OnRoll()
-    {
-        if (onRoll)
-            return;
+    //private void OnRoll()
+    //{
+    //    if (onRoll)
+    //        return;
 
-        onRoll = true;
-        animator.SetTrigger("Roll");
-    }
+    //    onRoll = true;
+    //    animator.SetTrigger("Roll");
+    //}
 
-    private void SetRoll()
-    {
-        onRoll = false;
-    }
+    //private void SetRoll()
+    //{
+    //    onRoll = false;
+    //}
 
     private void OnDead()
     {
@@ -431,6 +433,15 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             int damage = 10;
+
+            if(RoundManager.GetInstance.BossId == 2)
+            {
+                GameObject boss = BossManager.GetInstance.Parent.transform.Find("Boss").gameObject;
+                BossController bossController = boss.GetComponent<BossController>();
+
+                if (bossController.Attack)
+                    damage *= 2;
+            }
 
             // Boss와 충돌하면 HP 감소
             StartCoroutine(DecreaseHP(damage));
