@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 ControllerManager.GetInstance().DirLeft = true;
 
                 // ** 플레이어의 좌표가 -15.0 보다 클 때 플레이어만 움직인다.
-                if (transform.position.x > -15.0f)
+                if (transform.position.x > -16.4f)  // -15.0f
                     // ** 실제 플레이어를 움직인다.
                     transform.position += HorMovement;
             }
@@ -159,13 +159,13 @@ public class PlayerController : MonoBehaviour
 
             if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
-                if (transform.position.y < -5.5f)
+                if (transform.position.y < -3.0f)  // -5.5f
                     transform.position += VerMovement;
             }
 
             if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
-                if (transform.position.y > -9.0f)
+                if (transform.position.y > -6.0f)  // -9.0f
                     transform.position += VerMovement;
             }
 

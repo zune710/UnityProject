@@ -6,10 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class BossController : MonoBehaviour
 {
+    // BASE
     const int STATE_WALK = 1;
-    const int STATE_ATTACK = 2;
+    const int STATE_ATTACK = 2;  // 근접공격
+    
+    // PENGUIN
     const int STATE_SLIDE = 3;
 
+    // RHINO
+    const int STATE_ATTACKRUN = 2;
+    
     private GameObject Target;
     
     private Animator Anim;
@@ -33,6 +39,9 @@ public class BossController : MonoBehaviour
 
     private int choice;
 
+    private GameObject ApearUI;
+    private Animator ApearAnim;
+
 
     private void Awake()
     {
@@ -41,6 +50,12 @@ public class BossController : MonoBehaviour
         Anim = GetComponent<Animator>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        ApearUI = GameObject.Find("RoundInfoCanvas").transform.Find("BossInfo").gameObject;
+        
+        ApearAnim = ApearUI.GetComponent<Animator>();
+        
+        
     }
 
     void Start()
@@ -54,10 +69,41 @@ public class BossController : MonoBehaviour
         Attack = false;
         Walk = false;
 
+
+        switch (RoundManager.GetInstance.BossId)
+        {
+            case 1:
+                ApearAnim.SetTrigger("PengMove");
+                break;
+            case 2:
+                ApearAnim.SetTrigger("RinoMove");
+                break;
+            case 3:
+                break;
+        }
+        
+
         // StartCoroutine(OnCoolDown());  // 1. 코루틴 실행 후 코루틴 종료 상관없이 Start는 종료(코루틴 종료를 기다리지 않는다)
     }
 
     void Update()
+    {
+        switch(RoundManager.GetInstance.BossId)
+        {
+            case 1:
+                Penguin();
+                break;
+
+            case 2:
+                Rhino();
+                break;
+
+            case 3:
+                break;
+        }
+    }
+
+    private void Penguin()
     {
         float result = Target.transform.position.x - transform.position.x;
 
@@ -65,8 +111,8 @@ public class BossController : MonoBehaviour
             spriteRenderer.flipX = true;
         else if (result > 0.0f)
             spriteRenderer.flipX = false;
-        
-        if(ControllerManager.GetInstance().DirRight)
+
+        if (ControllerManager.GetInstance().DirRight)
             transform.position -= new Vector3(1.0f, 0.0f, 0.0f) * Time.deltaTime;
 
         if (active)
@@ -86,7 +132,7 @@ public class BossController : MonoBehaviour
                     break;
             }
         }
-        else if(cool)
+        else if (cool)
         {
             //active = true;
             cool = false;
@@ -94,6 +140,41 @@ public class BossController : MonoBehaviour
             StartCoroutine(OnCoolDown());
         }
     }
+
+    private void Rhino()
+    {
+        float result = Target.transform.position.x - transform.position.x;
+
+        if (result < 0.0f)
+            spriteRenderer.flipX = false;
+        else if (result > 0.0f)
+            spriteRenderer.flipX = true;
+
+        if (ControllerManager.GetInstance().DirRight)
+            transform.position -= new Vector3(1.0f, 0.0f, 0.0f) * Time.deltaTime;
+
+        if (active)
+        {
+            switch (choice)
+            {
+                case STATE_WALK:
+                    OnWalk();
+                    break;
+
+                case STATE_ATTACKRUN:
+                    OnAttackRun();
+                    break;
+            }
+        }
+        else if (cool)
+        {
+            //active = true;
+            cool = false;
+            choice = OnController();
+            StartCoroutine(OnCoolDown());
+        }
+    }
+
 
     private int OnController()
     {
@@ -128,8 +209,18 @@ public class BossController : MonoBehaviour
         // * 2: 공격      STATE_ATTACK
         // * 3: 슬라이딩  STATE_SLIDE
 
+        switch (RoundManager.GetInstance.BossId)
+        {
+            case 1:
+                return Random.Range(STATE_WALK, STATE_SLIDE + 1);
 
-        return Random.Range(STATE_WALK, STATE_SLIDE + 1);
+            case 2:
+                return Random.Range(STATE_WALK, STATE_ATTACKRUN + 1);
+
+            default:
+                return 1;
+        }
+        
     }
 
     private IEnumerator OnCoolDown()  // 2. 코루틴 실행
@@ -229,16 +320,41 @@ public class BossController : MonoBehaviour
             active = false;
     }
 
-    private void RinoAttack()
+    private void OnAttackRun()
     {
-        // onAttack = true일 때 속도 증가, (돌진 중 무적 - OnTriggerEnter2D에)
-        float value = Speed;
-        Speed *= 3;
+        Attack = true;
 
-       
+        float Distance = Vector3.Distance(EndPoint, transform.position);
+
+        if (Distance > 0.3f)
+        {
+            Vector3 Direction = (EndPoint - transform.position).normalized;
+
+            Movement = new Vector3(
+                Speed * 3 * 8.0f * Direction.x,     // Speed 3배 증가
+                Speed * 3 * 8.0f * Direction.y,
+                0.0f);
+
+            transform.position += Movement * Time.deltaTime;
+
+            
+
+            //// AttackRun 실행 중일 때 반복 실행하지 않기 위해
+            //if (!Anim.GetBool("AttackRun"))
+            //{
+            //    Anim.SetBool("AttackRun", true);
+            //}
+        }
+
+        else
+        {
+            Anim.SetBool("AttackRun", false);
+            active = false;
+        }
 
 
-        Speed = value;
+        // (돌진 중 무적 - OnTriggerEnter2D에)
+ 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -246,7 +362,10 @@ public class BossController : MonoBehaviour
         if (collision.tag == "Bullet")
         {
             if(RoundManager.GetInstance.BossId == 2 && Attack)  // Rino 공격 중 무적상태
-                return;
+            {
+                if(Anim.GetBool("AttackRun"))
+                    return;
+            }
 
             --HP;
             //Anim.SetTrigger("Hit");
@@ -267,10 +386,12 @@ public class BossController : MonoBehaviour
 
         if(collision.tag == "Player")
         {
-            if(RoundManager.GetInstance.BossId == 2 && Attack)  // Rino 공격으로 플레이어와 충돌
+            // Rhino 공격으로 플레이어와 충돌
+            if (RoundManager.GetInstance.BossId == 2 && Attack)  
             {
-                // 플레이어와 충돌하면 AttackHit bool true -> AttackHit 애니메이션
-
+                // 플레이어와 충돌하면 AttackHit 애니메이션 실행
+                if (Anim.GetBool("AttackRun"))
+                    Anim.SetTrigger("hit");
             }
         }
     }

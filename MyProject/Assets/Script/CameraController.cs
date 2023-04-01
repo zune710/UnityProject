@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
     IEnumerator Start()
     {
         // ** 카메라의 진동효과를 주기 전 카메라 위치를 받아온다.
-        OldPosition = new Vector3(0.0f, -1.9f, -10.0f);
+        OldPosition = new Vector3(0.0f, 0.1f, -10.0f);  // 0.0f, -1.9f, -10.0f
 
         // ** 0.15초 동안 실행
         while (shakeTime > 0.0f)

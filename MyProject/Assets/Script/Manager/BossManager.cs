@@ -7,7 +7,7 @@ public class BossManager : MonoBehaviour
     public enum BossType
     {
         PENGUIN = 1,
-        RINO = 2,
+        RHINO = 2,
         TREE = 3
     };
 
@@ -61,6 +61,9 @@ public class BossManager : MonoBehaviour
 
     private void Update()
     {
+        GetBossInfo();
+        Prefab = Resources.Load("Prefabs/Boss/" + bossType.ToString()) as GameObject;
+
         if (ControllerManager.GetInstance().onBoss && active)
         {
             // ** Enemy 원형 객체를 복제한다.
@@ -74,7 +77,7 @@ public class BossManager : MonoBehaviour
 
             // ** 클론의 위치를 초기화
             Obj.transform.position = new Vector3(
-                18.0f, -7.5f, 0.0f);
+                18.0f, -4.5f, 0.0f);   // 18.0f, -7.5f, 0.0f
 
             // ** 클론의 이름 초기화
             Obj.transform.name = "Boss";
@@ -91,8 +94,6 @@ public class BossManager : MonoBehaviour
             // 하나만 생성되게 함
             active = false;
         }
-
-        GetBossInfo();
     }
 
     private void GetBossInfo()
@@ -104,7 +105,7 @@ public class BossManager : MonoBehaviour
                 break;
 
             case 2:
-                bossType = BossType.RINO;
+                bossType = BossType.RHINO;
                 break;
 
             case 3:

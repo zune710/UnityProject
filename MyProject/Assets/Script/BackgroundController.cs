@@ -30,7 +30,7 @@ public class BackgroundController : MonoBehaviour
     private Vector3 movement;
     
     // ** 이미지가 중앙 위치에 정상적으로 노출될 수 있도록 하기 위한 완충 역할(버퍼) 
-    private Vector3 offset = new Vector3(0.0f, 7.5f, 0.0f);
+    private Vector3 offset = new Vector3(0.0f, 4.5f, 0.0f);  // 7.5f
 
 
     private void Awake()

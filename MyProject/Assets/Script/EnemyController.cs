@@ -138,8 +138,13 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.tag == "Bullet")
         {
-            --HP;
-            Anim.SetTrigger("Hit");
+            if (collision.transform.name == "BigBullet")
+                HP = 0;
+            else
+            {
+                --HP;
+                Anim.SetTrigger("Hit");
+            }
 
             if (HP <= 0)
             {

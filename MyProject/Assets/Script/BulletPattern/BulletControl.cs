@@ -5,7 +5,7 @@ using UnityEngine;
 public class BulletControl : MonoBehaviour
 {
     // ** 총알이 날아가는 속도
-    private float Speed;
+    public float Speed;
     public GameObject Target = null;
 
     public bool Option;
@@ -18,7 +18,12 @@ public class BulletControl : MonoBehaviour
 
     // ** 총알이 날아가야 할 방향
     public Vector3 Direction { get; set; }
-   
+
+
+    private void Awake()
+    {
+        fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
+    }
 
     private void Start()
     {

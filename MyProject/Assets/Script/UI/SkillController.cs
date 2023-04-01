@@ -13,13 +13,17 @@ public class SkillController : MonoBehaviour
     private int maxHP;
 
     private GameObject BulletPrefab;
+    private GameObject BigBulletPrefab;
     private GameObject fxPrefab;
     private GameObject Player;
+    private List<GameObject> BulletList = new List<GameObject>();
+    private Text Timer;
 
 
     private void Awake()
     {
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
+        BigBulletPrefab = Resources.Load("Prefabs/BigBullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
     }
 
@@ -37,6 +41,8 @@ public class SkillController : MonoBehaviour
         for (int i = 0; i < SlotButtons.Count; ++i)
             FillImages.Add(SlotButtons[i].transform.GetChild(0).GetChild(0).GetComponent<Image>());
 
+        Timer = FillImages[1].transform.Find("Timer").GetComponent<Text>();
+        Timer.gameObject.SetActive(false);
 
         cooldown = 0.0f;
         maxHP = ControllerManager.GetInstance().Player_HP;
@@ -68,13 +74,45 @@ public class SkillController : MonoBehaviour
     }
 
 
-    public void Slot1_PowerUp()  // Big Bullet
+    public void Slot1_BigBullet()
     {
         if (Time.timeScale > 0)
         {
             slot = 1;
-            cooldown = 0.1f;  // 0.5f
-            BulletTest();
+            cooldown = 0.1f;  //   0.5f
+
+            //GetScrewPattern();
+            BigBullet();
+        }
+    }
+
+    private void GetScrewPattern()  // multishot
+    {
+        float angle = -90.0f;
+        int count = (int)(180 / 9.0f);
+
+        Vector3 pos = GameObject.Find("Player").transform.position;
+
+        for (int i = 0; i < count - 1; ++i)
+        {
+            GameObject Obj = Instantiate(BulletPrefab);
+            BulletControl controller = Obj.AddComponent<BulletControl>();
+
+            controller.Option = false;
+            controller.Speed = 10.0f;
+            controller.transform.eulerAngles = new Vector3(
+            0.0f, 0.0f, 0.0f);
+
+            angle += 9.0f;
+
+            controller.Direction = new Vector3(
+                Mathf.Cos(angle * Mathf.Deg2Rad),
+                Mathf.Sin(angle * Mathf.Deg2Rad),
+                0.0f) * 5;
+
+            Obj.transform.position = pos + new Vector3(0.0f, 0.5f, 0.0f);
+
+            BulletList.Add(Obj);
         }
     }
 
@@ -96,10 +134,26 @@ public class SkillController : MonoBehaviour
     {
 
         float speed = ControllerManager.GetInstance().BulletSpeed;
-
+        
         ControllerManager.GetInstance().BulletSpeed += 5.0f;  // 1.0f
 
-        yield return new WaitForSeconds(5.0f);
+        Timer.gameObject.SetActive(true);
+
+        float time = 5.0f;  // 스킬 사용 시간
+
+        while(true)
+        {
+            if(time <= 0)
+            {
+                Timer.gameObject.SetActive(false);
+                break;
+            }
+
+            time -= Time.deltaTime;
+            Timer.text = time.ToString("F0");
+
+            yield return null;
+        }
 
         ControllerManager.GetInstance().BulletSpeed = speed;  // 원래대로
 
@@ -133,36 +187,40 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    private void BulletTest()
+    private void BigBullet()
     {
         SpriteRenderer spriteRenderer = Player.GetComponent<SpriteRenderer>();
 
         float Hor = Input.GetAxisRaw("Horizontal");
 
-        GameObject Obj = Instantiate(BulletPrefab);
+        GameObject Obj = Instantiate(BigBulletPrefab);
 
-        Obj.transform.position = Player.transform.position;
-        // Bullet 크기 조정
-        Obj.transform.localScale = new Vector3(5.0f, 5.0f, 5.0f);
-        // 그림자 위치 조정
-        Obj.transform.GetChild(0).transform.position += new Vector3(0.0f, 1.0f, 0.0f);
-        // Collider 위치 조정
-        Obj.GetComponent<CapsuleCollider2D>().offset = new Vector2(0.42f, -0.03f);
+        Obj.transform.position = new Vector3(
+            Player.transform.position.x, -4.5f, transform.position.z);
+
+        Obj.name = "BigBullet";
+
+        //// Bullet 크기 조정
+        //Obj.transform.localScale = new Vector3(5.0f, 5.0f, 5.0f);
+        //// 그림자 위치 조정
+        //Obj.transform.GetChild(0).transform.position += new Vector3(0.0f, 1.0f, 0.0f);
+        //// Collider 위치 조정
+        //Obj.GetComponent<CapsuleCollider2D>().offset = new Vector2(0.42f, -0.03f);
 
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
 
         Controller.fxPrefab = fxPrefab;
-        Controller.hp = 50;
+        Controller.hp = 500;
 
-        renderer.flipY = spriteRenderer.flipX;
+        renderer.flipX = spriteRenderer.flipX;
 
         if (Hor == 0)
         {
             if (spriteRenderer.flipX)
-                Controller.Direction = new Vector3(-1.0f, 0.0f, 0.0f);
-            else
                 Controller.Direction = new Vector3(1.0f, 0.0f, 0.0f);
+            else
+                Controller.Direction = new Vector3(-1.0f, 0.0f, 0.0f);
         }
         else
             Controller.Direction = new Vector3(Hor, 0.0f, 0.0f);
