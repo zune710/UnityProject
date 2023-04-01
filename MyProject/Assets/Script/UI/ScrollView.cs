@@ -10,7 +10,6 @@ public class ScrollView : MonoBehaviour
     public float sizeX;
     public float sizeY;
 
-    //private bool active;
 
     private void Awake()
     {
@@ -22,19 +21,9 @@ public class ScrollView : MonoBehaviour
         sizeX = 350.0f;
         sizeY = 350.0f;
 
-        //active = true;
-
         StartCoroutine(EffectUi());
     }
-    
-    //private void Update()
-    //{
-    //    if(active)
-    //    {
-    //        active = false;
-    //        StartCoroutine(EffectUi());
-    //    }
-    //}
+
 
     private void OnEnable()
     {

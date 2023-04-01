@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    // private SpriteRenderer spriteRenderer;
-
     // ** 총알이 날아가는 속도
     private float Speed;  // [HideInInspector] public float Speed;
 
@@ -15,43 +13,21 @@ public class BulletController : MonoBehaviour
     // ** 이펙트 효과 원본
     public GameObject fxPrefab;
 
-
-    // private float DefaultX;  // 생성될 때 position.x 값
-
     // ** 총알이 날아가야 할 방향
     public Vector3 Direction { get; set; } // 과 동일
-    //public Vector3 Direction
-    //{
-    //    get
-    //    {
-    //        return Direction;
-    //    }
-    //    set
-    //    {
-    //        Direction = value;
-    //    }
-    //}  // stack overflow 발생(왜?)
+
 
     private void Start()
     {
-        // spriteRenderer = this.GetComponent<SpriteRenderer>();
-
         // ** 속도 초기값
         Speed = ControllerManager.GetInstance().BulletSpeed;
 
         // ** 충돌 횟수를 3으로 지정한다.
         //hp = 3;  // PlayerController, SkillTest에서 설정
-
-        // DefaultX = transform.position.x;
     }
 
     void Update()
     {
-        //if (Direction.x == -1)
-        //    spriteRenderer.flipY = true;
-        //else
-        //    spriteRenderer.flipY = false;
-
         // ** 방향으로 속도만큼 위치를 변경
         transform.position += Direction * Speed * Time.deltaTime;
 
@@ -68,7 +44,6 @@ public class BulletController : MonoBehaviour
         --hp;
 
         // ** collision = 충돌한 대상
-        // ** 충돌한 대상을 삭제한다. ??
         // (총알이 카메라 밖을 벗어나 보이지 않는 벽에 충돌하면 삭제됨)
         if (collision.transform.tag == "Wall")
             Destroy(this.gameObject);

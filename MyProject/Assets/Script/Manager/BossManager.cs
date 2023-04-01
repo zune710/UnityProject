@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class BossManager : MonoBehaviour
 {
-    public enum BossType  // 이름 안 쓰고 다음으로 넘어갈 수 있도록 바꾸기
+    public enum BossType
     {
         PENGUIN = 1,
-        RINO = 2
+        RINO = 2,
+        TREE = 3
     };
 
     private BossManager() { }
@@ -87,7 +88,8 @@ public class BossManager : MonoBehaviour
             // ** 스크립트의 Target을 지금 생성된 Enemy로 세팅
             bossHPBar.Target = Obj;
 
-            active = false;  // 하나 생성되면 새로 생성 안 되게 함
+            // 하나만 생성되게 함
+            active = false;
         }
 
         GetBossInfo();
@@ -103,6 +105,10 @@ public class BossManager : MonoBehaviour
 
             case 2:
                 bossType = BossType.RINO;
+                break;
+
+            case 3:
+                bossType = BossType.TREE;
                 break;
         }
     }

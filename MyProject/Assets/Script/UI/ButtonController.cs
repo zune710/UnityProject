@@ -9,16 +9,14 @@ using UnityEngine.SceneManagement;
 public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     private Text text;
-    private RectTransform rectTransform;
 
-    private Color OldColor;
+    //private Color OldColor;
 
     private bool onHover;
 
     private void Awake()
     {
-        text = GetComponent<Text>();
-        rectTransform = GetComponent<RectTransform>();
+        text = transform.Find("Text").GetComponent<Text>();
     }
 
     private void Start()
@@ -35,10 +33,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        text.color = OldColor;
+        //text.color = OldColor;
 
-        // 버튼 위에 마우스 있는 상태로 떼야 LoadScene하도록 하기(예외처리)
-        //if(eventData.position.x)
         if(onHover)
         {
             if (transform.name == "New Game")
@@ -56,8 +52,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        OldColor = text.color;
-        text.color = Color.white;
+        //OldColor = text.color;
+        //text.color = new Color32(164, 160, 160, 154);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

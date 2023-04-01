@@ -25,9 +25,6 @@ public class RoundManager : MonoBehaviour
     private Slider GoalSlider;
     private Text RoundText;
 
-
-    //private List<GameObject> Enemies;
-
     public int EnemyId;
     public int BossId;
     public int Goal; // Enemy 처치 수(목표)
@@ -57,8 +54,6 @@ public class RoundManager : MonoBehaviour
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
-
-            //Enemies = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/Enemies"));
         }
     }
    private void Start()

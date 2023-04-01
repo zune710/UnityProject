@@ -26,10 +26,7 @@ public class PlayerController : MonoBehaviour
     // ** [상태 체크]
     private bool onAttack;  // 공격상태
     private bool onHit;     // 피격상태
-    //private bool onJump;    // 점프
-    //private bool onRoll;    // 구르기
     private bool onDead;    // 사망
-    //private bool onDive;    // 착지
 
     // ** 복제할 총알 원본
     private GameObject BulletPrefab;
@@ -37,14 +34,8 @@ public class PlayerController : MonoBehaviour
     // ** 복제할 FX 원본
     private GameObject fxPrefab;
 
-    // ** 추후에 list로 변경해야 함
-    // public GameObject[] stageBack = new GameObject[7];
+    // 배경 List
     public List<GameObject> stageBack;
-
-    /*
-     Dictionary<string, Object> dic1;
-     Dictionary<string, GameObject> dic2;
-    */
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -59,8 +50,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("오른쪽")]
     public bool DirRight;
 
-
-    private void Awake()  // Start보다 먼저 실행되고 덜 실행됨
+    // Start보다 먼저 실행
+    private void Awake()
     {
         // ** Player의 Animator를 받아온다.
         animator = this.GetComponent<Animator>();  // 'this.' 생략 가능
@@ -68,16 +59,8 @@ public class PlayerController : MonoBehaviour
         // ** Player의 SpriteRenderer를 받아온다.
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
-        // 테스트할 때는 이렇게! 에디터 모드에서만 뜨기 때문이다.
-        //#if UNITY_EDITOR
-        //        print("test");
-        //#else
-        //    print("???");
-        //#endif
-
         // ** [Resources] 폴더에서, 사용할 리소스를 들고온다.
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
-        //fxPrefab = Resources.Load("Prefabs/FX/Smoke") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
 
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds"));
@@ -96,18 +79,11 @@ public class PlayerController : MonoBehaviour
         // ** 초기값 세팅
         onAttack = false;
         onHit = false;
-        //onJump = false;
-        //onRoll = false;
         onDead = false;
-        //onDive = false;
         Direction = 1.0f;
 
         DirLeft = false;
         DirRight = false;
-
-        // 이게 효율적이지만 Resource를 Load하는 방법(82줄)을 권장한다.
-        //for (int i = 0; i < 7; ++i)
-        //    stageBack[i] = GameObject.Find(i.ToString());
     }
 
 
@@ -207,25 +183,6 @@ public class PlayerController : MonoBehaviour
                 spriteRenderer.flipX = DirRight = true;
             }
 
-            //// ** 좌측 컨트롤키를 입력한다면
-            //if (Input.GetKey(KeyCode.LeftControl))
-            //    // ** 공격
-            //    OnAttack();
-
-            //// ** 좌측 쉬프트키를 입력한다면
-            //if (Input.GetKey(KeyCode.LeftShift))
-            //    // ** 피격
-            //    OnHit();
-
-            //if (Input.GetButtonDown("Jump"))      
-            //    OnJump();
-
-            //if (transform.position.y > 0)
-            //    OnDive();
-
-            //if (Input.GetKey(KeyCode.Q))
-            //    OnRoll();
-
             if (ControllerManager.GetInstance().Player_HP <= 0)
                 OnDead();
 
@@ -270,12 +227,8 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("Speed", Hor);
             if(Hor == 0)
                 animator.SetFloat("Speed", Ver);
-
-            // ** offset box
-            // transform.position += Movement;  // 원래 FixedUpdate에 써야 함
         }
     }
-
 
 
     private void OnAttack()
@@ -322,62 +275,13 @@ public class PlayerController : MonoBehaviour
         onHit = false;
     }
 
-    //private void OnJump()
-    //{
-    //    if (onJump)
-    //        return;
-
-    //    onJump = true;
-    //    animator.SetTrigger("Jump");
-    //    while (transform.position.y < 2)
-    //        transform.position += new Vector3(0.0f, 0.3f, 0.0f);
-    //}
-
-    //private void SetJump()
-    //{
-    //    onJump = false;
-    //}
-
-    //private void OnDive()
-    //{
-    //    if (onDive)
-    //        return;
-
-    //    onDive = true;
-    //    animator.SetTrigger("Dive");
-    //    transform.position -= new Vector3(0.0f, 0.3f, 0.0f);
-    //}
-
-    //private void SetDive()
-    //{
-    //    onDive = false;
-    //}
-
-    //private void OnRoll()
-    //{
-    //    if (onRoll)
-    //        return;
-
-    //    onRoll = true;
-    //    animator.SetTrigger("Roll");
-    //}
-
-    //private void SetRoll()
-    //{
-    //    onRoll = false;
-    //}
-
     private void OnDead()
     {
         if (onDead)
-        {
-            //ControllerManager.GetInstance().Player_HP = maxHP;
             return;
-        }
 
         onDead = true;
         animator.SetTrigger("Dead");
-        //ControllerManager.GetInstance().Player_HP = maxHP;
     }
 
     private void SetDead()
@@ -390,8 +294,8 @@ public class PlayerController : MonoBehaviour
         float Hor = Input.GetAxisRaw("Horizontal");
 
         GameObject Obj = Instantiate(BulletPrefab);
-        // Obj.transform.name = "";
-        Obj.transform.position = transform.position;  // 플레이어 position 위치에 놓음
+        Obj.transform.name = "Bullet";
+        Obj.transform.position = transform.position;
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
 
