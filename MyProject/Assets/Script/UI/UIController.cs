@@ -22,6 +22,25 @@ public class UIController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    public void onRestart()  // 해당 라운드 처음부터 다시
+    {
+        // 변수 초기화
+        if (ControllerManager.GetInstance().onBoss)
+        {
+            ControllerManager.GetInstance().BossActive = true;
+            ControllerManager.GetInstance().Player_HP = 100;
+        }
+        else
+        {
+            ControllerManager.GetInstance().EnemyCount = 0;
+            ControllerManager.GetInstance().Player_HP = 100;
+        }
+
+        // Reload Scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+
     public void onSettingMenuActive()  // ScrollView
     {
         SettingMenuActive = !SettingMenuActive;

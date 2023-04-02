@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
                 {
                     ControllerManager.GetInstance().DirRight = false;
 
-                    if (transform.position.x < 15.0f)
+                    if (transform.position.x < 16.0f)
                         transform.position += HorMovement;
                 }
                 else
@@ -282,6 +282,8 @@ public class PlayerController : MonoBehaviour
 
         onDead = true;
         animator.SetTrigger("Dead");
+
+        ControllerManager.GetInstance().GameOver = true;
     }
 
     private void SetDead()
@@ -319,7 +321,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        print("collision");
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

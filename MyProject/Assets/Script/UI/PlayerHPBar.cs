@@ -18,8 +18,8 @@ public class PlayerHPBar : MonoBehaviour
 
     private void Start()
     {
-        HPBar.maxValue = ControllerManager.GetInstance().Player_HP;
-        HPBar.value = HPBar.maxValue;
+        HPBar.maxValue = 100;
+        HPBar.value = ControllerManager.GetInstance().Player_HP;
     }
 
     private void Update()

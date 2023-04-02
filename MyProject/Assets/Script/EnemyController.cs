@@ -151,9 +151,6 @@ public class EnemyController : MonoBehaviour
                 Anim.SetTrigger("Die");
                 GetComponent<CapsuleCollider2D>().enabled = false;  // 죽고 있는 Enemy의 Collider 끄기
 
-                //if (transform.name == "Rock2" || transform.name == "Rock3")
-                //    return;
-
                 ++ControllerManager.GetInstance().EnemyCount;
 
                 if (ControllerManager.GetInstance().EnemyCount == RoundManager.GetInstance.Goal)
@@ -260,7 +257,7 @@ public class EnemyController : MonoBehaviour
                     Random.Range(transform.position.y - 0.5f, transform.position.y + 0.5f),
                     0.0f);
 
-                if (pos.y > -6.0f || pos.y < -9.0f)
+                if (pos.y > -3.1f || pos.y < -5.9f)
                     continue;
 
                 // ** 클론의 위치 초기화
@@ -293,7 +290,7 @@ public class EnemyController : MonoBehaviour
                     Random.Range(transform.position.y - 0.5f, transform.position.y + 0.5f),
                     0.0f);
 
-                if (pos.y > -6.0f || pos.y < -9.0f)
+                if (pos.y > -3.1f || pos.y < -5.9f)
                     continue;
 
                 // ** 클론의 위치 초기화

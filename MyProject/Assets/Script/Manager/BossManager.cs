@@ -43,7 +43,7 @@ public class BossManager : MonoBehaviour
         {
             instance = this;
 
-            active = false;
+            active = ControllerManager.GetInstance().BossActive;
 
             // ** 생성되는 Boss를 담아둘 상위 객체
             Parent = new GameObject("BossList");

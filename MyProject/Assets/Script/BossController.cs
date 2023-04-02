@@ -8,14 +8,18 @@ public class BossController : MonoBehaviour
 {
     // BASE
     const int STATE_WALK = 1;
-    const int STATE_ATTACK = 2;  // 근접공격
+    const int STATE_ATTACK = 2;  // 기본 공격
     
     // PENGUIN
     const int STATE_SLIDE = 3;
 
     // RHINO
     const int STATE_ATTACKRUN = 2;
-    
+
+    // TREE
+    const int STATE_BULLET = 3;
+
+
     private GameObject Target;
     
     private Animator Anim;
@@ -34,6 +38,7 @@ public class BossController : MonoBehaviour
     private bool SkillAttack;
     public bool Attack;
     private bool Walk;
+    private bool Hit;
     private bool active;
     private bool cool;
 
@@ -41,6 +46,9 @@ public class BossController : MonoBehaviour
 
     private GameObject ApearUI;
     private Animator ApearAnim;
+
+    private List<GameObject> BulletList = new List<GameObject>();
+    private GameObject TreeBulletPrefab;
 
 
     private void Awake()
@@ -54,8 +62,8 @@ public class BossController : MonoBehaviour
         ApearUI = GameObject.Find("RoundInfoCanvas").transform.Find("BossInfo").gameObject;
         
         ApearAnim = ApearUI.GetComponent<Animator>();
-        
-        
+
+        TreeBulletPrefab = Resources.Load("Prefabs/Boss/TreeBullet") as GameObject;
     }
 
     void Start()
@@ -68,6 +76,7 @@ public class BossController : MonoBehaviour
         SkillAttack = false;
         Attack = false;
         Walk = false;
+        Hit = false;
 
 
         switch (RoundManager.GetInstance.BossId)
@@ -79,6 +88,7 @@ public class BossController : MonoBehaviour
                 ApearAnim.SetTrigger("RinoMove");
                 break;
             case 3:
+                ApearAnim.SetTrigger("TreeMove");
                 break;
         }
         
@@ -99,6 +109,7 @@ public class BossController : MonoBehaviour
                 break;
 
             case 3:
+                Tree();
                 break;
         }
     }
@@ -175,6 +186,44 @@ public class BossController : MonoBehaviour
         }
     }
 
+    private void Tree()
+    {
+        float result = Target.transform.position.x - transform.position.x;
+
+        if (result < 0.0f)
+            spriteRenderer.flipX = false;
+        else if (result > 0.0f)
+            spriteRenderer.flipX = true;
+
+        if (ControllerManager.GetInstance().DirRight)
+            transform.position -= new Vector3(1.0f, 0.0f, 0.0f) * Time.deltaTime;
+
+        if (active)
+        {
+            switch (choice)
+            {
+                case STATE_WALK:
+                    OnWalkTree();
+                    break;
+
+                case STATE_ATTACK:
+                    OnAttackBullet();
+                    break;
+
+                case STATE_BULLET:
+                    OnBulletPattern();
+                    break;
+            }
+        }
+        else if (cool)
+        {
+            //active = true;
+            cool = false;
+            choice = OnController();
+            StartCoroutine(OnCoolDown());
+        }
+    }
+
 
     private int OnController()
     {
@@ -194,7 +243,8 @@ public class BossController : MonoBehaviour
 
             if (SkillAttack)
             {
-                Anim.SetBool("Slide", false);
+                if(RoundManager.GetInstance.BossId == 1)
+                    Anim.SetBool("Slide", false);
                 SkillAttack = false;
             }
         }
@@ -216,6 +266,9 @@ public class BossController : MonoBehaviour
 
             case 2:
                 return Random.Range(STATE_WALK, STATE_ATTACKRUN + 1);
+
+            case 3:
+                return Random.Range(STATE_WALK, STATE_BULLET + 1);
 
             default:
                 return 1;
@@ -244,13 +297,38 @@ public class BossController : MonoBehaviour
         // ** Player 따라가기
         float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
-        if (Distance > 3.0f)
+        if (Distance < 7.0f)
         {
             Vector3 Direction = (Target.transform.position - transform.position).normalized;
 
             Movement = new Vector3(
                 Speed * Direction.x, 
                 Speed * Direction.y, 
+                0.0f);
+
+            transform.position += Movement * Time.deltaTime;
+
+            // 위, 아래로 갈 때도 Walk 애니메이션 나오도록 Movement.y 추가
+            Anim.SetFloat("Speed", Mathf.Abs(Movement.x) + Mathf.Abs(Movement.y));
+        }
+        else
+            active = false;
+    }
+
+    private void OnWalkTree()
+    {
+        Walk = true;
+
+        // ** Player 따라가기
+        float Distance = Vector3.Distance(Target.transform.position, transform.position);
+
+        if (Distance > 7.0f)
+        {
+            Vector3 Direction = (Target.transform.position - transform.position).normalized;
+
+            Movement = new Vector3(
+                Speed * Direction.x,
+                Speed * Direction.y,
                 0.0f);
 
             transform.position += Movement * Time.deltaTime;
@@ -322,43 +400,301 @@ public class BossController : MonoBehaviour
 
     private void OnAttackRun()
     {
+        //if (Attack)
+        //    return;
+        
         Attack = true;
 
         float Distance = Vector3.Distance(EndPoint, transform.position);
 
-        if (Distance > 0.3f)
+        if (Distance > 0.05f)
         {
             Vector3 Direction = (EndPoint - transform.position).normalized;
 
             Movement = new Vector3(
-                Speed * 3 * 8.0f * Direction.x,     // Speed 3배 증가
-                Speed * 3 * 8.0f * Direction.y,
+                Speed * 4 * 8.0f * Direction.x,     // Speed 4배 증가
+                Speed * 4 * 8.0f * Direction.y,
                 0.0f);
 
             transform.position += Movement * Time.deltaTime;
 
-            
-
-            //// AttackRun 실행 중일 때 반복 실행하지 않기 위해
-            //if (!Anim.GetBool("AttackRun"))
-            //{
-            //    Anim.SetBool("AttackRun", true);
-            //}
+            // AttackRun 실행 중일 때 반복 실행하지 않기 위해
+            if (!Anim.GetBool("AttackRun"))
+            {
+                Anim.SetBool("AttackRun", true);
+            }
         }
-
         else
         {
             Anim.SetBool("AttackRun", false);
+            Hit = false;
             active = false;
         }
 
+        if (Hit)
+        {
+            Anim.SetBool("AttackRun", false);
+            Hit = false;
+            active = false;
+        }
 
-        // (돌진 중 무적 - OnTriggerEnter2D에)
- 
+        //StartCoroutine(AttackRunCoroutine());
+    }
+
+    //private IEnumerator AttackRunCoroutine()
+    //{
+    //    float time = 3.0f;
+
+    //    while (true)
+    //    {
+    //        if (time <= 0)
+    //        {
+    //            Anim.SetBool("AttackRun", false);
+    //            active = false;
+    //            break;
+    //        }
+
+    //        float Distance = Vector3.Distance(Target.transform.position, transform.position);
+
+    //        //if (Distance > 0.3f)
+    //        {
+    //            Vector3 Direction = (Target.transform.position - transform.position).normalized;
+
+    //            Movement = new Vector3(
+    //                Speed * 10 * Direction.x,
+    //                Speed * 10 * Direction.y,
+    //                0.0f);
+
+    //            //Vector3 Direction = (EndPoint - transform.position).normalized;
+
+    //            //Movement = new Vector3(
+    //            //    Speed * 3 * 8.0f * Direction.x,     // Speed 3배 증가
+    //            //    Speed * 3 * 8.0f * Direction.y,
+    //            //    0.0f);
+
+    //            transform.position += Movement * Time.deltaTime;
+
+    //            //// AttackRun 실행 중일 때 반복 실행하지 않기 위해
+    //            //if (!Anim.GetBool("AttackRun"))
+    //            //{
+    //            //    Anim.SetBool("AttackRun", true);
+    //            //}
+    //        }
+            
+    //        if(Hit)
+    //        {
+    //            Anim.SetBool("AttackRun", false);
+    //            Hit = false;
+    //            active = false;
+    //            break;
+    //        }
+
+    //        time -= Time.deltaTime;
+    //        yield return null;
+    //    }
+    //}
+
+
+    private void OnAttackBullet()
+    {
+        if (Attack)
+            return;
+
+        Attack = true;
+
+        Movement = new Vector3(0.0f, 0.0f, 0.0f);
+        Anim.SetFloat("Speed", Movement.x);
+        Anim.SetTrigger("Attack");
+    }
+
+    private IEnumerator ShootBullet()
+    {
+        for(int i = 0; i < 3; ++i)
+        {
+
+            GameObject Obj = Instantiate(TreeBulletPrefab);
+
+            Obj.transform.position = new Vector3(
+                transform.position.x - 1.45f,
+                transform.position.y - 0.3f,
+                transform.position.z);
+
+            // ** 총알의 EnemyBulletController 스크립트를 받아온다.
+            EnemyBulletController Controller = Obj.AddComponent<EnemyBulletController>();
+
+            float Direction;
+            if (spriteRenderer.flipX)
+                Direction = 1.0f;
+            else
+                Direction = -1.0f;
+
+            // ** 총알 스크립트 내부의 방향 변수를 현재 플레이어의 방향 변수로 설정한다.
+            Controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
+
+            // ** 총알의 SpriteRenderer를 받아온다.
+            SpriteRenderer bulletRenderer = Obj.GetComponent<SpriteRenderer>();
+
+            // ** 총알의 이미지 반전 상태를 플레이어의 이미지 반전 상태로 설정한다.
+            bulletRenderer.flipX = spriteRenderer.flipX;
+
+            // ** 모든 설정이 종료되었다면 저장소에 보관한다.
+            BulletList.Add(Obj);
+
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        active = false;
+    }
+
+    private void OnBulletPattern()
+    {
+        if (SkillAttack)
+            return;
+
+        SkillAttack = true;
+        
+        float choice = Random.Range(1, 5);
+
+        switch(choice)  // Bullet Pattern
+        {
+            case 1:
+                GetScrewPattern(5.0f, (int)(360 / 5.0f));
+                break;
+
+            case 2:
+                StartCoroutine(GetDelayScrewPattern());
+                break;
+
+            case 3:
+                StartCoroutine(ExplosionPattern(5.0f, (int)(360 / 5.0f)));
+                break;
+
+            case 4:
+                GuideBulletPattern();
+                break;
+        }
+
+        active = false;
+    }
+
+    private void GetScrewPattern(float _angle, int _count, bool _option = false)
+    {
+        for (int i = 0; i < _count; ++i)
+        {
+            GameObject Obj = Instantiate(TreeBulletPrefab);
+            BulletControl controller = Obj.AddComponent<BulletControl>();
+
+            controller.Option = _option;
+
+            _angle += 5.0f;
+
+            controller.Direction = new Vector3(
+                Mathf.Cos(_angle * 3.141592f / 180),
+                Mathf.Sin(_angle * 3.141592f / 180),
+                0.0f) * 5;
+
+            Obj.transform.position = transform.position;
+
+            BulletList.Add(Obj);
+        }
+    }
+
+    private IEnumerator GetDelayScrewPattern()
+    {
+        float fAngle = 30.0f;
+
+        int iCount = (int)(360 / fAngle);
+
+        int i = 0;
+
+        while (i < (iCount) * 3)
+        {
+            GameObject Obj = Instantiate(TreeBulletPrefab);
+            BulletControl controller = Obj.GetComponent<BulletControl>();
+
+            controller.Option = false;
+
+            fAngle += 30.0f;
+
+
+
+            controller.Direction = new Vector3(
+                Mathf.Cos(fAngle * Mathf.Deg2Rad),
+                Mathf.Sin(fAngle * Mathf.Deg2Rad),
+                0.0f) * 5;
+
+            Obj.transform.position = transform.position;
+
+            BulletList.Add(Obj);
+
+            ++i;
+
+            yield return new WaitForSeconds(0.025f);
+        }
+    }
+
+    public IEnumerator ExplosionPattern(float _angle, int _count, bool _option = false)
+    {
+        GameObject ParentObj = Instantiate(TreeBulletPrefab);
+
+         BulletControl control = ParentObj.AddComponent<BulletControl>();
+
+        control.Option = false;
+
+        control.Direction = GameObject.Find("Target").transform.position - transform.position;
+
+        ParentObj.transform.position = transform.position;
+
+        yield return new WaitForSeconds(1.5f);
+
+        Vector3 pos = ParentObj.transform.position;
+
+        Destroy(ParentObj);
+
+        for (int i = 0; i < _count; ++i)
+        {
+            GameObject Obj = Instantiate(TreeBulletPrefab);
+
+            BulletControl controller = Obj.GetComponent<BulletControl>();
+
+            controller.Option = _option;
+
+            _angle += 5.0f;
+
+            controller.Direction = new Vector3(
+                Mathf.Cos(_angle * 3.141592f / 180),
+                Mathf.Sin(_angle * 3.141592f / 180),
+                0.0f) * 5;
+
+            Obj.transform.position = pos;
+
+            BulletList.Add(Obj);
+        }
+    }
+
+    public void GuideBulletPattern()
+    {
+        GameObject Obj = Instantiate(TreeBulletPrefab);
+        BulletControl controller = Obj.GetComponent<BulletControl>();
+
+        controller.Target = GameObject.Find("Target");
+        controller.Option = true;
+
+        Obj.transform.position = transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.tag == "Player")
+        {
+            // Rhino 공격으로 플레이어와 충돌
+            if (RoundManager.GetInstance.BossId == 2 && Attack)
+            {
+                // 플레이어와 충돌하면 AttackHit 애니메이션 실행
+                Hit = true;
+                Anim.SetTrigger("AttackHit");
+            }
+        }
         if (collision.tag == "Bullet")
         {
             if(RoundManager.GetInstance.BossId == 2 && Attack)  // Rino 공격 중 무적상태
@@ -367,8 +703,13 @@ public class BossController : MonoBehaviour
                     return;
             }
 
-            --HP;
-            //Anim.SetTrigger("Hit");
+            if (collision.transform.name == "BigBullet")
+                HP -= 10;
+            else
+            {
+                --HP;
+                Anim.SetTrigger("Hit");
+            }
 
             if (HP <= 0)
             {
@@ -376,22 +717,11 @@ public class BossController : MonoBehaviour
                 // 죽고 있는 Enemy의 Collider 끄기
                 GetComponent<CapsuleCollider2D>().enabled = false;
 
-                // 다음 라운드로 넘어가기
-                RoundManager.GetInstance.BossClear = true;
-
-                //SceneManager.LoadScene("SelectRound");
-
-            }
-        }
-
-        if(collision.tag == "Player")
-        {
-            // Rhino 공격으로 플레이어와 충돌
-            if (RoundManager.GetInstance.BossId == 2 && Attack)  
-            {
-                // 플레이어와 충돌하면 AttackHit 애니메이션 실행
-                if (Anim.GetBool("AttackRun"))
-                    Anim.SetTrigger("hit");
+                if (RoundManager.GetInstance.BossId == 3)
+                    ControllerManager.GetInstance().GameClear = true;
+                else
+                    // 다음 라운드로 넘어가기
+                    RoundManager.GetInstance.BossClear = true;
             }
         }
     }

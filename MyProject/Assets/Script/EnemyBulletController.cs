@@ -14,6 +14,11 @@ public class EnemyBulletController : MonoBehaviour
     public Vector3 Direction { get; set; }
 
 
+    private void Awake()
+    {
+        fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
+    }
+
     private void Start()
     {
         // ** 속도 초기값

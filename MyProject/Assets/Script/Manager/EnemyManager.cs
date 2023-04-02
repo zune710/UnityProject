@@ -7,8 +7,8 @@ public class EnemyManager : MonoBehaviour
     public enum EnemyType
     {
         Chameleon = 1,
-        Plant = 2,
-        Rock1 = 3
+        Rock1 = 2,
+        Plant = 3
     };
 
     private EnemyManager() { }
@@ -119,12 +119,12 @@ public class EnemyManager : MonoBehaviour
                 break;
 
             case 2:
-                enemyType = EnemyType.Plant;
+                enemyType = EnemyType.Rock1;
                 SpawnTime = 3.0f;
                 break;
 
             case 3:
-                enemyType = EnemyType.Rock1;
+                enemyType = EnemyType.Plant;
                 SpawnTime = 3.0f;
                 break;
         }

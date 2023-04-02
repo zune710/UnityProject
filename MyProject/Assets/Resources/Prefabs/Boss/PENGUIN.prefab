@@ -122,6 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HP: 10
   Speed: 0.5
+  Attack: 0
 --- !u!70 &5548472186455816576
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

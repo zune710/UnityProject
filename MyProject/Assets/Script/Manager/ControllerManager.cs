@@ -27,4 +27,19 @@ public class ControllerManager
     public int Player_HP = 100;
 
     public int EnemyCount = 0;
+
+    public int EnemyId = 1;
+    public int BossId = 1;
+    public int Goal = 3; // Enemy 처치 수(목표)
+
+    public int Round = 1;
+    public bool GoalClear = false;
+    public bool BossClear = false;
+
+    public bool GameOver = false;
+    public bool GameClear = false;
+
+    public bool BossActive = false;
+
+    public bool LoadGame = false;
 }

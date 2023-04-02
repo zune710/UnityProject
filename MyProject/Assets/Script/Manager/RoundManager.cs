@@ -46,11 +46,19 @@ public class RoundManager : MonoBehaviour
             GoalSlider = GoalBar.GetComponent<Slider>();
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
 
-            Round = 1;
-            EnemyId = 1;   // 1
-            BossId = 1;
+            Round = ControllerManager.GetInstance().Round;
+            EnemyId = ControllerManager.GetInstance().EnemyId;
+            BossId = ControllerManager.GetInstance().BossId;
             
-            Goal = 3;  // 3
+            Goal = ControllerManager.GetInstance().Goal;
+
+            GoalClear = ControllerManager.GetInstance().GoalClear;
+            BossClear = ControllerManager.GetInstance().BossClear;
+            
+            if(ControllerManager.GetInstance().onBoss)
+                GoalBar.SetActive(false);
+
+            //ControllerManager.GetInstance().Player_HP = 100;
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
@@ -58,13 +66,10 @@ public class RoundManager : MonoBehaviour
     }
    private void Start()
     {
-        GoalClear = false;
-        BossClear = false;
-
         RoundText.text = "Round " + Round.ToString();
 
         GoalSlider.maxValue = Goal;
-        GoalSlider.value = 0;
+        GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
     }
 
     private void Update()
@@ -92,8 +97,7 @@ public class RoundManager : MonoBehaviour
             else if(ControllerManager.GetInstance().onBoss)
                 StartCoroutine(EnemyRoundSetting());
 
-            // Reload Scene
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            
         }
 
     }
@@ -132,6 +136,10 @@ public class RoundManager : MonoBehaviour
 
         // 플레이어 HP 리셋
         ControllerManager.GetInstance().Player_HP = 100;
+
+        // 플레이어 위치 초기화
+        GameObject Player = GameObject.Find("Player");
+        Player.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
 
         yield return new WaitForSeconds(1.5f);
 

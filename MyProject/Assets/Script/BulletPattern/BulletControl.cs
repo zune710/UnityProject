@@ -85,6 +85,8 @@ public class BulletControl : MonoBehaviour
 
             // ** 진동 효과 컨트롤러 생성
             camera.AddComponent<CameraController>();
+
+            Destroy(this.gameObject, 0.016f);
         }
 
         // ** 총알의 충돌 횟수가 0이 되면(충돌 가능 횟수를 모두 소진하면) 총알 삭제
@@ -95,6 +97,6 @@ public class BulletControl : MonoBehaviour
     public float getAngle(Vector3 from, Vector3 to)
     {
         return Quaternion.FromToRotation(Vector3.down, to - from).eulerAngles.z;
-        // 짐벌락 현상
+        // 오일러 각(eulerAngles)의 짐벌락 현상 때에 Quaternion 사용
     }
 }
