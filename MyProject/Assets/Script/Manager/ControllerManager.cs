@@ -19,8 +19,9 @@ public class ControllerManager
     public bool DirLeft;
     public bool DirRight;
 
-    public bool onEnemy = true;
-    public bool onBoss = false;
+    public bool onEnemy = false;//
+    public bool onBoss = true;//
+    public bool BossActive = true;//
 
     public float BulletSpeed = 10.0f;
     
@@ -29,17 +30,16 @@ public class ControllerManager
     public int EnemyCount = 0;
 
     public int EnemyId = 1;
-    public int BossId = 1;
-    public int Goal = 3; // Enemy 처치 수(목표)
+    public int BossId = 1;//
 
     public int Round = 1;
+    public int Goal = 10; // Enemy 처치 수(목표)
+
     public bool GoalClear = false;
     public bool BossClear = false;
 
     public bool GameOver = false;
     public bool GameClear = false;
-
-    public bool BossActive = false;
 
     public bool LoadGame = false;
 }

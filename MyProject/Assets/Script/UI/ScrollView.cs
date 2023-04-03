@@ -1,11 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class ScrollView : MonoBehaviour
 {
     public GameObject ui;
     public RectTransform uiTranspos;
+
+    public GameObject SoundButton;
+    public Sprite SoundOn;
+    public Sprite SoundOff;
+
+    public GameObject SoundSlider;
+    private Slider Volume;
+
+    private bool active;
 
     public float sizeX;
     public float sizeY;
@@ -14,6 +25,7 @@ public class ScrollView : MonoBehaviour
     private void Awake()
     {
         uiTranspos = ui.GetComponent<RectTransform>();
+        Volume = SoundSlider.GetComponent<Slider>();
     }
 
     private void Start()
@@ -21,9 +33,28 @@ public class ScrollView : MonoBehaviour
         sizeX = 350.0f;
         sizeY = 350.0f;
 
+        active = true;
+
+        Volume.maxValue = 100;
+        Volume.value = 50;
+
         StartCoroutine(EffectUi());
     }
 
+    private void Update()
+    {
+        // VolumeControl
+        if (Volume.value == 0)
+        {
+            SoundButton.GetComponent<Image>().sprite = SoundOff;
+            active = false;
+        }
+        else
+        {
+            SoundButton.GetComponent<Image>().sprite = SoundOn;
+            active = true;
+        }
+    }
 
     private void OnEnable()
     {
@@ -64,5 +95,25 @@ public class ScrollView : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    public void SoundOnOff()
+    {
+        if(active)
+        {
+            SoundButton.GetComponent<Image>().sprite = SoundOff;
+            Volume.value = 0;
+            
+            // Sound Off
+        }
+        else
+        {
+            SoundButton.GetComponent<Image>().sprite = SoundOn;
+            Volume.value = 50;
+            
+            // Sound On
+        }
+
+        active = !active;
     }
 }

@@ -111,7 +111,7 @@ public class EnemyManager : MonoBehaviour
 
     private void GetEnemyInfo()
     {
-        switch (RoundManager.GetInstance.EnemyId)
+        switch (ControllerManager.GetInstance().EnemyId)
         {
             case 1:
                 enemyType = EnemyType.Chameleon;

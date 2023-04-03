@@ -98,7 +98,7 @@ public class BossManager : MonoBehaviour
 
     private void GetBossInfo()
     {
-        switch (RoundManager.GetInstance.BossId)
+        switch (ControllerManager.GetInstance().BossId)
         {
             case 1:
                 bossType = BossType.PENGUIN;

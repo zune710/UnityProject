@@ -68,10 +68,10 @@ public class DataManager : MonoBehaviour
         {
             DataForm form = JsonUtility.FromJson<DataForm>(JsonData.ToString());  // 로컬 저장
 
-            RoundManager.GetInstance.Round = form.Round;
-            RoundManager.GetInstance.EnemyId = form.EnemyId;
-            RoundManager.GetInstance.BossId = form.BossId;
-            RoundManager.GetInstance.Goal = form.Goal;
+            ControllerManager.GetInstance().Round = form.Round;
+            ControllerManager.GetInstance().EnemyId = form.EnemyId;
+            ControllerManager.GetInstance().BossId = form.BossId;
+            ControllerManager.GetInstance().Goal = form.Goal;
             ControllerManager.GetInstance().onEnemy = form.onEnemy;
             ControllerManager.GetInstance().onBoss = form.onBoss;
             BossManager.GetInstance.active = form.active;
@@ -134,10 +134,10 @@ public class DataManager : MonoBehaviour
     {
         DataForm form = new DataForm();
 
-        form.Round = RoundManager.GetInstance.Round;
-        form.EnemyId = RoundManager.GetInstance.EnemyId;
-        form.BossId = RoundManager.GetInstance.BossId;
-        form.Goal = RoundManager.GetInstance.Goal;
+        form.Round = ControllerManager.GetInstance().Round;
+        form.EnemyId = ControllerManager.GetInstance().EnemyId;
+        form.BossId = ControllerManager.GetInstance().BossId;
+        form.Goal = ControllerManager.GetInstance().Goal;
         form.onEnemy = ControllerManager.GetInstance().onEnemy;
         form.onBoss = ControllerManager.GetInstance().onBoss;
         form.active = BossManager.GetInstance.active;

@@ -86,35 +86,35 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    private void GetScrewPattern()  // multishot
-    {
-        float angle = -90.0f;
-        int count = (int)(180 / 9.0f);
+    //private void GetScrewPattern()  // multishot
+    //{
+    //    float angle = -90.0f;
+    //    int count = (int)(180 / 9.0f);
 
-        Vector3 pos = GameObject.Find("Player").transform.position;
+    //    Vector3 pos = GameObject.Find("Player").transform.position;
 
-        for (int i = 0; i < count - 1; ++i)
-        {
-            GameObject Obj = Instantiate(BulletPrefab);
-            BulletControl controller = Obj.AddComponent<BulletControl>();
+    //    for (int i = 0; i < count - 1; ++i)
+    //    {
+    //        GameObject Obj = Instantiate(BulletPrefab);
+    //        BulletControl controller = Obj.AddComponent<BulletControl>();
 
-            controller.Option = false;
-            controller.Speed = 10.0f;
-            controller.transform.eulerAngles = new Vector3(
-            0.0f, 0.0f, 0.0f);
+    //        controller.Option = false;
+    //        controller.Speed = 10.0f;
+    //        controller.transform.eulerAngles = new Vector3(
+    //        0.0f, 0.0f, 0.0f);
 
-            angle += 9.0f;
+    //        angle += 9.0f;
 
-            controller.Direction = new Vector3(
-                Mathf.Cos(angle * Mathf.Deg2Rad),
-                Mathf.Sin(angle * Mathf.Deg2Rad),
-                0.0f) * 5;
+    //        controller.Direction = new Vector3(
+    //            Mathf.Cos(angle * Mathf.Deg2Rad),
+    //            Mathf.Sin(angle * Mathf.Deg2Rad),
+    //            0.0f) * 5;
 
-            Obj.transform.position = pos + new Vector3(0.0f, 0.5f, 0.0f);
+    //        Obj.transform.position = pos + new Vector3(0.0f, 0.5f, 0.0f);
 
-            BulletList.Add(Obj);
-        }
-    }
+    //        BulletList.Add(Obj);
+    //    }
+    //}
 
     public void Slot2_SpeedUp()  // Bullet Speed 증가
     {
@@ -165,7 +165,7 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 3;
-            cooldown = 0.01f;  // 0.5f
+            cooldown = 0.03f;  // 0.5f
 
 
             int value = 10;

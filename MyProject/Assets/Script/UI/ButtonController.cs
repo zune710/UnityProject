@@ -10,8 +10,6 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 {
     private Text text;
 
-    //private Color OldColor;
-
     private bool onHover;
 
     public Button LoadGame;
@@ -45,16 +43,24 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        //text.color = OldColor;
-
         if(onHover)
         {
             if (transform.name == "New Game")
             {
-                Time.timeScale = 1.0f;
-                ResetValue();
-                ControllerManager.GetInstance().LoadGame = true;
-                SceneManager.LoadScene("Game Start");
+                //Time.timeScale = 1.0f;  // 안 해도 됨
+                
+                if(ControllerManager.GetInstance().LoadGame)
+                {
+                    // 기존의 Load 파일 사라짐 경고 UI SetActive true
+                    
+                }
+                else
+                {
+                    ResetValue();
+                    ControllerManager.GetInstance().LoadGame = true;
+                    SceneManager.LoadScene("Game Start");
+                }
+                
             }
             else if(transform.name == "Load Game" && ControllerManager.GetInstance().LoadGame)
             {
@@ -76,22 +82,23 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             else if (transform.name == "Quit")
             {
                 Application.Quit();  // 에디터에서는 무시됨
-                UnityEditor.EditorApplication.ExitPlaymode();
+                UnityEditor.EditorApplication.ExitPlaymode();  // 에디터 플레이모드 나가기
             }
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //OldColor = text.color;
-        //text.color = new Color32(164, 160, 160, 154);
+        
     }
 
+    // 마우스가 버튼 위에 있을 때
     public void OnPointerEnter(PointerEventData eventData)
     {
         onHover = true;
     }
 
+    // 마우스가 버튼을 벗어났을 때
     public void OnPointerExit(PointerEventData eventData)
     {
         onHover = false;
@@ -102,18 +109,28 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().Player_HP = 100;
         ControllerManager.GetInstance().BulletSpeed = 10.0f;
         ControllerManager.GetInstance().EnemyCount = 0;
-        ControllerManager.GetInstance().Goal = 3;
+        ControllerManager.GetInstance().Goal = 10;
 
         ControllerManager.GetInstance().BossId = 1;
         ControllerManager.GetInstance().EnemyId = 1;
         ControllerManager.GetInstance().Round = 1;
-
 
         ControllerManager.GetInstance().onEnemy = true;
         ControllerManager.GetInstance().onBoss = false;
 
         ControllerManager.GetInstance().GameClear = false;
         ControllerManager.GetInstance().GameOver = false;
+    }
+
+
+    // 버튼 onClick
+    public void WarningYES()
+    {
+
+    }
+
+    public void WarningNO()
+    {
 
     }
 }

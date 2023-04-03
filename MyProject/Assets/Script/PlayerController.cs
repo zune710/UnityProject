@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
 
-        stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds"));
+        stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds/Night"));
     }
 
     // ** 유니티 기본 제공 함수
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
                 {
                     ControllerManager.GetInstance().DirRight = false;
 
-                    if (transform.position.x < 16.0f)
+                    if (transform.position.x < 16.4f)
                         transform.position += HorMovement;
                 }
                 else
@@ -229,7 +229,6 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat("Speed", Ver);
         }
     }
-
 
     private void OnAttack()
     {
@@ -335,17 +334,16 @@ public class PlayerController : MonoBehaviour
 
             OnHit();
         }
-
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        else if(collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
         {
             int damage = 10;
 
-            if(RoundManager.GetInstance.BossId == 2)
+            if(ControllerManager.GetInstance().BossId == 2)
             {
                 GameObject boss = BossManager.GetInstance.Parent.transform.Find("Boss").gameObject;
                 BossController bossController = boss.GetComponent<BossController>();
 
-                if (bossController.Attack)
+                if (bossController.Attack || bossController.SkillAttack)
                     damage *= 2;
             }
 
@@ -354,6 +352,12 @@ public class PlayerController : MonoBehaviour
 
             OnHit();
         }
+
+        // ** 진동 효과를 생성할 관리자 생성
+        GameObject camera = new GameObject("Camera Test");
+
+        // ** 진동 효과 컨트롤러 생성
+        camera.AddComponent<CameraController>();
     }
 
     private IEnumerator DecreaseHP(int damage)
@@ -379,4 +383,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-

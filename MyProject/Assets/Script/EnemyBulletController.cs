@@ -39,15 +39,21 @@ public class EnemyBulletController : MonoBehaviour
         // ** 이펙트 효과의 위치를 지정
         Obj.transform.position = transform.position;
 
+        // ** collision = 충돌한 대상
+        // ** Wall과 충돌하면 Bullet을 삭제한다.
+        if (collision.transform.tag == "Wall")
+            Destroy(this.gameObject);
+        else
+        {
+            // ** 진동 효과를 생성할 관리자 생성
+            GameObject camera = new GameObject("Camera Test");
 
-        // ** 진동 효과를 생성할 관리자 생성
-        GameObject camera = new GameObject("Camera Test");
+            // ** 진동 효과 컨트롤러 생성
+            camera.AddComponent<CameraController>();
 
-        // ** 진동 효과 컨트롤러 생성
-        camera.AddComponent<CameraController>();
-
-        // 총알 삭제
-        Destroy(this.gameObject, 0.016f);
+            // 총알 삭제
+            Destroy(this.gameObject, 0.016f);
+        }
     }
 
 

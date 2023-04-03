@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   hasBullet: 0
-  HP: 3
+  HP: 5
   Speed: 0.2
   AttackRange: 2
 --- !u!61 &1816529618765182359

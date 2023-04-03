@@ -29,11 +29,11 @@ public class BulletControl : MonoBehaviour
     {
         // ** 속도 초기값
         //Speed = ControllerManager.GetInstance().BulletSpeed;
-        Speed = Option ? 0.75f : 1.0f;
+        Speed = Option ? 7.0f : 1.0f;
 
         // ** 벡터의 정규화
         if(Option)
-            Direction = Target.transform.position - transform.position;
+            Direction = Target.transform.position + new Vector3(0.0f, -4.9f, 0.0f) - transform.position;  // Player Collider 방향
         Direction.Normalize();
 
         float fAngle = getAngle(Vector3.down, Direction);
@@ -50,16 +50,41 @@ public class BulletControl : MonoBehaviour
         // ** 실시간으로 타깃의 위치를 확인하고 방향을 갱신한다.
         if(Option && Target)
         {
-            Direction = (Target.transform.position - transform.position).normalized;
-            
-            float fAngle = getAngle(Vector3.down, Target.transform.position);
+            StartCoroutine(FollowTarget(2.0f));
 
-            transform.eulerAngles = new Vector3(
-                0.0f, 0.0f, fAngle);
+            Option = false;
         }
 
         // ** 방향으로 속도만큼 위치를 변경
         transform.position += Direction * Speed * Time.deltaTime;
+    }
+
+    private IEnumerator FollowTarget(float _time)
+    {
+        float time = _time;
+
+        while (time > 0)
+        {
+            time -= Time.deltaTime;
+
+            Direction = (Target.transform.position - transform.position).normalized;
+
+            float fAngle = getAngle(Vector3.down, Target.transform.position);
+
+            transform.eulerAngles = new Vector3(
+                0.0f, 0.0f, fAngle);
+
+            yield return null;
+        }
+
+        // ** 이펙트 효과 복제
+        GameObject Obj = Instantiate(fxPrefab);
+
+        // ** 이펙트 효과의 위치를 지정
+        Obj.transform.position = transform.position;
+
+        Destroy(gameObject);
+            
     }
 
     // ** 충돌체와 물리엔진이 포함된 오브젝트가 다른 충돌체와 충돌한다면 실행되는 함수

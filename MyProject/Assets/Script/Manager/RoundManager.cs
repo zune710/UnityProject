@@ -25,11 +25,8 @@ public class RoundManager : MonoBehaviour
     private Slider GoalSlider;
     private Text RoundText;
 
-    public int EnemyId;
-    public int BossId;
     public int Goal; // Enemy 처치 수(목표)
 
-    public int Round;
     public bool GoalClear;
     public bool BossClear;
 
@@ -46,9 +43,6 @@ public class RoundManager : MonoBehaviour
             GoalSlider = GoalBar.GetComponent<Slider>();
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
 
-            Round = ControllerManager.GetInstance().Round;
-            EnemyId = ControllerManager.GetInstance().EnemyId;
-            BossId = ControllerManager.GetInstance().BossId;
             
             Goal = ControllerManager.GetInstance().Goal;
 
@@ -66,7 +60,7 @@ public class RoundManager : MonoBehaviour
     }
    private void Start()
     {
-        RoundText.text = "Round " + Round.ToString();
+        RoundText.text = "Round " + ControllerManager.GetInstance().Round.ToString();
 
         GoalSlider.maxValue = Goal;
         GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
@@ -121,7 +115,7 @@ public class RoundManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         // EnemyId 변경
-        ++EnemyId;
+        ++ControllerManager.GetInstance().EnemyId;
 
         // Boss On(2/2)
         BossManager.GetInstance.active = true;
@@ -144,16 +138,17 @@ public class RoundManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         // 라운드 증가
-        ++Round;
-        RoundText.text = "Round" + Round.ToString();
+        ++ControllerManager.GetInstance().Round;
+        RoundText.text = "Round" + ControllerManager.GetInstance().Round.ToString();
 
         // Enemy 처치 목표 증가
-        Goal *= 2;
+        ControllerManager.GetInstance().Goal += 10;
+        Goal = ControllerManager.GetInstance().Goal;
         GoalSlider.maxValue = Goal;
         GoalSlider.value = 0;
 
         // BossId 변경
-        ++BossId;
+        ++ControllerManager.GetInstance().BossId;
 
         // Enemy On
         ControllerManager.GetInstance().onEnemy = true;
