@@ -12,14 +12,19 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private bool onHover;
 
-    public Button LoadGame;
     private Animator OptionAnim;
+    private GameObject SubMenuCanvas;
+    private GameObject AlertMenu;
 
     private void Awake()
     {
         text = transform.Find("Text").GetComponent<Text>();
 
-        OptionAnim = GameObject.Find("OptionMenu").GetComponent<Animator>();
+        SubMenuCanvas = GameObject.Find("SubMenuCanvas");
+        OptionAnim = SubMenuCanvas.transform.Find("OptionMenu").GetComponent<Animator>();
+        AlertMenu = SubMenuCanvas.transform.Find("AlertMenu").gameObject;
+        // 꺼져 있으면 GameObject.Find는 못 찾지만
+        // transform.Find는 찾을 수 있음
 
         if (ControllerManager.GetInstance().LoadGame)
         {
@@ -35,6 +40,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private void Start()
     {
         text.text = transform.name;
+
+        AlertMenu.gameObject.SetActive(false);
 
         onHover = false;
     }
@@ -52,8 +59,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             {
                 if(ControllerManager.GetInstance().LoadGame)
                 {
-                    // 기존의 Load 파일 사라짐 경고 UI SetActive true
-                    
+                    // 저장된 데이터 덮어쓰기 경고 UI
+                    AlertMenu.gameObject.SetActive(true);
                 }
                 else
                 {
@@ -136,15 +143,16 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
 
     // 버튼 onClick
-    public void WarningYES()
+    public void AlertYES()
     {
         ResetValue();
         ControllerManager.GetInstance().LoadGame = true;
         SceneManager.LoadScene("Game Start");
     }
 
-    public void WarningNO()
+    public void AlertNO()
     {
         // 경고창 끄기
+        AlertMenu.gameObject.SetActive(false);
     }
 }

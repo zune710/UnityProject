@@ -16,7 +16,7 @@ public class SkillController : MonoBehaviour
     private GameObject BigBulletPrefab;
     private GameObject fxPrefab;
     private GameObject Player;
-    private List<GameObject> BulletList = new List<GameObject>();
+    //private List<GameObject> BulletList = new List<GameObject>();
     private Text Timer;
 
     private PlayerController playerController;

@@ -8,59 +8,86 @@ using UnityEngine.EventSystems;
 public class SidebarController : MonoBehaviour
 {
     
-    public GameObject Menu;
-    public GameObject End;
-    public GameObject Dark;
+    private GameObject Menu;
+    private GameObject End;
+    private GameObject Dark;
+    private GameObject brokenHeart;
+
+    public GameObject HeartCount;  // Inspector
 
     private Animator Anim;
+    private Animator HeartAnim;
+
+    private AudioSource ButtonSFX;
+
     public bool check;
+    public bool active;
 
 
     private void Awake()
     {
         Menu = transform.Find("MenuFrame").gameObject;
-
         End = transform.Find("GameEnd").gameObject;
-
         Dark = transform.Find("DarkBackground").gameObject;
+        brokenHeart = transform.Find("BrokenHeart").gameObject;
 
         Anim = Menu.GetComponent<Animator>();
+        HeartAnim = brokenHeart.GetComponent<Animator>();
+
+        ButtonSFX = GetComponent<AudioSource>();
     }
 
     void Start()
     {
         check = false;
+        active = true;
         End.SetActive(false);
         Dark.SetActive(false);
+        brokenHeart.SetActive(false);
 
         Time.timeScale = 1.0f;
     }
 
     private void Update()
     {
-        if (ControllerManager.GetInstance().GameOver)
+        if(active)
         {
-            Time.timeScale = 0.0f;
-            Dark.SetActive(true);
-            End.GetComponent<Text>().text = "GAME OVER";
-            End.SetActive(true);
-            End.GetComponent<Animator>().SetTrigger("Move");
+            if (ControllerManager.GetInstance().GameOver)
+            {
+                active = false;
+                
+                Time.timeScale = 0.0f;
+                Dark.SetActive(true);
 
-        }
-        else if(ControllerManager.GetInstance().GameClear)
-        {
-            Time.timeScale = 0.0f;
-            Dark.SetActive(true);
-            End.GetComponent<Text>().text = "GAME CLEAR";
-            End.SetActive(true);
-            End.GetComponent<Animator>().SetTrigger("Move");
-            
-            ControllerManager.GetInstance().LoadGame = false;
+                brokenHeart.SetActive(true);
+                HeartAnim.SetTrigger("Broken");
+
+                End.GetComponent<Text>().text = "GAME OVER";
+                End.SetActive(true);
+
+                StartCoroutine(GameOverAnim());
+
+            }
+            else if (ControllerManager.GetInstance().GameClear)
+            {
+                active = false;
+
+                Time.timeScale = 0.0f;
+                Dark.SetActive(true);
+
+                End.GetComponent<Text>().text = "GAME CLEAR";
+                End.SetActive(true);
+                End.GetComponent<Animator>().SetTrigger("Move");
+
+                ControllerManager.GetInstance().LoadGame = false;
+            }
         }
     }
 
     public void ClickButton()
     {
+        ButtonSFX.Play();
+
         check = !check;
         Dark.SetActive(check);
         Anim.SetBool("Move", check);
@@ -73,5 +100,15 @@ public class SidebarController : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    private IEnumerator GameOverAnim()
+    {
+        // Time.timeScale = 0.0f일 때는 Realtime 사용
+        yield return new WaitForSecondsRealtime(2.0f);  // BrokenHeart Anim 재생시간만큼
+
+        Destroy(HeartCount.transform.GetChild(0).gameObject);
+
+        End.GetComponent<Animator>().SetTrigger("Move");
     }
 }

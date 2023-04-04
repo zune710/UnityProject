@@ -21,11 +21,14 @@ public class ScrollView : MonoBehaviour
     public float sizeX;
     public float sizeY;
 
+    private AudioSource ButtonSFX;
+
 
     private void Awake()
     {
         uiTranspos = ui.GetComponent<RectTransform>();
         Volume = SoundSlider.GetComponent<Slider>();
+        ButtonSFX = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -96,7 +99,9 @@ public class ScrollView : MonoBehaviour
 
     public void SoundOnOff()
     {
-        if(active)
+        ButtonSFX.Play();
+
+        if (active)
         {
             SoundButton.GetComponent<Image>().sprite = SoundOff;
             Volume.value = 0;

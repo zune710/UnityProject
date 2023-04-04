@@ -30,6 +30,7 @@ public class PlayerHPBar : MonoBehaviour
         for (int i = 0; i < count; ++i )
         {
             GameObject Obj = Instantiate(HeartPrefab);
+            Obj.name = "Heart";
             Obj.transform.SetParent(Parent.transform);
         }
     }
@@ -42,12 +43,12 @@ public class PlayerHPBar : MonoBehaviour
         //        ControllerManager.GetInstance().Player_HP += 1;
         //}
 
-        //if (Input.GetMouseButton(1))
-        //{
-        //    if (ControllerManager.GetInstance().Player_HP > 0)
-        //        ControllerManager.GetInstance().Player_HP -= 1;
-            
-        //}
+        if (Input.GetMouseButton(1))
+        {
+            if (ControllerManager.GetInstance().Player_HP > 0)
+                ControllerManager.GetInstance().Player_HP -= 1;
+
+        }
 
         HPBar.value = ControllerManager.GetInstance().Player_HP;
 
