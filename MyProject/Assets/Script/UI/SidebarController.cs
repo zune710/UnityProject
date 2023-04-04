@@ -54,6 +54,8 @@ public class SidebarController : MonoBehaviour
             End.GetComponent<Text>().text = "GAME CLEAR";
             End.SetActive(true);
             End.GetComponent<Animator>().SetTrigger("Move");
+            
+            ControllerManager.GetInstance().LoadGame = false;
         }
     }
 

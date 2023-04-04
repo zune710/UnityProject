@@ -138,8 +138,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   hasBullet: 0
-  HP: 5
-  Speed: 0.3
+  HP: 3
+  Speed: 1
   AttackRange: 0
 --- !u!1 &8326164801005188890
 GameObject:

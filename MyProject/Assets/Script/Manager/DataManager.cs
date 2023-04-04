@@ -43,15 +43,6 @@ class DataForm
     }
 }
 
-
-
-//Round = 1;
-//EnemyId = 1;
-//BossId = 1;
-//public bool onEnemy = true;
-//public bool onBoss = false;
-//       BossManager.GetInstance.active = true;
-
 public class DataManager : MonoBehaviour
 {
     // (호출되려면 싱글톤화 필요)

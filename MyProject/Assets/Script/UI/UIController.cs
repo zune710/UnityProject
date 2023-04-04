@@ -19,6 +19,13 @@ public class UIController : MonoBehaviour
 
     public void onMainMenu()
     {
+        if(ControllerManager.GetInstance().GameOver)
+        {
+            // Heart 사라지는 UI(Heart 이미지 바꾸기)
+
+
+        }
+        
         SceneManager.LoadScene("MainMenu");
     }
 

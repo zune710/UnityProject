@@ -59,6 +59,9 @@ public class EnemyManager : MonoBehaviour
     {
         GetEnemyInfo();
 
+        if (!ControllerManager.GetInstance().DirRight)
+            SpawnTime *= 0.2f;
+
         // ** Enemy로 사용할 원형 객체
         Prefab = Resources.Load("Prefabs/Enemies/" + enemyType.ToString()) as GameObject;
         //HPPrefab = Resources.Load("Prefabs/EnemyHPSlider") as GameObject;
@@ -92,7 +95,8 @@ public class EnemyManager : MonoBehaviour
                 // ** 스크립트의 Target을 지금 생성된 Enemy로 세팅
                 //enemyHPBar.Target = Obj;
             }
-            // ** 1.5초 휴식
+            
+            // ** SpawnTime만큼 휴식
             yield return new WaitForSeconds(SpawnTime);
         }
     }
@@ -120,12 +124,12 @@ public class EnemyManager : MonoBehaviour
 
             case 2:
                 enemyType = EnemyType.Rock1;
-                SpawnTime = 3.0f;
+                SpawnTime = 2.0f;
                 break;
 
             case 3:
                 enemyType = EnemyType.Plant;
-                SpawnTime = 3.0f;
+                SpawnTime = 2.0f;
                 break;
         }
     }

@@ -85,15 +85,12 @@ public class RoundManager : MonoBehaviour
             if (ControllerManager.GetInstance().onEnemy)
             {
                 // Enemy Off
-                ControllerManager.GetInstance().onEnemy = false;  // 78줄 멈추게
+                ControllerManager.GetInstance().onEnemy = false;  // Update의 첫 번째 조건문 피하게
                 StartCoroutine(BossRoundSetting());
             }
             else if(ControllerManager.GetInstance().onBoss)
                 StartCoroutine(EnemyRoundSetting());
-
-            
         }
-
     }
 
     private IEnumerator BossRoundSetting()

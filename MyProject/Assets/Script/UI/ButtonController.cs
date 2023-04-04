@@ -13,10 +13,13 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private bool onHover;
 
     public Button LoadGame;
+    private Animator OptionAnim;
 
     private void Awake()
     {
         text = transform.Find("Text").GetComponent<Text>();
+
+        OptionAnim = GameObject.Find("OptionMenu").GetComponent<Animator>();
 
         if (ControllerManager.GetInstance().LoadGame)
         {
@@ -47,8 +50,6 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         {
             if (transform.name == "New Game")
             {
-                //Time.timeScale = 1.0f;  // 안 해도 됨
-                
                 if(ControllerManager.GetInstance().LoadGame)
                 {
                     // 기존의 Load 파일 사라짐 경고 UI SetActive true
@@ -79,13 +80,23 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
                 SceneManager.LoadScene("Game Start");
             }
+            else if(transform.name == "Option")
+            {
+                OptionAnim.SetBool("Move", true);
+            }
             else if (transform.name == "Quit")
             {
                 Application.Quit();  // 에디터에서는 무시됨
-                UnityEditor.EditorApplication.ExitPlaymode();  // 에디터 플레이모드 나가기
+                //UnityEditor.EditorApplication.ExitPlaymode();  // 에디터 플레이모드 나가기
             }
         }
     }
+
+    public void CloseOption()
+    {
+        OptionAnim.SetBool("Move", false);
+    }
+
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -109,6 +120,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().Player_HP = 100;
         ControllerManager.GetInstance().BulletSpeed = 10.0f;
         ControllerManager.GetInstance().EnemyCount = 0;
+        ControllerManager.GetInstance().Heart = 3;
         ControllerManager.GetInstance().Goal = 10;
 
         ControllerManager.GetInstance().BossId = 1;
@@ -126,11 +138,13 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     // 버튼 onClick
     public void WarningYES()
     {
-
+        ResetValue();
+        ControllerManager.GetInstance().LoadGame = true;
+        SceneManager.LoadScene("Game Start");
     }
 
     public void WarningNO()
     {
-
+        // 경고창 끄기
     }
 }

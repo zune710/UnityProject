@@ -22,6 +22,8 @@ public class BackgroundController : MonoBehaviour
     // ** 이미지 이동 속도
     public float Speed;
 
+    private float playerSpeed;
+
     // ** 플레이어 정보
     private GameObject player;
     private PlayerController playerController;
@@ -36,7 +38,7 @@ public class BackgroundController : MonoBehaviour
     private void Awake()
     {
         // ** 플레이어의 기본 정보를 받아온다.
-        player = GameObject.Find("Player").gameObject;  // gameObject 안 써도 들어가지나 가독성 위해 씀
+        player = GameObject.Find("Player").gameObject;  // .gameObject 안 써도 들어가지나 가독성 위해 씀
 
         // ** 부모객체를 받아온다.
         parent = GameObject.Find("BackgroundList").transform;
@@ -65,10 +67,11 @@ public class BackgroundController : MonoBehaviour
     void Update()
     {
         offset.y = player.transform.position.y * -1;
+        playerSpeed = playerController.Speed * 0.2f;
 
         // ** 이동 정보 세팅
         movement = new Vector3(
-            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed + offset.x, // ** 나중에 singleton으로 변경해야 함
+            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed * playerSpeed + offset.x, // ** 나중에 singleton으로 변경해야 함
             player.transform.position.y + offset.y,
             0.0f + offset.z);
 

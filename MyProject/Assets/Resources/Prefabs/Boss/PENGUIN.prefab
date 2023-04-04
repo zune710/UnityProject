@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 100
-  Speed: 1
+  Speed: 1.5
   SkillAttack: 0
   Attack: 0
 --- !u!70 &5548472186455816576

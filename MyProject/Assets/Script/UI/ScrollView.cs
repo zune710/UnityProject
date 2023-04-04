@@ -30,9 +30,6 @@ public class ScrollView : MonoBehaviour
 
     private void Start()
     {
-        sizeX = 350.0f;
-        sizeY = 350.0f;
-
         active = true;
 
         Volume.maxValue = 100;

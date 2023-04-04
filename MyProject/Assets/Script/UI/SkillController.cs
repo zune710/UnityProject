@@ -19,12 +19,16 @@ public class SkillController : MonoBehaviour
     private List<GameObject> BulletList = new List<GameObject>();
     private Text Timer;
 
+    private PlayerController playerController;
+
 
     private void Awake()
     {
         BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
         BigBulletPrefab = Resources.Load("Prefabs/BigBullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
+
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     private void Start()
@@ -48,21 +52,42 @@ public class SkillController : MonoBehaviour
         maxHP = ControllerManager.GetInstance().Player_HP;
     }
 
-    public void PushButton()
+    private void Update()
     {
-        if (Time.timeScale > 0)
+        if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            FillImages[slot - 1].fillAmount = 1;
-            SlotButtons[slot - 1].GetComponent<Button>().enabled = false;
+            Slot1_BigBullet();
+            PushButton();
         }
 
-        StartCoroutine(Cooldown_Coroutine());
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            Slot2_SpeedUp();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            Slot3_Heal();
+            PushButton();
+        }
     }
 
-    IEnumerator Cooldown_Coroutine()
+    public void PushButton()
+    {
+        int value = slot - 1;
+        
+        if (Time.timeScale > 0)
+        {
+            FillImages[value].fillAmount = 1;
+            SlotButtons[value].GetComponent<Button>().enabled = false;
+        }
+
+        StartCoroutine(Cooldown_Coroutine(value));
+    }
+
+    IEnumerator Cooldown_Coroutine(int value)
     {
         float cool = cooldown;
-        int value = slot - 1;
 
         while(FillImages[value].fillAmount != 0)
         {
@@ -79,9 +104,8 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 1;
-            cooldown = 0.1f;  //   0.5f
+            cooldown = 0.03f;
 
-            //GetScrewPattern();
             BigBullet();
         }
     }
@@ -116,7 +140,7 @@ public class SkillController : MonoBehaviour
     //    }
     //}
 
-    public void Slot2_SpeedUp()  // Bullet Speed 증가
+    public void Slot2_SpeedUp()  // Player, Bullet Speed 증가
     {
         if (Time.timeScale > 0)
         {
@@ -126,15 +150,17 @@ public class SkillController : MonoBehaviour
             FillImages[slot - 1].fillAmount = 1;
             SlotButtons[slot - 1].GetComponent<Button>().enabled = false;
 
-            StartCoroutine(UsingSpeedUp());
+            StartCoroutine(UsingSpeedUp(slot - 1));
         }
     }
 
-    private IEnumerator UsingSpeedUp()
+    private IEnumerator UsingSpeedUp(int value)
     {
 
-        float speed = ControllerManager.GetInstance().BulletSpeed;
-        
+        float playerSpeed = playerController.Speed;
+        float bulletSpeed = ControllerManager.GetInstance().BulletSpeed;
+
+        playerController.Speed += 5.0f;
         ControllerManager.GetInstance().BulletSpeed += 5.0f;  // 1.0f
 
         Timer.gameObject.SetActive(true);
@@ -155,9 +181,15 @@ public class SkillController : MonoBehaviour
             yield return null;
         }
 
-        ControllerManager.GetInstance().BulletSpeed = speed;  // 원래대로
+        // 원래대로
+        playerController.Speed = playerSpeed;
+        ControllerManager.GetInstance().BulletSpeed = bulletSpeed;
 
-        PushButton();
+        // PushButton(); 부분
+        FillImages[value].fillAmount = 1;
+        SlotButtons[value].GetComponent<Button>().enabled = false;
+
+        StartCoroutine(Cooldown_Coroutine(value));
     }
 
     public void Slot3_Heal()  // 회복
@@ -165,7 +197,7 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 3;
-            cooldown = 0.03f;  // 0.5f
+            cooldown = 0.05f;  // 0.5f
 
 
             int value = 10;

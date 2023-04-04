@@ -139,7 +139,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   hasBullet: 0
   HP: 2
-  Speed: 0.5
+  Speed: 2
   AttackRange: 0
 --- !u!1 &8326164801005188890
 GameObject:

@@ -33,18 +33,18 @@ public class EnemyBulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ** 이펙트 효과 복제
-        GameObject Obj = Instantiate(fxPrefab);
-
-        // ** 이펙트 효과의 위치를 지정
-        Obj.transform.position = transform.position;
-
         // ** collision = 충돌한 대상
         // ** Wall과 충돌하면 Bullet을 삭제한다.
         if (collision.transform.tag == "Wall")
             Destroy(this.gameObject);
         else
         {
+            // ** 이펙트 효과 복제
+            GameObject Obj = Instantiate(fxPrefab);
+
+            // ** 이펙트 효과의 위치를 지정
+            Obj.transform.position = transform.position;
+
             // ** 진동 효과를 생성할 관리자 생성
             GameObject camera = new GameObject("Camera Test");
 

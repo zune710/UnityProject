@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour
     private Vector3 Movement;
 
     public GameObject Player;
+    PlayerController playerController;
+
     private GameObject EnemyBullet;
 
     private GameObject fxPrefab;
@@ -30,11 +32,14 @@ public class EnemyController : MonoBehaviour
     public float Speed;
     public float AttackRange;
 
+    private float playerSpeed;
+
     private void Awake()
     {
         Anim = GetComponent<Animator>();
 
         Player = GameObject.Find("Player");
+        playerController = Player.GetComponent<PlayerController>();
 
         EnemyType = EnemyManager.GetInstance.enemyType.ToString();
 
@@ -61,10 +66,13 @@ public class EnemyController : MonoBehaviour
                     Player.transform.position,
                     transform.position);
 
+        playerSpeed = playerController.Speed * 0.2f;  // 1(속도 증가 스킬 사용하면 2)
+
+
         if (distance < AttackRange)
         {
             Movement = ControllerManager.GetInstance().DirRight ?
-            new Vector3(1.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f);
+            new Vector3(1.0f * playerSpeed, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f); // 1.0f: Background 2 속도
 
             transform.position -= Movement * Time.deltaTime;
 
@@ -73,7 +81,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             Movement = ControllerManager.GetInstance().DirRight ?
-            new Vector3(Speed + 1.0f, 0.0f, 0.0f) : new Vector3(Speed, 0.0f, 0.0f); // 1.0f: Background 2 속도
+            new Vector3(Speed + 1.0f * playerSpeed, 0.0f, 0.0f) : new Vector3(Speed, 0.0f, 0.0f); // 1.0f: Background 2 속도
 
             transform.position -= Movement * Time.deltaTime;
             Anim.SetFloat("Speed", Movement.x);
@@ -86,6 +94,9 @@ public class EnemyController : MonoBehaviour
             Anim.SetTrigger("Die");
             GetComponent<CapsuleCollider2D>().enabled = false;
         }
+
+        if (transform.position.x < -20.0f)
+            Destroy(gameObject);
 
         //// Old Enemy
         //float distance = Vector3.Distance(
@@ -159,6 +170,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+
     private void OnAttack()
     {
         // 공통
@@ -207,7 +219,7 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    private IEnumerator CreatePlantBullet()
+    private IEnumerator CreatePlantBullet()  // Plant Attack Anim Event
     {
         GameObject Obj = Instantiate(EnemyBullet);
 
@@ -305,11 +317,9 @@ public class EnemyController : MonoBehaviour
                 ++i;
             }
         }
-
-
     }
 
-    private void DestroyEnemy()
+    private void DestroyEnemy()  // Die Anim Event
     {
         Destroy(gameObject, 0.016f);
     }
