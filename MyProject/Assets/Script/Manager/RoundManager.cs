@@ -39,6 +39,9 @@ public class RoundManager : MonoBehaviour
     public GameObject NextInfoText;
     public GameObject NextInfoBack;
 
+    private AudioSource BGM;
+    public AudioClip[] BGMs;
+
 
 
     private void Awake()
@@ -66,6 +69,8 @@ public class RoundManager : MonoBehaviour
 
             NextInfoAnim = NextInfo.GetComponent<Animator>();
 
+            BGM = GetComponent<AudioSource>();
+
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
         }
@@ -83,6 +88,8 @@ public class RoundManager : MonoBehaviour
 
         // Fade In + Round Info
         StartCoroutine(PlayFadeIn());
+
+        PlayMusic();
     }
 
     private void Update()
@@ -119,6 +126,10 @@ public class RoundManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
+        // BGM 변경
+        BGM.clip = BGMs[1];  // BossBattle
+        BGM.Play();
+
         // GoalBar Off
         GoalBar.SetActive(false);
 
@@ -151,6 +162,10 @@ public class RoundManager : MonoBehaviour
         RoundText.text = "Round" + ControllerManager.GetInstance().Round.ToString();
 
         yield return new WaitForSeconds(1.5f);
+
+        // BGM 변경
+        BGM.clip = BGMs[0];  // EnemyBattle
+        BGM.Play();
 
         // Info UI(Round)
         NextInfoText.GetComponent<Text>().text = RoundText.text;
@@ -211,5 +226,15 @@ public class RoundManager : MonoBehaviour
         if (ControllerManager.GetInstance().onBoss)
             ControllerManager.GetInstance().BossActive = true;
 
+    }
+
+    private void PlayMusic()
+    {
+        if (ControllerManager.GetInstance().onEnemy)
+            BGM.clip = BGMs[0];  // EnemyBattle
+        else if (ControllerManager.GetInstance().onBoss)
+            BGM.clip = BGMs[1];  // BossBattle
+
+        BGM.Play();
     }
 }

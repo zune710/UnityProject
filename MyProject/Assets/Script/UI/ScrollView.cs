@@ -22,6 +22,7 @@ public class ScrollView : MonoBehaviour
     public float sizeY;
 
     private AudioSource ButtonSFX;
+    public AudioSource BGM;
 
 
     private void Awake()
@@ -29,20 +30,24 @@ public class ScrollView : MonoBehaviour
         uiTranspos = ui.GetComponent<RectTransform>();
         Volume = SoundSlider.GetComponent<Slider>();
         ButtonSFX = GetComponent<AudioSource>();
+
+        BGM = GameObject.Find("GameManager").GetComponent<AudioSource>();
     }
 
     private void Start()
     {
         active = true;
 
-        Volume.maxValue = 100;
-        Volume.value = 50;
+        Volume.maxValue = 1;
+        Volume.value = BGM.volume;
 
         StartCoroutine(EffectUi());
     }
 
     private void Update()
     {
+        BGM.volume = Volume.value;
+
         // VolumeControl
         if (Volume.value == 0)
         {
@@ -111,7 +116,7 @@ public class ScrollView : MonoBehaviour
         else
         {
             SoundButton.GetComponent<Image>().sprite = SoundOn;
-            Volume.value = 50;
+            Volume.value = 1;
             
             // Sound On
         }

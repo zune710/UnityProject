@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 
 public class SidebarController : MonoBehaviour
 {
-    
     private GameObject Menu;
     private GameObject End;
     private GameObject Dark;
@@ -17,12 +16,17 @@ public class SidebarController : MonoBehaviour
     public GameObject DeleteDataText;  // Inspector
     public GameObject Bunny;  // Inspector
 
+    private GameObject gameManager;
+
     private Animator Anim;
     private Animator HeartAnim;
     private Animator DeleteDataTextAnim;
     private Animator BunnyAnim;
 
     private AudioSource ButtonSFX;
+    private AudioSource BGM;
+
+    private AudioClip[] BGMs;
 
     public bool check;
     public bool active;
@@ -35,12 +39,17 @@ public class SidebarController : MonoBehaviour
         Dark = transform.Find("DarkBackground").gameObject;
         brokenHeart = transform.Find("BrokenHeart").gameObject;
 
+        gameManager = GameObject.Find("GameManager").gameObject;
+
         Anim = Menu.GetComponent<Animator>();
         HeartAnim = brokenHeart.GetComponent<Animator>();
         DeleteDataTextAnim = DeleteDataText.GetComponent<Animator>();
         BunnyAnim = Bunny.GetComponent<Animator>();
 
         ButtonSFX = GetComponent<AudioSource>();
+        BGM = gameManager.GetComponent<AudioSource>();
+
+        BGMs = gameManager.GetComponent<RoundManager>().BGMs;
     }
 
     void Start()
@@ -78,6 +87,9 @@ public class SidebarController : MonoBehaviour
             else if (ControllerManager.GetInstance().GameClear)
             {
                 active = false;
+
+                BGM.clip = BGMs[2];  // GameClear
+                BGM.Play();
 
                 Time.timeScale = 0.0f;
                 Dark.SetActive(true);
@@ -134,7 +146,7 @@ public class SidebarController : MonoBehaviour
     private IEnumerator GameClearAnim()
     {
         // Time.timeScale = 0.0f일 때는 Realtime 사용
-        yield return new WaitForSecondsRealtime(4.0f);  // Bunny Anim 재생시간만큼
+        yield return new WaitForSecondsRealtime(4.0f);  // Bunny Anim 재생시간(5초)
 
         // End(Game Clear) UI Animation
         End.GetComponent<Animator>().SetTrigger("Move");
