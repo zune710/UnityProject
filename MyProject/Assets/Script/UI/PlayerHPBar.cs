@@ -27,7 +27,7 @@ public class PlayerHPBar : MonoBehaviour
 
         int count = ControllerManager.GetInstance().Heart;  // 1 ~ 3
 
-        for (int i = 0; i < count; ++i )
+        for (int i = 0; i < count; ++i)
         {
             GameObject Obj = Instantiate(HeartPrefab);
             Obj.name = "Heart";

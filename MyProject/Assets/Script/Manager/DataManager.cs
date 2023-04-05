@@ -30,7 +30,7 @@ class DataForm
     public int Goal;
     public bool onEnemy;
     public bool onBoss;
-    public bool active;
+    public bool BossActive;
 
     //ItemForm item;  // json 안에 json 형태로 저장
 
@@ -65,7 +65,7 @@ public class DataManager : MonoBehaviour
             ControllerManager.GetInstance().Goal = form.Goal;
             ControllerManager.GetInstance().onEnemy = form.onEnemy;
             ControllerManager.GetInstance().onBoss = form.onBoss;
-            BossManager.GetInstance.active = form.active;
+            ControllerManager.GetInstance().BossActive = form.BossActive;
         }
 
         //value = int.Parse(form.age);
@@ -131,7 +131,7 @@ public class DataManager : MonoBehaviour
         form.Goal = ControllerManager.GetInstance().Goal;
         form.onEnemy = ControllerManager.GetInstance().onEnemy;
         form.onBoss = ControllerManager.GetInstance().onBoss;
-        form.active = BossManager.GetInstance.active;
+        form.BossActive = ControllerManager.GetInstance().BossActive;
 
         string JsonData = JsonUtility.ToJson(form);
 

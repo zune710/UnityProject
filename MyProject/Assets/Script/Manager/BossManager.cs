@@ -32,8 +32,6 @@ public class BossManager : MonoBehaviour
     private GameObject Prefab;
     private GameObject HPPrefab;
 
-    public bool active;
-
     public BossType bossType;
 
 
@@ -42,8 +40,6 @@ public class BossManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-
-            active = ControllerManager.GetInstance().BossActive;
 
             // ** 생성되는 Boss를 담아둘 상위 객체
             Parent = new GameObject("BossList");
@@ -64,7 +60,7 @@ public class BossManager : MonoBehaviour
         GetBossInfo();
         Prefab = Resources.Load("Prefabs/Boss/" + bossType.ToString()) as GameObject;
 
-        if (ControllerManager.GetInstance().onBoss && active)
+        if (ControllerManager.GetInstance().onBoss && ControllerManager.GetInstance().BossActive)
         {
             // ** Enemy 원형 객체를 복제한다.
             GameObject Obj = Instantiate(Prefab);
@@ -92,7 +88,7 @@ public class BossManager : MonoBehaviour
             bossHPBar.Target = Obj;
 
             // 하나만 생성되게 함
-            active = false;
+            ControllerManager.GetInstance().BossActive = false;
         }
     }
 

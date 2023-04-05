@@ -30,6 +30,15 @@ public class RoundManager : MonoBehaviour
     public bool GoalClear;
     public bool BossClear;
 
+    public GameObject FadeIn;  // Inspector
+    private Image FadeInImg;
+    private Animator FadeInAnim;
+
+    public GameObject NextInfo;
+    private Animator NextInfoAnim;
+    public GameObject NextInfoText;
+    public GameObject NextInfoBack;
+
 
 
     private void Awake()
@@ -52,18 +61,28 @@ public class RoundManager : MonoBehaviour
             if(ControllerManager.GetInstance().onBoss)
                 GoalBar.SetActive(false);
 
-            //ControllerManager.GetInstance().Player_HP = 100;
+            FadeInImg = FadeIn.GetComponent<Image>();
+            FadeInAnim = FadeIn.GetComponent<Animator>();
+
+            NextInfoAnim = NextInfo.GetComponent<Animator>();
 
             // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
             //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
         }
     }
+
    private void Start()
     {
+
         RoundText.text = "Round " + ControllerManager.GetInstance().Round.ToString();
+
+        NextInfoText.GetComponent<Text>().text = RoundText.text;
 
         GoalSlider.maxValue = Goal;
         GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
+
+        // Fade In + Round Info
+        StartCoroutine(PlayFadeIn());
     }
 
     private void Update()
@@ -75,7 +94,7 @@ public class RoundManager : MonoBehaviour
 
         if (GoalClear || BossClear)
         {
-            // 목표 도달 ->  다음 라운드 -> ...
+            /* 목표 도달 ->  다음 라운드 -> ... */
 
             // 변수 리셋(if문 한 번만 실행되게)
             GoalClear = false;
@@ -109,13 +128,17 @@ public class RoundManager : MonoBehaviour
         // 플레이어 HP 리셋
         ControllerManager.GetInstance().Player_HP = 100;
 
+        // Info UI(Boss)
+        NextInfoText.GetComponent<Text>().text = "Boss Round";  // ??
+        NextInfoAnim.SetTrigger("Move");
+
         yield return new WaitForSeconds(1.5f);
 
         // EnemyId 변경
         ++ControllerManager.GetInstance().EnemyId;
 
         // Boss On(2/2)
-        BossManager.GetInstance.active = true;
+        ControllerManager.GetInstance().BossActive = true;
     }
 
     private IEnumerator EnemyRoundSetting()
@@ -123,7 +146,15 @@ public class RoundManager : MonoBehaviour
         // Boss Off
         ControllerManager.GetInstance().onBoss = false;
 
+        // 라운드 증가
+        ++ControllerManager.GetInstance().Round;
+        RoundText.text = "Round" + ControllerManager.GetInstance().Round.ToString();
+
         yield return new WaitForSeconds(1.5f);
+
+        // Info UI(Round)
+        NextInfoText.GetComponent<Text>().text = RoundText.text;
+        NextInfoAnim.SetTrigger("Move");
 
         // 플레이어 HP 리셋
         ControllerManager.GetInstance().Player_HP = 100;
@@ -133,10 +164,6 @@ public class RoundManager : MonoBehaviour
         Player.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
 
         yield return new WaitForSeconds(1.5f);
-
-        // 라운드 증가
-        ++ControllerManager.GetInstance().Round;
-        RoundText.text = "Round" + ControllerManager.GetInstance().Round.ToString();
 
         // Enemy 처치 목표 증가
         ControllerManager.GetInstance().Goal += 10;
@@ -152,5 +179,37 @@ public class RoundManager : MonoBehaviour
 
         // GoalBar On
         GoalBar.SetActive(true);
+    }
+
+
+    private IEnumerator PlayFadeIn()
+    {
+        FadeInImg.enabled = true;
+
+        Time.timeScale = 0.0f;
+
+        yield return new WaitForSecondsRealtime(1.5f);  // 화면에 뜰 때까지 대기
+
+        FadeInAnim.SetBool("FadeIn", true);
+
+        yield return new WaitForSecondsRealtime(2.0f);  // FadeIn Animation Clip 길이만큼
+
+        FadeInImg.enabled = false;
+        FadeInAnim.SetBool("FadeIn", false);
+
+        Time.timeScale = 1.0f;
+
+        // Info UI(Round)
+        if(ControllerManager.GetInstance().onBoss)
+            NextInfoText.GetComponent<Text>().text = "Boss Round";
+        else
+            NextInfoText.GetComponent<Text>().text = RoundText.text;
+        NextInfoAnim.SetTrigger("Move");
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (ControllerManager.GetInstance().onBoss)
+            ControllerManager.GetInstance().BossActive = true;
+
     }
 }

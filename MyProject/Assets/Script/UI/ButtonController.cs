@@ -16,6 +16,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private GameObject SubMenuCanvas;
     private GameObject AlertMenu;
 
+    private AudioSource ButtonSFX;
+
     private void Awake()
     {
         text = transform.Find("Text").GetComponent<Text>();
@@ -25,6 +27,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         AlertMenu = SubMenuCanvas.transform.Find("AlertMenu").gameObject;
         // 꺼져 있으면 GameObject.Find는 못 찾지만
         // transform.Find는 찾을 수 있음
+
+        ButtonSFX = GetComponent<AudioSource>();
 
         if (ControllerManager.GetInstance().LoadGame)
         {
@@ -55,6 +59,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         if(onHover)
         {
+            ButtonSFX.Play();
+            
             if (transform.name == "New Game")
             {
                 if(ControllerManager.GetInstance().LoadGame)
@@ -81,7 +87,6 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
                 if(ControllerManager.GetInstance().onBoss)
                 {
-                    ControllerManager.GetInstance().BossActive = true;
                     ControllerManager.GetInstance().Player_HP = 100;
                 }
 
@@ -101,6 +106,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void CloseOption()
     {
+        ButtonSFX.Play();
+
         OptionAnim.SetBool("Move", false);
     }
 
@@ -128,7 +135,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().BulletSpeed = 10.0f;
         ControllerManager.GetInstance().EnemyCount = 0;
         ControllerManager.GetInstance().Heart = 3;
-        ControllerManager.GetInstance().Goal = 10;
+        ControllerManager.GetInstance().Goal = 1;  // 20
 
         ControllerManager.GetInstance().BossId = 1;
         ControllerManager.GetInstance().EnemyId = 1;
@@ -136,6 +143,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
         ControllerManager.GetInstance().onEnemy = true;
         ControllerManager.GetInstance().onBoss = false;
+        ControllerManager.GetInstance().BossActive = false;
 
         ControllerManager.GetInstance().GameClear = false;
         ControllerManager.GetInstance().GameOver = false;
@@ -145,6 +153,9 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     // 버튼 onClick
     public void AlertYES()
     {
+        ButtonSFX.Play();
+
+        // New Game 실행
         ResetValue();
         ControllerManager.GetInstance().LoadGame = true;
         SceneManager.LoadScene("Game Start");
@@ -152,6 +163,8 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void AlertNO()
     {
+        ButtonSFX.Play();
+        
         // 경고창 끄기
         AlertMenu.gameObject.SetActive(false);
     }

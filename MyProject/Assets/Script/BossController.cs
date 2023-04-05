@@ -14,7 +14,9 @@ public class BossController : MonoBehaviour
     const int STATE_SLIDE = 3;
 
     // RHINO
-    const int STATE_ATTACKRUN = 2;
+    const int STATE_ATTACKRUN1 = 2;
+    const int STATE_ATTACKRUN2 = 3;
+
 
     // TREE
     const int STATE_BULLET = 3;
@@ -210,7 +212,8 @@ public class BossController : MonoBehaviour
                     OnWalk();
                     break;
 
-                case STATE_ATTACKRUN:
+                case STATE_ATTACKRUN1:
+                case STATE_ATTACKRUN2:  // 확률 올리려고
                     OnAttackRun();
                     break;
             }
@@ -301,7 +304,7 @@ public class BossController : MonoBehaviour
                 return Random.Range(STATE_WALK, STATE_SLIDE + 1);
 
             case 2:
-                return Random.Range(STATE_WALK, STATE_ATTACKRUN + 1);
+                return Random.Range(STATE_WALK, STATE_ATTACKRUN2 + 1);
 
             case 3:
                 return Random.Range(STATE_WALK, STATE_BULLET + 1);
@@ -337,17 +340,20 @@ public class BossController : MonoBehaviour
         // ** Player 따라가기
         float Distance = Vector3.Distance(Target.transform.position, transform.position);
 
-        Vector3 Direction = (Target.transform.position - transform.position).normalized;
+        if (Distance > 0.1f)
+        {
+            Vector3 Direction = (Target.transform.position - transform.position).normalized;
 
-        Movement = new Vector3(
-            Speed * Direction.x,
-            Speed * Direction.y,
-            0.0f);
+            Movement = new Vector3(
+                Speed * Direction.x,
+                Speed * Direction.y,
+                0.0f);
 
-        transform.position += Movement * Time.deltaTime;
+            transform.position += Movement * Time.deltaTime;
 
-        // 위, 아래로 갈 때도 Walk 애니메이션 나오도록 Movement.y 추가
-        Anim.SetFloat("Speed", Mathf.Abs(Movement.x) + Mathf.Abs(Movement.y));
+            // 위, 아래로 갈 때도 Walk 애니메이션 나오도록 Movement.y 추가
+            Anim.SetFloat("Speed", Mathf.Abs(Movement.x) + Mathf.Abs(Movement.y));
+        }
     }
 
     private IEnumerator TimeLimit(float _time)
@@ -432,7 +438,7 @@ public class BossController : MonoBehaviour
 
         float Distance = Vector3.Distance(EndPoint, transform.position);
 
-        if (Distance > 0.05f)
+        if (Distance > 0.1f)  // 0.05f
         {
             Vector3 Direction = (EndPoint - transform.position).normalized;
 

@@ -36,7 +36,6 @@ public class UIController : MonoBehaviour
         // 변수 초기화
         if (ControllerManager.GetInstance().onBoss)
         {
-            ControllerManager.GetInstance().BossActive = true;
             ControllerManager.GetInstance().Player_HP = 100;
         }
         else

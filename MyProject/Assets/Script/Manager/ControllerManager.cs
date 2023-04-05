@@ -34,7 +34,7 @@ public class ControllerManager
     public int BossId = 1;
 
     public int Round = 1;
-    public int Goal = 20; // Enemy 처치 수(목표) 20 (10씩 증가)
+    public int Goal = 1; // Enemy 처치 수(목표) 20 (10씩 증가), ButtonController에서도 변경해야 함
 
     public bool GoalClear = false;
     public bool BossClear = false;
