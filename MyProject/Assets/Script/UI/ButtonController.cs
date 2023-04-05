@@ -92,7 +92,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
                 SceneManager.LoadScene("Game Start");
             }
-            else if(transform.name == "Option")
+            else if(transform.name == "How To Play")
             {
                 OptionAnim.SetBool("Move", true);
             }

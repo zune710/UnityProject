@@ -132,7 +132,7 @@ public class RoundManager : MonoBehaviour
         NextInfoText.GetComponent<Text>().text = "Boss Round";  // ??
         NextInfoAnim.SetTrigger("Move");
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
 
         // EnemyId 변경
         ++ControllerManager.GetInstance().EnemyId;
@@ -163,7 +163,7 @@ public class RoundManager : MonoBehaviour
         GameObject Player = GameObject.Find("Player");
         Player.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.0f);
 
         // Enemy 처치 목표 증가
         ControllerManager.GetInstance().Goal += 10;
@@ -206,7 +206,7 @@ public class RoundManager : MonoBehaviour
             NextInfoText.GetComponent<Text>().text = RoundText.text;
         NextInfoAnim.SetTrigger("Move");
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(2.5f);
 
         if (ControllerManager.GetInstance().onBoss)
             ControllerManager.GetInstance().BossActive = true;
