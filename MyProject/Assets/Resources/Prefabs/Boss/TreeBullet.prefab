@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2399037937304601651}
   - component: {fileID: -569341642698023579}
   - component: {fileID: 5597509395815475671}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: TreeBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -56,19 +56,28 @@ public class SkillController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Slot1_BigBullet();
-            PushButton();
+            if(SlotButtons[0].GetComponent<Button>().enabled)
+            {
+                Slot1_BigBullet();
+                PushButton();
+            }
+            
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Slot2_SpeedUp();
+            if(SlotButtons[1].GetComponent<Button>().enabled)
+                Slot2_SpeedUp();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            Slot3_Heal();
-            PushButton();
+            if(SlotButtons[2].GetComponent<Button>().enabled)
+            {
+                Slot3_Heal();
+                PushButton();
+            }
+                
         }
     }
 

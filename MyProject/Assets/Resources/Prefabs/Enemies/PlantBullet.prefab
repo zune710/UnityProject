@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -569341642698023579}
   - component: {fileID: 5597509395815475671}
   - component: {fileID: 7712896804025318167}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: PlantBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   m_Component:
   - component: {fileID: 292955701332846876}
   - component: {fileID: 1843915852755218516}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

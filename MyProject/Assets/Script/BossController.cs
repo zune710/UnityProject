@@ -77,7 +77,7 @@ public class BossController : MonoBehaviour
     {
         onStart = false;
 
-        CoolDown = 1.5f;
+        CoolDown = 0.5f;  // 1.5f
  
         active = false;
         cool = true;
@@ -333,7 +333,7 @@ public class BossController : MonoBehaviour
     private void OnWalk()
     {
         if (!Walk)
-            StartCoroutine(TimeLimit(Random.Range(3.0f, 5.0f)));
+            StartCoroutine(TimeLimit(Random.Range(1.0f, 3.0f)));
         
         Walk = true;
 
