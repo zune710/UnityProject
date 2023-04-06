@@ -14,9 +14,7 @@ public class BossController : MonoBehaviour
     const int STATE_SLIDE = 3;
 
     // RHINO
-    const int STATE_ATTACKRUN1 = 2;
-    const int STATE_ATTACKRUN2 = 3;
-
+    const int STATE_ATTACKRUN = 2;
 
     // TREE
     const int STATE_BULLET = 3;
@@ -45,6 +43,8 @@ public class BossController : MonoBehaviour
     private bool Hit;
     private bool active;
     private bool cool;
+
+    private bool SkillActive;
 
     private int choice;
 
@@ -86,6 +86,8 @@ public class BossController : MonoBehaviour
         Attack = false;
         Walk = false;
         Hit = false;
+
+        SkillActive = false;
 
 
         switch (ControllerManager.GetInstance().BossId)
@@ -212,8 +214,7 @@ public class BossController : MonoBehaviour
                     OnWalk();
                     break;
 
-                case STATE_ATTACKRUN1:
-                case STATE_ATTACKRUN2:  // 확률 올리려고
+                case STATE_ATTACKRUN:
                     OnAttackRun();
                     break;
             }
@@ -291,7 +292,7 @@ public class BossController : MonoBehaviour
 
 
         // ** 어디로 움직일지 정하는 시점에 플레이어의 위치를 도착지점으로 세팅
-        EndPoint = Target.transform.position;
+        // EndPoint = Target.transform.position;
 
         // * [return]
         // * 1: 이동      STATE_WALK
@@ -304,7 +305,7 @@ public class BossController : MonoBehaviour
                 return Random.Range(STATE_WALK, STATE_SLIDE + 1);
 
             case 2:
-                return Random.Range(STATE_WALK, STATE_ATTACKRUN2 + 1);
+                return Random.Range(STATE_WALK, STATE_ATTACKRUN + 1);
 
             case 3:
                 return Random.Range(STATE_WALK, STATE_BULLET + 1);
@@ -404,6 +405,17 @@ public class BossController : MonoBehaviour
 
     private void OnSlide()
     {
+        if(!SkillAttack)
+        {
+            EndPoint = Target.transform.position;
+            
+            if(Vector3.Distance(EndPoint, transform.position) < 3.0f)
+            {
+                active = false;
+                return;
+            }
+        }
+
         SkillAttack = true;
 
         // ** 목적지에 도착할 때까지
@@ -427,47 +439,104 @@ public class BossController : MonoBehaviour
                 Anim.SetTrigger("Preslide");
             }
         }
-
         else
             active = false;
     }
 
     private void OnAttackRun()
     {
+        if(!Attack)
+        {
+            int select = Random.Range(1, 3);
+
+            EndPoint = Target.transform.position;
+
+            switch(select)
+            {
+                case 1:
+                    StartCoroutine(BackStep());
+                    break;
+                case 2:
+                    SkillActive = true;
+                    break;
+            }
+        }
+
         Attack = true;
 
-        float Distance = Vector3.Distance(EndPoint, transform.position);
-
-        if (Distance > 0.1f)  // 0.05f
+        if (SkillActive)
         {
-            Vector3 Direction = (EndPoint - transform.position).normalized;
+            float Distance = Vector3.Distance(EndPoint, transform.position);
 
-            Movement = new Vector3(
-                Speed * 4 * 8.0f * Direction.x,     // Speed 4배 증가
-                Speed * 4 * 8.0f * Direction.y,
-                0.0f);
+            if (Distance > 0.3f)  // 0.05f
+            {
+                Vector3 Direction = (EndPoint - transform.position).normalized;
+
+                Movement = new Vector3(
+                    Speed * 4 * 8.0f * Direction.x,     // Speed 4배 증가
+                    Speed * 4 * 8.0f * Direction.y,
+                    0.0f);
+
+                transform.position += Movement * Time.deltaTime;
+
+                // AttackRun 실행 중일 때 반복 실행하지 않기 위해
+                if (!Anim.GetBool("AttackRun"))
+                {
+                    Anim.SetBool("AttackRun", true);
+                }
+            }
+            else
+            {
+                Anim.SetBool("AttackRun", false);
+                SkillActive = false;
+                Hit = false;
+                active = false;
+            }
+
+            if (Hit)
+            {
+                Anim.SetBool("AttackRun", false);
+                SkillActive = false;
+                Hit = false;
+                active = false;
+            }
+        }
+    }
+
+    private IEnumerator BackStep()
+    {
+        float Direction;
+        
+        if(spriteRenderer.flipX)
+            Direction = -1;
+        else
+            Direction = 1;
+
+        Vector3 BackStep = transform.position + new Vector3(1.5f * Direction, 0.0f, 0.0f);
+
+        while(true)
+        {
+            if(spriteRenderer.flipX)
+            {
+                if (transform.position.x <= BackStep.x)
+                    break;
+            }
+            else
+            {
+                if(transform.position.x >= BackStep.x)
+                    break;
+            }
+
+            Movement = new Vector3(Speed * 4 * 8.0f * Direction, 0.0f, 0.0f);
 
             transform.position += Movement * Time.deltaTime;
 
-            // AttackRun 실행 중일 때 반복 실행하지 않기 위해
-            if (!Anim.GetBool("AttackRun"))
-            {
-                Anim.SetBool("AttackRun", true);
-            }
-        }
-        else
-        {
-            Anim.SetBool("AttackRun", false);
-            Hit = false;
-            active = false;
+            yield return null;
         }
 
-        if (Hit)
-        {
-            Anim.SetBool("AttackRun", false);
-            Hit = false;
-            active = false;
-        }
+        yield return new WaitForSeconds(0.2f);
+
+        SkillActive = true;
     }
 
     private void OnAttackBullet()
@@ -488,6 +557,8 @@ public class BossController : MonoBehaviour
         {
 
             GameObject Obj = Instantiate(TreeBulletPrefab);
+
+            Obj.GetComponent<Collider2D>().offset = new Vector2(0.005f, -0.16f);
 
             // ** 총알의 EnemyBulletController 스크립트를 받아온다.
             EnemyBulletController Controller = Obj.AddComponent<EnemyBulletController>();
@@ -536,8 +607,9 @@ public class BossController : MonoBehaviour
             return;
 
         SkillAttack = true;
-        
-        float choice = Random.Range(1, 5);
+
+        //float choice = Random.Range(1, 5);
+        float choice = 4;
 
         switch(choice)  // Bullet Pattern
         {
@@ -571,8 +643,8 @@ public class BossController : MonoBehaviour
             _angle += 5.0f;
 
             controller.Direction = new Vector3(
-                Mathf.Cos(_angle * 3.141592f / 180),
-                Mathf.Sin(_angle * 3.141592f / 180),
+                Mathf.Cos(_angle * Mathf.Deg2Rad),
+                Mathf.Sin(_angle * Mathf.Deg2Rad),
                 0.0f) * 5;
 
             Obj.transform.position = transform.position;
@@ -626,7 +698,7 @@ public class BossController : MonoBehaviour
     {
         GameObject ParentObj = Instantiate(TreeBulletPrefab);
 
-         BulletControl control = ParentObj.AddComponent<BulletControl>();
+        BulletControl control = ParentObj.AddComponent<BulletControl>();
 
         control.Option = _option;
 
@@ -640,7 +712,10 @@ public class BossController : MonoBehaviour
         fxObj.transform.position = transform.position;
 
         if (!ParentObj)
+        {
+            active = false;
             yield break;
+        }
         
         Vector3 pos = ParentObj.transform.position;
         Destroy(ParentObj);
@@ -656,8 +731,8 @@ public class BossController : MonoBehaviour
             _angle += 10.0f;
 
             controller.Direction = new Vector3(
-                Mathf.Cos(_angle * 3.141592f / 180),
-                Mathf.Sin(_angle * 3.141592f / 180),
+                Mathf.Cos(_angle * Mathf.Deg2Rad),
+                Mathf.Sin(_angle * Mathf.Deg2Rad),
                 0.0f) * 5;
 
             Obj.transform.position = pos;

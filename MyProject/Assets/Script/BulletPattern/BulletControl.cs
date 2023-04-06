@@ -10,9 +10,6 @@ public class BulletControl : MonoBehaviour
 
     public bool Option;
 
-    // ** 총알이 충돌한 횟수
-    //public int hp;
-
     // ** 이펙트 효과 원본
     public GameObject fxPrefab;
 
@@ -28,51 +25,51 @@ public class BulletControl : MonoBehaviour
     private void Start()
     {
         // ** 속도 초기값
-        //Speed = ControllerManager.GetInstance().BulletSpeed;
-        Speed = Option ? 7.0f : 1.0f;
+        Speed = Option ? 10.0f : 1.0f;
 
         // ** 벡터의 정규화
-        if(Option)
-            Direction = Target.transform.position + new Vector3(0.0f, -4.9f, 0.0f) - transform.position;  // Player Collider 방향
+        if (Option)
+            Direction = (Target.transform.position + new Vector3(0.0f, -0.3f, 0.0f)) - transform.position;  // Player Collider 방향으로
         Direction.Normalize();
 
         float fAngle = getAngle(Vector3.down, Direction);
 
         transform.eulerAngles = new Vector3(
-            0.0f, 0.0f, fAngle);
-
-        // ** 충돌 횟수를 3으로 지정한다.
-        //hp = 3;
+            0.0f, 0.0f, fAngle + 90f);
     }
 
     void Update()
     {
         // ** 실시간으로 타깃의 위치를 확인하고 방향을 갱신한다.
-        if(Option && Target)
+        if(Target)
         {
-            StartCoroutine(FollowTarget(2.0f));
+            if(Option)
+            {
+                StartCoroutine(TimeLimit(2.0f));
+                Option = false;
+            }
+            
+            Direction = ((Target.transform.position + new Vector3(0.0f, -0.3f, 0.0f)) - transform.position).normalized;
 
-            Option = false;
+            float fAngle = getAngle(Vector3.down, Direction);
+
+            transform.eulerAngles =  new Vector3(0.0f, 0.0f, fAngle + 120f);
         }
 
         // ** 방향으로 속도만큼 위치를 변경
         transform.position += Direction * Speed * Time.deltaTime;
     }
 
-    private IEnumerator FollowTarget(float _time)
+    private IEnumerator TimeLimit(float _time)
     {
         float time = _time;
 
-        while (time > 0)
+        while (true)
         {
+            if (time <= 0)
+                break;
+
             time -= Time.deltaTime;
-
-            Direction = (Target.transform.position - transform.position).normalized;
-
-            float fAngle = getAngle(Vector3.down, Target.transform.position);
-
-            transform.eulerAngles = new Vector3(
-                0.0f, 0.0f, fAngle);
 
             yield return null;
         }
@@ -84,15 +81,39 @@ public class BulletControl : MonoBehaviour
         Obj.transform.position = transform.position;
 
         Destroy(gameObject);
-            
     }
+
+    //private IEnumerator FollowTarget(float _time)
+    //{
+    //    float time = _time;
+
+    //    while (time > 0)
+    //    {
+    //        Direction = (Target.transform.position + new Vector3(0.0f, -0.3f, 0.0f) - transform.position);
+    //        Direction.Normalize();
+
+    //        float fAngle = getAngle(Vector3.down, Direction);
+
+    //        transform.eulerAngles = new Vector3(
+    //            0.0f, 0.0f, fAngle + 90f);
+
+    //        time -= Time.deltaTime;
+
+    //        yield return null;
+    //    }
+
+    //    // ** 이펙트 효과 복제
+    //    GameObject Obj = Instantiate(fxPrefab);
+
+    //    // ** 이펙트 효과의 위치를 지정
+    //    Obj.transform.position = transform.position;
+
+    //    Destroy(gameObject);
+    //}
 
     // ** 충돌체와 물리엔진이 포함된 오브젝트가 다른 충돌체와 충돌한다면 실행되는 함수
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ** 충돌 횟수 차감
-        //--hp;
-
         // ** 이펙트 효과 복제
         GameObject Obj = Instantiate(fxPrefab);
 
@@ -113,15 +134,21 @@ public class BulletControl : MonoBehaviour
 
             Destroy(this.gameObject, 0.016f);
         }
-
-        // ** 총알의 충돌 횟수가 0이 되면(충돌 가능 횟수를 모두 소진하면) 총알 삭제
-        //if (hp == 0)
-        //    Destroy(this.gameObject, 0.016f);
     }
 
     public float getAngle(Vector3 from, Vector3 to)
     {
         return Quaternion.FromToRotation(Vector3.down, to - from).eulerAngles.z;
-        // 오일러 각(eulerAngles)의 짐벌락 현상 때에 Quaternion 사용
+        // 오일러 각(eulerAngles)의 짐벌락 현상 때문에 Quaternion 사용
     }
+
+    //void getAngle()
+    //{
+    //    Vector3 bullet = transform.position;
+    //    Vector3 player =  GameObject.Find("Player").transform.position;
+    //    Vector3 Direction = (bullet - player).normalized;
+    //    float angle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg;
+
+    //    transform.rotation = Quaternion.AngleAxis(angle - 180f, Vector3.forward);
+    //}
 }

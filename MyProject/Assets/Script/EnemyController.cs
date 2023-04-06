@@ -34,6 +34,7 @@ public class EnemyController : MonoBehaviour
 
     private float playerSpeed;
 
+
     private void Awake()
     {
         Anim = GetComponent<Animator>();
