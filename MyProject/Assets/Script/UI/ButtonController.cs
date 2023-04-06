@@ -135,7 +135,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().BulletSpeed = 10.0f;
         ControllerManager.GetInstance().EnemyCount = 0;
         ControllerManager.GetInstance().Heart = 3;
-        ControllerManager.GetInstance().Goal = 20;  // 20
+        ControllerManager.GetInstance().Goal = 20;
 
         ControllerManager.GetInstance().BossId = 1;
         ControllerManager.GetInstance().EnemyId = 1;

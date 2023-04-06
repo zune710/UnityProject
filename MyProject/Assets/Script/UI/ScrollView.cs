@@ -108,17 +108,15 @@ public class ScrollView : MonoBehaviour
 
         if (active)
         {
+            // Sound Off
             SoundButton.GetComponent<Image>().sprite = SoundOff;
             Volume.value = 0;
-            
-            // Sound Off
         }
         else
         {
-            SoundButton.GetComponent<Image>().sprite = SoundOn;
-            Volume.value = 1;
-            
             // Sound On
+            SoundButton.GetComponent<Image>().sprite = SoundOn;
+            Volume.value = 0.7f;
         }
 
         active = !active;

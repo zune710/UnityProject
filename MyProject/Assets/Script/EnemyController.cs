@@ -20,10 +20,6 @@ public class EnemyController : MonoBehaviour
     private List<GameObject> Bullets = new List<GameObject>();
 
     private bool onAttack;
-    private bool onMagic;
-
-    private float CoolTime;
-    private float CoolDown;
 
     private string EnemyType;
 
@@ -55,10 +51,6 @@ public class EnemyController : MonoBehaviour
         Movement = new Vector3(1.0f, 0.0f, 0.0f);
 
         onAttack = false;
-        onMagic = false;
-
-        CoolTime = 10.0f;
-        CoolDown = 0.0f;
     }
 
     void Update()
@@ -98,51 +90,6 @@ public class EnemyController : MonoBehaviour
 
         if (transform.position.x < -20.0f)
             Destroy(gameObject);
-
-        //// Old Enemy
-        //float distance = Vector3.Distance(
-        //        Player.transform.position,
-        //        transform.position);
-
-        //if (CoolDown > 0.0f)
-        //    CoolDown -= Time.deltaTime;
-
-        //if (distance < 2.0f)
-        //{
-        //    Movement = ControllerManager.GetInstance().DirRight ?
-        //    new Vector3(1.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f);
-
-        //    transform.position -= Movement * Time.deltaTime;
-
-        //    OnAttack();
-        //}
-        //else if (distance < 5.0f && CoolDown <= 0.0f)
-        //{
-        //    Movement = ControllerManager.GetInstance().DirRight ?
-        //    new Vector3(1.0f, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f);
-
-        //    transform.position -= Movement * Time.deltaTime;
-
-        //    OnMagic();
-        //}
-        //else
-        //{
-        //    Movement = ControllerManager.GetInstance().DirRight ?
-        //    new Vector3(Speed + 1.0f, 0.0f, 0.0f) : new Vector3(Speed, 0.0f, 0.0f); // 1.0f: Background 2 속도
-
-        //    transform.position -= Movement * Time.deltaTime;
-        //    Anim.SetFloat("Speed", Movement.x);
-        //}
-
-        //if (ControllerManager.GetInstance().onBoss)
-        //{
-        //    HP = 0;
-
-        //    Anim.SetTrigger("Die");
-        //    GetComponent<CapsuleCollider2D>().enabled = false;
-
-        //    //ControllerManager.GetInstance().EnemyCount = 0;
-        //}
     }
 
 
@@ -175,7 +122,7 @@ public class EnemyController : MonoBehaviour
     private void OnAttack()
     {
         // 공통
-        if (onAttack || onMagic)
+        if (onAttack)
             return;
 
         onAttack = true;
@@ -189,36 +136,6 @@ public class EnemyController : MonoBehaviour
     {
         onAttack = false;
     }
-
-    private void OnMagic()
-    {
-        if (onMagic || onAttack)
-            return;
-
-        onMagic = true;
-        CoolDown = CoolTime;
-
-        //Anim.SetTrigger("Magic");
-
-        CreateEnemyBullet();
-    }
-
-    private void SetMagic()
-    {
-        onMagic = false;
-    }
-
-    private void CreateEnemyBullet()
-    {
-        GameObject Obj = Instantiate(EnemyBullet);
-
-        // OldEnemyBullet
-        Obj.transform.position = new Vector3(
-            Player.transform.position.x,
-            Player.transform.position.y + 0.5f,
-            0.0f);
-    }
-
 
     private IEnumerator CreatePlantBullet()  // Plant Attack Anim Event
     {
@@ -248,6 +165,8 @@ public class EnemyController : MonoBehaviour
 
     private void RockSplit()
     {
+        GetComponent<AudioSource>().Play();
+        
         GameObject RockPrefab;
         List<GameObject> SplitRock = new List<GameObject>();
         Vector3 pos;

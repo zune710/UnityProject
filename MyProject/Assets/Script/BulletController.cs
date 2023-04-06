@@ -67,5 +67,3 @@ public class BulletController : MonoBehaviour
             Destroy(this.gameObject, 0.016f);
     }
 }
-
-// 유니티에서는 안 쓰는 함수도 실행되면서 스택이 쌓이기 때문에 주석 처리하지 않고 지우는 것이 좋다.

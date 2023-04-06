@@ -16,7 +16,7 @@ public class SkillController : MonoBehaviour
     private GameObject BigBulletPrefab;
     private GameObject fxPrefab;
     private GameObject Player;
-    //private List<GameObject> BulletList = new List<GameObject>();
+
     private Text Timer;
 
     private PlayerController playerController;
@@ -49,7 +49,7 @@ public class SkillController : MonoBehaviour
         Timer.gameObject.SetActive(false);
 
         cooldown = 0.0f;
-        maxHP = ControllerManager.GetInstance().Player_HP;
+        maxHP = 100;
     }
 
     private void Update()
@@ -119,42 +119,13 @@ public class SkillController : MonoBehaviour
         }
     }
 
-    //private void GetScrewPattern()  // multishot
-    //{
-    //    float angle = -90.0f;
-    //    int count = (int)(180 / 9.0f);
-
-    //    Vector3 pos = GameObject.Find("Player").transform.position;
-
-    //    for (int i = 0; i < count - 1; ++i)
-    //    {
-    //        GameObject Obj = Instantiate(BulletPrefab);
-    //        BulletControl controller = Obj.AddComponent<BulletControl>();
-
-    //        controller.Option = false;
-    //        controller.Speed = 10.0f;
-    //        controller.transform.eulerAngles = new Vector3(
-    //        0.0f, 0.0f, 0.0f);
-
-    //        angle += 9.0f;
-
-    //        controller.Direction = new Vector3(
-    //            Mathf.Cos(angle * Mathf.Deg2Rad),
-    //            Mathf.Sin(angle * Mathf.Deg2Rad),
-    //            0.0f) * 5;
-
-    //        Obj.transform.position = pos + new Vector3(0.0f, 0.5f, 0.0f);
-
-    //        BulletList.Add(Obj);
-    //    }
-    //}
 
     public void Slot2_SpeedUp()  // Player, Bullet Speed 증가
     {
         if (Time.timeScale > 0)
         {
             slot = 2;
-            cooldown = 0.05f;  // 0.5f
+            cooldown = 0.05f;
 
             FillImages[slot - 1].fillAmount = 1;
             SlotButtons[slot - 1].GetComponent<Button>().enabled = false;
@@ -170,7 +141,7 @@ public class SkillController : MonoBehaviour
         float bulletSpeed = ControllerManager.GetInstance().BulletSpeed;
 
         playerController.Speed += 5.0f;
-        ControllerManager.GetInstance().BulletSpeed += 5.0f;  // 1.0f
+        ControllerManager.GetInstance().BulletSpeed += 5.0f;
 
         Timer.gameObject.SetActive(true);
 
@@ -206,7 +177,7 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 3;
-            cooldown = 0.05f;  // 0.5f
+            cooldown = 0.05f;
 
 
             int value = 10;
@@ -240,13 +211,6 @@ public class SkillController : MonoBehaviour
             Player.transform.position.x, -4.5f, transform.position.z);
 
         Obj.name = "BigBullet";
-
-        //// Bullet 크기 조정
-        //Obj.transform.localScale = new Vector3(5.0f, 5.0f, 5.0f);
-        //// 그림자 위치 조정
-        //Obj.transform.GetChild(0).transform.position += new Vector3(0.0f, 1.0f, 0.0f);
-        //// Collider 위치 조정
-        //Obj.GetComponent<CapsuleCollider2D>().offset = new Vector2(0.42f, -0.03f);
 
         BulletController Controller = Obj.AddComponent<BulletController>();
         SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();

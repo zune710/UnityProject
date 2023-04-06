@@ -328,7 +328,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") || collision.gameObject.layer == LayerMask.NameToLayer("EnemyBullet"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") || 
+            collision.gameObject.layer == LayerMask.NameToLayer("EnemyBullet"))
         {
             int damage = 5;
 
@@ -337,7 +338,8 @@ public class PlayerController : MonoBehaviour
 
             OnHit();
         }
-        else if(collision.gameObject.layer == LayerMask.NameToLayer("Boss") || collision.gameObject.layer == LayerMask.NameToLayer("BossBullet"))
+        else if(collision.gameObject.layer == LayerMask.NameToLayer("Boss") || 
+            collision.gameObject.layer == LayerMask.NameToLayer("BossBullet"))
         {
             int damage = 10;
 

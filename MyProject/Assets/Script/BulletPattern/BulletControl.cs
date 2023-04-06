@@ -83,33 +83,6 @@ public class BulletControl : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //private IEnumerator FollowTarget(float _time)
-    //{
-    //    float time = _time;
-
-    //    while (time > 0)
-    //    {
-    //        Direction = (Target.transform.position + new Vector3(0.0f, -0.3f, 0.0f) - transform.position);
-    //        Direction.Normalize();
-
-    //        float fAngle = getAngle(Vector3.down, Direction);
-
-    //        transform.eulerAngles = new Vector3(
-    //            0.0f, 0.0f, fAngle + 90f);
-
-    //        time -= Time.deltaTime;
-
-    //        yield return null;
-    //    }
-
-    //    // ** 이펙트 효과 복제
-    //    GameObject Obj = Instantiate(fxPrefab);
-
-    //    // ** 이펙트 효과의 위치를 지정
-    //    Obj.transform.position = transform.position;
-
-    //    Destroy(gameObject);
-    //}
 
     // ** 충돌체와 물리엔진이 포함된 오브젝트가 다른 충돌체와 충돌한다면 실행되는 함수
     private void OnTriggerEnter2D(Collider2D collision)
@@ -141,14 +114,4 @@ public class BulletControl : MonoBehaviour
         return Quaternion.FromToRotation(Vector3.down, to - from).eulerAngles.z;
         // 오일러 각(eulerAngles)의 짐벌락 현상 때문에 Quaternion 사용
     }
-
-    //void getAngle()
-    //{
-    //    Vector3 bullet = transform.position;
-    //    Vector3 player =  GameObject.Find("Player").transform.position;
-    //    Vector3 Direction = (bullet - player).normalized;
-    //    float angle = Mathf.Atan2(Direction.x, Direction.y) * Mathf.Rad2Deg;
-
-    //    transform.rotation = Quaternion.AngleAxis(angle - 180f, Vector3.forward);
-    //}
 }

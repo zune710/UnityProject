@@ -70,9 +70,6 @@ public class RoundManager : MonoBehaviour
             NextInfoAnim = NextInfo.GetComponent<Animator>();
 
             BGM = GetComponent<AudioSource>();
-
-            // ** 씬이 변경되어도 계속 유지될 수 있게 해준다.
-            //DontDestroyOnLoad(this.gameObject);  // this 생략 가능(색이 어두우면 생략해도 된다는 뜻!)
         }
     }
 

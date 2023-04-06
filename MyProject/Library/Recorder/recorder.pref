@@ -45,7 +45,7 @@ MonoBehaviour:
       m_ForceAssetFolder: 0
       m_AbsolutePath: "D:/\uC9C0\uC724\uC774\uAEBC/\uAC15\uC9C0\uC724/\uC678\uC7A5\uD558\uB4DC
         \uB123\uC5B4\uC5B4\uC57C \uD568/SGA \uAD6D\uAE30\uC218\uC5C5 PPT/Unity/\uC601\uC0C1"
-    m_FileName: GamePlay_<Date>_<Take>
+    m_FileName: GamePlay<Take>_<Date>
   outputFormat: 0
   videoBitRateMode: 2
   captureAlpha: 0

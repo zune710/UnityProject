@@ -32,7 +32,7 @@ public class BackgroundController : MonoBehaviour
     private Vector3 movement;
     
     // ** 이미지가 중앙 위치에 정상적으로 노출될 수 있도록 하기 위한 완충 역할(버퍼) 
-    private Vector3 offset = new Vector3(0.0f, 4.5f, 0.0f);  // 7.5f
+    private Vector3 offset = new Vector3(0.0f, 4.5f, 0.0f);
 
 
     private void Awake()
@@ -71,7 +71,7 @@ public class BackgroundController : MonoBehaviour
 
         // ** 이동 정보 세팅
         movement = new Vector3(
-            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed * playerSpeed + offset.x, // ** 나중에 singleton으로 변경해야 함
+            Input.GetAxisRaw("Horizontal") * Time.deltaTime * Speed * playerSpeed + offset.x,
             player.transform.position.y + offset.y,
             0.0f + offset.z);
 

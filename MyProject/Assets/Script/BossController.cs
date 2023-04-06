@@ -77,7 +77,7 @@ public class BossController : MonoBehaviour
     {
         onStart = false;
 
-        CoolDown = 0.5f;  // 1.5f
+        CoolDown = 0.5f;
  
         active = false;
         cool = true;
@@ -104,8 +104,6 @@ public class BossController : MonoBehaviour
         }
 
         StartCoroutine(BossStart());  // 화면에 보일 때까지 걸어온다.
-
-        // StartCoroutine(OnCoolDown());  // 1. 코루틴 실행 후 코루틴 종료 상관없이 Start는 종료(코루틴 종료를 기다리지 않는다)
     }
 
     void Update()
@@ -187,7 +185,6 @@ public class BossController : MonoBehaviour
         }
         else if (cool)
         {
-            //active = true;
             cool = false;
             choice = OnController();
             StartCoroutine(OnCoolDown());
@@ -290,7 +287,6 @@ public class BossController : MonoBehaviour
         }
         // ** 로직
 
-
         // ** 어디로 움직일지 정하는 시점에 플레이어의 위치를 도착지점으로 세팅
         // EndPoint = Target.transform.position;
 
@@ -316,7 +312,7 @@ public class BossController : MonoBehaviour
         
     }
 
-    private IEnumerator OnCoolDown()  // 2. 코루틴 실행
+    private IEnumerator OnCoolDown()
     {
         float fTime = CoolDown;
 
@@ -326,7 +322,7 @@ public class BossController : MonoBehaviour
             yield return null;
         }
 
-        active = true;  // 88줄
+        active = true;
         cool = true; 
     }
 
@@ -396,11 +392,6 @@ public class BossController : MonoBehaviour
         }
         
         active = false;
-
-        // StartCoroutine(OnCoolDown());
-        // 3. 다른 코루틴 실행(이전에 실행한 코루틴과 일시적으로 잠깐 동시에 존재)
-        //    이전 코루틴은 OnAttack 함수 빠져나가고 switch문의 break 실행되면서 종료됨
-        // active 사용한 지금 스크립트는 중복(동시 존재) X
     }
 
     private void OnSlide()
@@ -468,7 +459,7 @@ public class BossController : MonoBehaviour
         {
             float Distance = Vector3.Distance(EndPoint, transform.position);
 
-            if (Distance > 0.3f)  // 0.05f
+            if (Distance > 0.3f)
             {
                 Vector3 Direction = (EndPoint - transform.position).normalized;
 
@@ -608,8 +599,7 @@ public class BossController : MonoBehaviour
 
         SkillAttack = true;
 
-        //float choice = Random.Range(1, 5);
-        float choice = 4;
+        float choice = Random.Range(1, 5);
 
         switch(choice)  // Bullet Pattern
         {
@@ -789,6 +779,7 @@ public class BossController : MonoBehaviour
                 if (HP <= 0)
                 {
                     Anim.SetTrigger("Die");
+
                     // 죽고 있는 Enemy의 Collider 끄기
                     GetComponent<CapsuleCollider2D>().enabled = false;
 
