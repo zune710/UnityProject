@@ -7,22 +7,22 @@ using UnityEngine.Networking;
 using TMPro;
 
 
-[System.Serializable]
-public class MemberForm
-{
-    public int index;
-    public string name;
-    public int age;
-    public int gender;
+//[System.Serializable]
+//public class MemberForm
+//{
+//    public int index;
+//    public string name;
+//    public int age;
+//    public int gender;
 
-    public MemberForm(int index, string name, int age, int gender)
-    {
-        this.index = index;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-    }
-}
+//    public MemberForm(int index, string name, int age, int gender)
+//    {
+//        this.index = index;
+//        this.name = name;
+//        this.age = age;
+//        this.gender = gender;
+//    }
+//}
 // 회원가입
 // 로그인
 
@@ -31,19 +31,12 @@ public class ExampleManager : MonoBehaviour
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
 
-    public GameObject ID;
-    public GameObject Password;
-    private InputField id;
-    private InputField password;
+    public InputField ID;
+    public InputField Password;
+    private string id;
+    private string password;
 
     private bool login;
-
-    private void Awake()
-    {
-        id = ID.GetComponent<InputField>();
-        password = Password.GetComponent<InputField>();
-        login = false;
-    }
 
 
     IEnumerator Start()
@@ -85,35 +78,5 @@ public class ExampleManager : MonoBehaviour
     public void NextScene()
     {
         SceneManager.LoadScene("progressScene");
-
-        //StartCoroutine(LoginTest());
-    }
-
-    public IEnumerator LoginTest()
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("order", "sign in");
-        form.AddField("id", id.text);
-        form.AddField("password", password.text);
-
-        form.AddField("userName", id.text);
-        form.AddField("age", password.text);
-
-        using (UnityWebRequest request2 = UnityWebRequest.Post(URL, form))
-        {
-            yield return request2.SendWebRequest();
-
-            if (request2.downloadHandler.text == "login")
-                login = true;
-        }
-        Debug.Log(login);
-
-        if (login)
-            SceneManager.LoadScene("progressScene");
-        else
-        {
-            id.text = "";
-            password.text = "";
-        }
     }
 }
