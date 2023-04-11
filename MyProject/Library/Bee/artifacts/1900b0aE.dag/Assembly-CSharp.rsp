@@ -369,6 +369,7 @@
 "Assets/ExampleManager.cs"
 "Assets/FX/Scripts/CFX_AutoDestructShuriken.cs"
 "Assets/FX/Scripts/CFX_LightIntensityFade.cs"
+"Assets/ProgressBar.cs"
 "Assets/Script/BackgroundController.cs"
 "Assets/Script/BossController.cs"
 "Assets/Script/BulletController.cs"

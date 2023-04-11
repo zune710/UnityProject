@@ -72,7 +72,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 {
                     ResetValue();
                     ControllerManager.GetInstance().LoadGame = true;
-                    SceneManager.LoadScene("Game Start");
+                    SceneManager.LoadScene("GameStart");
                 }
                 
             }
@@ -90,7 +90,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                     ControllerManager.GetInstance().Player_HP = 100;
                 }
 
-                SceneManager.LoadScene("Game Start");
+                SceneManager.LoadScene("GameStart");
             }
             else if(transform.name == "How To Play")
             {
@@ -158,7 +158,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         // New Game 실행
         ResetValue();
         ControllerManager.GetInstance().LoadGame = true;
-        SceneManager.LoadScene("Game Start");
+        SceneManager.LoadScene("GameStart");
     }
 
     public void AlertNO()
