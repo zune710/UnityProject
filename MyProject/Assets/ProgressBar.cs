@@ -14,7 +14,7 @@ public class ProgressBar : MonoBehaviour
 
     IEnumerator Start()
     {
-        //EditorApplication.isPaused = true;
+        //EditorApplication.isPaused = true;  // playmode 일시정지
         asyncOperation = SceneManager.LoadSceneAsync("MainMenu");
         asyncOperation.allowSceneActivation = false;
 
