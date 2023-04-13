@@ -26,10 +26,10 @@ public class ProgressBar : MonoBehaviour
             //text.text = (progress * 100f).ToString() + "%";
 
             // ** asyncOperation.progress: 0.0 ~ 0.9
-            float progress = asyncOperation.progress / 0.9f * 100f;
+            float progress = asyncOperation.progress / 0.9f * 100f;  // 0.0 ~ 100.0
             text.text = progress.ToString() + "%";
 
-            image.fillAmount = asyncOperation.progress / 0.9f;
+            image.fillAmount = asyncOperation.progress / 0.9f;  // 0.0 ~ 1.0
 
             yield return null;
 
@@ -41,7 +41,7 @@ public class ProgressBar : MonoBehaviour
 
                 messageText.gameObject.SetActive(true);
 
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0))  // or Input.anyKeyDown
                     asyncOperation.allowSceneActivation = true;
             }
         }

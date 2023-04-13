@@ -26,6 +26,7 @@ public class UIController : MonoBehaviour
     {
         ButtonSFX.Play();  // 소리 나기 전에 넘어가는 듯
 
+        DataManager.GetInstance.SaveData();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -57,9 +58,11 @@ public class UIController : MonoBehaviour
         SettingMenu.SetActive(SettingMenuActive);
     }
 
-    public void onQuit()
+    public void onQuit()  // 사용 안 하는 듯
     {
         ButtonSFX.Play();
+
+        DataManager.GetInstance.SaveData();
 
         Application.Quit();  // 에디터에서는 무시됨
         UnityEditor.EditorApplication.ExitPlaymode();

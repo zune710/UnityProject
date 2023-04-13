@@ -8,36 +8,19 @@ using UnityEngine.Networking;
 
 
 [System.Serializable]
-public class MemberForm
-{
-    public string id;
-    public string password;
-    public string userName;
-    public int age;
-    public int gender;
-
-    public MemberForm(string id, string password, string userName, int age, int gender)
-    {
-        this.id = id;
-        this.password = password;
-        this.userName = userName;
-        this.age = age;
-        this.gender = gender;
-    }
-}
-
-[System.Serializable]
-public class InfoForm
+public class LogInDataForm
 {
     public string order;
     public string date;
     public string message;
+    public bool login;
 
-    public InfoForm(string order, string date, string message)
+    public LogInDataForm(string order, string date, string message, bool login)
     {
         this.order = order;
         this.date = date;
         this.message = message;
+        this.login = login;
     }
 }
 
@@ -47,15 +30,19 @@ public class LogInManager : MonoBehaviour
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
 
-    private EventSystem system;
+    private EventSystem eventSystem;
 
     public GameObject SignUpFrame;
+    public Button LogInButton;
+    public Button OnSignUpButton;
+    public Button SignUpButton;
     public InputField ID;
     public InputField Password;
     public InputField NewID;
     public InputField NewPassword;
     public InputField UserName;
     public InputField Age;
+    public Image GenderInput;
     public Toggle GenderM;
     public Toggle GenderF;
     public Text Notice;
@@ -71,7 +58,7 @@ public class LogInManager : MonoBehaviour
 
     private void Start()
     {
-        system = EventSystem.current;
+        eventSystem = EventSystem.current;
     }
 
     private void Update()
@@ -84,20 +71,20 @@ public class LogInManager : MonoBehaviour
             isChanged = false;
         }
 
-        // Tab키로 이동
+        // Tab키로 이동(Navigation 설정되어 있어야 작동)
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (system.currentSelectedGameObject != null)
+            if (eventSystem.currentSelectedGameObject != null)
             {
                 Selectable next;
 
                 // 오른쪽으로 이동해야 하는 경우
-                if (system.currentSelectedGameObject.transform.name == "PasswordInput" ||
-                    system.currentSelectedGameObject.transform.name == "Gender(M)")
-                    next = system.currentSelectedGameObject.GetComponent<Selectable>().FindSelectableOnRight();
+                if (eventSystem.currentSelectedGameObject.transform.name == "PasswordInput" ||
+                    eventSystem.currentSelectedGameObject.transform.name == "Gender(M)")
+                    next = eventSystem.currentSelectedGameObject.GetComponent<Selectable>().FindSelectableOnRight();
                 // 아래쪽으로 이동해야 하는 경우
                 else
-                    next = system.currentSelectedGameObject.GetComponent<Selectable>().FindSelectableOnDown();
+                    next = eventSystem.currentSelectedGameObject.GetComponent<Selectable>().FindSelectableOnDown();
 
 
                 if (next != null)
@@ -105,15 +92,15 @@ public class LogInManager : MonoBehaviour
                     InputField inputfield = next.GetComponent<InputField>();
 
                     if (inputfield != null)
-                        inputfield.OnPointerClick(new PointerEventData(system));
+                        inputfield.OnPointerClick(new PointerEventData(eventSystem));
 
-                    system.SetSelectedGameObject(next.gameObject, new BaseEventData(system));
+                    eventSystem.SetSelectedGameObject(next.gameObject, new BaseEventData(eventSystem));
                 }
             }
         }
     }
 
-    bool SetLogInInfo()
+    private bool SetLogInData()
     {
         id = ID.text;
         password = Password.text;
@@ -124,7 +111,7 @@ public class LogInManager : MonoBehaviour
             return true;
     }
 
-    bool SetSignUpInfo()
+    private bool SetSignUpData()
     {
         id = NewID.text;
         password = NewPassword.text;
@@ -142,14 +129,18 @@ public class LogInManager : MonoBehaviour
 
     public void SignUp()
     {
-        if (!SetSignUpInfo())
+        Interactable(false);
+
+        if (!SetSignUpData())
         {
             Debug.Log("비어있음");
             Notice.text = "모두 입력하세요.";
             Notice.enabled = true;
+
+            Interactable(true);
             return;
         }
-
+        
         //nameof
         WWWForm form = new WWWForm();
         form.AddField("order", "sign up");
@@ -164,11 +155,15 @@ public class LogInManager : MonoBehaviour
 
     public void LogIn()
     {
-        if (!SetLogInInfo())
+        Interactable(false);
+
+        if (!SetLogInData())
         {
             Debug.Log("비어있음");
             Notice.text = "모두 입력하세요.";
             Notice.enabled = true;
+
+            Interactable(true);
             return;
         }
 
@@ -189,25 +184,30 @@ public class LogInManager : MonoBehaviour
             if (request.isDone)
             {
                 Debug.Log(request.downloadHandler.text);
-                InfoForm info = JsonUtility.FromJson<InfoForm>(request.downloadHandler.text);
+                LogInDataForm info = JsonUtility.FromJson<LogInDataForm>(request.downloadHandler.text);
 
-                if (info.message == "로그인 완료")
+                if (info.login)
                     NextScene();
-                else if (info.message == "로그인 실패")
+                else
                 {
-                    Notice.text = "아이디 또는 비밀번호를 잘못 입력했습니다.";
-                    Notice.enabled = true;
-                }
-                else if (info.message == "회원가입 완료")
-                    SetActiveSignUpFrame();
-                else if (info.message == "이미 존재하는 id입니다.")
-                {
-                    Notice.text = "이미 존재하는 ID입니다.";
-                    Notice.enabled = true;
+                    if(info.message == "회원가입 완료")
+                        SetActiveSignUpFrame();
+                    else if (info.message == "중복ID")
+                    {
+                        Notice.text = "이미 존재하는 ID입니다.";
+                        Notice.enabled = true;
+                    }
+                    else
+                    {
+                        Notice.text = "아이디 또는 비밀번호를 잘못 입력했습니다.";
+                        Notice.enabled = true;
+                    }
                 }
             }
             else
                 Debug.Log("응답없음");
+
+            Interactable(true);
         }
     }
 
@@ -220,6 +220,9 @@ public class LogInManager : MonoBehaviour
     {
         Notice.enabled = false;
         SignUpFrame.SetActive(!SignUpFrame.activeSelf);
+
+        if(SignUpFrame.activeSelf)
+            eventSystem.SetSelectedGameObject(NewID.gameObject);
     }
 
     public void SelectMale()
@@ -236,5 +239,25 @@ public class LogInManager : MonoBehaviour
 
         if (GenderF.isOn)
             GenderM.isOn = false;
+    }
+
+    private void Interactable(bool value)
+    {
+        LogInButton.interactable = value;
+        OnSignUpButton.interactable = value;
+        SignUpButton.interactable = value;
+
+        ID.interactable = value;
+        Password.interactable = value;
+
+        NewID.interactable = value;
+        NewPassword.interactable = value;
+        UserName.interactable = value;
+        Age.interactable = value;
+        GenderM.interactable = value;
+        GenderF.interactable = value;
+
+        GenderInput.color = value ? new Color(1.0f, 1.0f, 1.0f, 1.0f) 
+            : new Color(200 / 255f, 200 / 255f, 200 / 255f, 128 / 255f);
     }
 }
