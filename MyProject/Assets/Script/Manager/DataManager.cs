@@ -249,6 +249,7 @@ public class DataManager : MonoBehaviour
     // (외부에서 호출되면 외부 데이터 가지고 들어올 수 있어야 함. 지금은 X)
     public void SaveData()
     {
+        Debug.Log("savedata");
         DataForm data = new DataForm();
         WWWForm form = new WWWForm();
 
@@ -271,7 +272,7 @@ public class DataManager : MonoBehaviour
         form.AddField(nameof(data.GameData.GameOver), ControllerManager.GetInstance().GameOver.ToString());
         form.AddField(nameof(data.GameData.GameClear) , ControllerManager.GetInstance().GameClear.ToString());
 
-        string JsonData = JsonUtility.ToJson(form);
+        //string JsonData = JsonUtility.ToJson(form);
 
         StartCoroutine(Post(form));
 

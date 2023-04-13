@@ -260,4 +260,12 @@ public class LogInManager : MonoBehaviour
         GenderInput.color = value ? new Color(1.0f, 1.0f, 1.0f, 1.0f) 
             : new Color(200 / 255f, 200 / 255f, 200 / 255f, 128 / 255f);
     }
+
+    private void OnApplicationQuit()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("order", "log out");
+
+        StartCoroutine(Post(form));
+    }
 }
