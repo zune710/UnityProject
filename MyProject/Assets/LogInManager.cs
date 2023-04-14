@@ -98,6 +98,9 @@ public class LogInManager : MonoBehaviour
                 }
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Return))
+            LogIn();
     }
 
     private bool SetLogInData()

@@ -15,6 +15,11 @@ public class ProgressBar : MonoBehaviour
     IEnumerator Start()
     {
         //EditorApplication.isPaused = true;  // playmode 일시정지
+
+        // MainMenu로 이동하기 전에 LoadData 실행
+        DataManager dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
+        dataManager.LoadData();
+
         asyncOperation = SceneManager.LoadSceneAsync("MainMenu");
         asyncOperation.allowSceneActivation = false;
 
@@ -36,13 +41,18 @@ public class ProgressBar : MonoBehaviour
             if (asyncOperation.progress > 0.7f)
             {
                 //yield return new WaitForSeconds(2.5f);
-
                 //asyncOperation.allowSceneActivation = true;
+                
+                // LoadData 완료되면 다음 Scene으로 이동
+                if(dataManager.isDone)
+                {
+                    messageText.gameObject.SetActive(true);
+                    
+                    if (Input.GetMouseButtonDown(0))  // or Input.anyKeyDown
+                        asyncOperation.allowSceneActivation = true;
 
-                messageText.gameObject.SetActive(true);
+                }
 
-                if (Input.GetMouseButtonDown(0))  // or Input.anyKeyDown
-                    asyncOperation.allowSceneActivation = true;
             }
         }
     }

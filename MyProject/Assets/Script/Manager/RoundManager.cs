@@ -27,9 +27,6 @@ public class RoundManager : MonoBehaviour
 
     public int Goal; // Enemy 처치 수(목표)
 
-    public bool GoalClear;
-    public bool BossClear;
-
     public GameObject FadeIn;  // Inspector
     private Image FadeInImg;
     private Animator FadeInAnim;
@@ -55,11 +52,7 @@ public class RoundManager : MonoBehaviour
             GoalSlider = GoalBar.GetComponent<Slider>();
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
 
-            
             Goal = ControllerManager.GetInstance().Goal;
-
-            GoalClear = ControllerManager.GetInstance().GoalClear;
-            BossClear = ControllerManager.GetInstance().BossClear;
             
             if(ControllerManager.GetInstance().onBoss)
                 GoalBar.SetActive(false);
@@ -96,13 +89,13 @@ public class RoundManager : MonoBehaviour
             GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
         }
 
-        if (GoalClear || BossClear)
+        if (ControllerManager.GetInstance().GoalClear || ControllerManager.GetInstance().BossClear)
         {
             /* 목표 도달 ->  다음 라운드 -> ... */
 
             // 변수 리셋(if문 한 번만 실행되게)
-            GoalClear = false;
-            BossClear = false;
+            ControllerManager.GetInstance().GoalClear = false;
+            ControllerManager.GetInstance().BossClear = false;
 
             // Round Setting
             if (ControllerManager.GetInstance().onEnemy)

@@ -787,7 +787,7 @@ public class BossController : MonoBehaviour
                         ControllerManager.GetInstance().GameClear = true;
                     else
                         // 다음 라운드로 넘어가기
-                        RoundManager.GetInstance.BossClear = true;
+                        ControllerManager.GetInstance().BossClear = true;
                 }
             }
         }

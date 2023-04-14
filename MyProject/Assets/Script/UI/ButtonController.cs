@@ -29,6 +29,15 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         // transform.Find는 찾을 수 있음
 
         ButtonSFX = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        text.text = transform.name;
+
+        AlertMenu.gameObject.SetActive(false);
+
+        onHover = false;
 
         if (ControllerManager.GetInstance().LoadGame)
         {
@@ -39,15 +48,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
         else
             GameObject.Find("Inactive").gameObject.SetActive(true);
-    }
 
-    private void Start()
-    {
-        text.text = transform.name;
-
-        AlertMenu.gameObject.SetActive(false);
-
-        onHover = false;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -78,9 +79,9 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             }
             else if(transform.name == "Load Game" && ControllerManager.GetInstance().LoadGame)
             {
-                DataManager.GetInstance.LoadData();
-                
-                if(ControllerManager.GetInstance().GameOver)
+                //GameObject.Find("DataManager").GetComponent<DataManager>().LoadData();
+
+                if (ControllerManager.GetInstance().GameOver)
                 {
                     ControllerManager.GetInstance().GameOver = false;
                     ControllerManager.GetInstance().Player_HP = 100;

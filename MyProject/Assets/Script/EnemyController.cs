@@ -113,7 +113,7 @@ public class EnemyController : MonoBehaviour
                 ++ControllerManager.GetInstance().EnemyCount;
 
                 if (ControllerManager.GetInstance().EnemyCount == RoundManager.GetInstance.Goal)
-                    RoundManager.GetInstance.GoalClear = true;
+                    ControllerManager.GetInstance().GoalClear = true;
             }
         }
     }

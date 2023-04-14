@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
-using System.Text;
 using UnityEngine.Networking;
 
 //[System.Serializable]
@@ -19,29 +17,9 @@ using UnityEngine.Networking;
 //    }
 //}
 
-[System.Serializable]
-public class RoundDataForm
-{
-    public int Round;
-    public int Goal;
-    public bool onEnemy;
-    public bool onBoss;
-    public bool BossActive;
-
-    public RoundDataForm() { }
-
-    public RoundDataForm(int round, int goal, bool onEnemy, bool onBoss, bool bossActive)
-    {
-        Round = round;
-        Goal = goal;
-        this.onEnemy = onEnemy;
-        this.onBoss = onBoss;
-        BossActive = bossActive;
-    }
-}
 
 [System.Serializable]
-public class GameDataForm
+public class DataForm
 {
     public bool LoadGame;
 
@@ -51,63 +29,20 @@ public class GameDataForm
     public bool GameOver;
     public bool GameClear;
 
-    public GameDataForm() { }
+    public int Round;
+    public int Goal;
+    public bool onEnemy;
+    public bool onBoss;
+    public bool BossActive;
 
-    public GameDataForm(bool loadGame, bool goalClear, bool bossClear, bool gameOver, bool gameClear)
-    {
-        LoadGame = loadGame;
-        GoalClear = goalClear;
-        BossClear = bossClear;
-        GameOver = gameOver;
-        GameClear = gameClear;
-    }
-}
-
-[System.Serializable]
-public class PlayerDataForm
-{
     public int Player_HP;
     public int Heart;
     public int EnemyCount;
 
-    public PlayerDataForm(int player_HP, int heart, int enemyCount)
-    {
-        Player_HP = player_HP;
-        Heart = heart;
-        EnemyCount = enemyCount;
-    }
-}
-
-[System.Serializable]
-public class EnemyDataForm
-{
     public int EnemyId;
     public int BossId;
 
-    public EnemyDataForm(int enemyId, int bossId)
-    {
-        EnemyId = enemyId;
-        BossId = bossId;
-    }
-}
-
-[System.Serializable]
-public class DataForm
-{
-    public RoundDataForm RoundData;
-    public GameDataForm GameData;
-    public PlayerDataForm PlayerData;
-    public EnemyDataForm EnemyData;
-
     public DataForm() { }
-
-    public DataForm(RoundDataForm roundData, GameDataForm gameData, PlayerDataForm playerData, EnemyDataForm enemyData)
-    {
-        RoundData = roundData;
-        GameData = gameData;
-        PlayerData = playerData;
-        EnemyData = enemyData;
-    }
 
     //ItemForm item;  // json 안에 json 형태로 저장
 }
@@ -130,164 +65,103 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    public bool isDone = false;
+
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
-    //private string userName;
-    //private int value;
 
     void Start()
     {
-        //var JsonData = Resources.Load<TextAsset>("saveFile/Data");
-        var JsonData = Resources.Load<TextAsset>("saveFile/SaveData");
-
-        if(JsonData)
-        {
-            DataForm form = JsonUtility.FromJson<DataForm>(JsonData.ToString());  // 로컬 저장
-
-            ControllerManager.GetInstance().Player_HP = form.PlayerData.Player_HP;
-            ControllerManager.GetInstance().Heart = form.PlayerData.Heart;
-            ControllerManager.GetInstance().EnemyCount = form.PlayerData.EnemyCount;
-
-            ControllerManager.GetInstance().EnemyId = form.EnemyData.EnemyId;
-            ControllerManager.GetInstance().BossId = form.EnemyData.BossId;
-
-            ControllerManager.GetInstance().Round = form.RoundData.Round;
-            ControllerManager.GetInstance().Goal = form.RoundData.Goal;
-            ControllerManager.GetInstance().onEnemy = form.RoundData.onEnemy;
-            ControllerManager.GetInstance().onBoss = form.RoundData.onBoss;
-            ControllerManager.GetInstance().BossActive = form.RoundData.BossActive;
-
-            ControllerManager.GetInstance().LoadGame = form.GameData.LoadGame;
-            ControllerManager.GetInstance().GoalClear = form.GameData.GoalClear;
-            ControllerManager.GetInstance().BossClear = form.GameData.BossClear;
-            ControllerManager.GetInstance().GameOver = form.GameData.GameOver;
-            ControllerManager.GetInstance().GameClear = form.GameData.GameClear;
-
-        }
-
         DontDestroyOnLoad(gameObject);
-
-        //value = int.Parse(form.age);
-        //userName = form.name;
-
-        //print(userName + " : " + value);
-
-
-
-        //WWWForm wform = new WWWForm(); // 서버 저장
+        Debug.Log(isDone);
     }
 
-    //private void Update()
-    //{
-    //    if(Input.GetKeyUp(KeyCode.UpArrow))
-    //    {
-    //        ++value;
-    //        print(value);
-    //    }
-
-    //    if (Input.GetKeyDown(KeyCode.DownArrow))
-    //    {
-    //        --value;
-    //        print(value);
-    //    }
-
-    //    if (Input.GetKeyDown(KeyCode.Return))
-    //    {
-    //        SaveData(userName, value.ToString());
-    //    }
-    //}
-
-    //public void ExitButton()
-    //{
-    //    SaveData();
-    //}
-
-
-
-
-    public IEnumerator LoadData()
+    public void LoadData()
     {
-        using (UnityWebRequest request = UnityWebRequest.Get(URL))
+        WWWForm www = new WWWForm();
+        www.AddField("order", "load data");
+
+        StartCoroutine(LoadPost(www));
+    }
+
+    private IEnumerator LoadPost(WWWForm www)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Post(URL, www))
         {
             yield return request.SendWebRequest();
 
             if (request.isDone)
             {
                 Debug.Log(request.downloadHandler.text);
+                if (request.downloadHandler.text == "데이터 없음")
+                {
+                    yield break;
+                }
+
                 DataForm form = JsonUtility.FromJson<DataForm>(request.downloadHandler.text);
 
                 InsertData(form);
-                Debug.Log("LoadData 완료");
             }
             else
                 Debug.Log("응답없음");
+
+            request.Dispose();
         }
+
+        isDone = true;
     }
 
-    public void InsertData(DataForm form)
+    private void InsertData(DataForm form)
     {
-        ControllerManager.GetInstance().Player_HP = form.PlayerData.Player_HP;
-        ControllerManager.GetInstance().Heart = form.PlayerData.Heart;
-        ControllerManager.GetInstance().EnemyCount = form.PlayerData.EnemyCount;
+        ControllerManager.GetInstance().Player_HP = form.Player_HP;
+        ControllerManager.GetInstance().Heart = form.Heart;
+        ControllerManager.GetInstance().EnemyCount = form.EnemyCount;
 
-        ControllerManager.GetInstance().EnemyId = form.EnemyData.EnemyId;
-        ControllerManager.GetInstance().BossId = form.EnemyData.BossId;
+        ControllerManager.GetInstance().EnemyId = form.EnemyId;
+        ControllerManager.GetInstance().BossId = form.BossId;
 
-        ControllerManager.GetInstance().Round = form.RoundData.Round;
-        ControllerManager.GetInstance().Goal = form.RoundData.Goal;
-        ControllerManager.GetInstance().onEnemy = form.RoundData.onEnemy;
-        ControllerManager.GetInstance().onBoss = form.RoundData.onBoss;
-        ControllerManager.GetInstance().BossActive = form.RoundData.BossActive;
+        ControllerManager.GetInstance().Round = form.Round;
+        ControllerManager.GetInstance().Goal = form.Goal;
+        ControllerManager.GetInstance().onEnemy = form.onEnemy;
+        ControllerManager.GetInstance().onBoss = form.onBoss;
+        ControllerManager.GetInstance().BossActive = form.BossActive;
 
-        ControllerManager.GetInstance().LoadGame = form.GameData.LoadGame;
-        ControllerManager.GetInstance().GoalClear = form.GameData.GoalClear;
-        ControllerManager.GetInstance().BossClear = form.GameData.BossClear;
-        ControllerManager.GetInstance().GameOver = form.GameData.GameOver;
-        ControllerManager.GetInstance().GameClear = form.GameData.GameClear;
+        ControllerManager.GetInstance().LoadGame = form.LoadGame;
+        ControllerManager.GetInstance().GoalClear = form.GoalClear;
+        ControllerManager.GetInstance().BossClear = form.BossClear;
+        ControllerManager.GetInstance().GameOver = form.GameOver;
+        ControllerManager.GetInstance().GameClear = form.GameClear;
     }
 
-    // (외부에서 호출되면 외부 데이터 가지고 들어올 수 있어야 함. 지금은 X)
     public void SaveData()
     {
-        Debug.Log("savedata");
-        DataForm data = new DataForm();
         WWWForm form = new WWWForm();
 
-        form.AddField(nameof(data.PlayerData.Player_HP), ControllerManager.GetInstance().Player_HP);
-        form.AddField(nameof(data.PlayerData.Heart), ControllerManager.GetInstance().Heart);
-        form.AddField(nameof(data.PlayerData.EnemyCount), ControllerManager.GetInstance().EnemyCount);
-        
-        form.AddField(nameof(data.EnemyData.EnemyId), ControllerManager.GetInstance().EnemyId);
-        form.AddField(nameof(data.EnemyData.BossId), ControllerManager.GetInstance().BossId);
-        
-        form.AddField(nameof(data.RoundData.Round), ControllerManager.GetInstance().Round);
-        form.AddField(nameof(data.RoundData.Goal), ControllerManager.GetInstance().Goal);
-        form.AddField(nameof(data.RoundData.onEnemy), ControllerManager.GetInstance().onEnemy.ToString());
-        form.AddField(nameof(data.RoundData.onBoss), ControllerManager.GetInstance().onBoss.ToString());
-        form.AddField(nameof(data.RoundData.BossActive), ControllerManager.GetInstance().BossActive.ToString());
-        
-        form.AddField(nameof(data.GameData.LoadGame), ControllerManager.GetInstance().LoadGame.ToString());
-        form.AddField(nameof(data.GameData.GoalClear), ControllerManager.GetInstance().GoalClear.ToString());
-        form.AddField(nameof(data.GameData.BossClear), ControllerManager.GetInstance().BossClear.ToString());
-        form.AddField(nameof(data.GameData.GameOver), ControllerManager.GetInstance().GameOver.ToString());
-        form.AddField(nameof(data.GameData.GameClear) , ControllerManager.GetInstance().GameClear.ToString());
+        form.AddField("order", "save data");
 
-        //string JsonData = JsonUtility.ToJson(form);
+        form.AddField("Player_HP", ControllerManager.GetInstance().Player_HP);
+        form.AddField("Heart", ControllerManager.GetInstance().Heart);
+        form.AddField("EnemyCount", ControllerManager.GetInstance().EnemyCount);
 
-        StartCoroutine(Post(form));
+        form.AddField("EnemyId", ControllerManager.GetInstance().EnemyId);
+        form.AddField("BossId", ControllerManager.GetInstance().BossId);
 
-        //// 없으면 경로에 파일 생성
-        //FileStream fileStream = new FileStream(
-        //    Application.dataPath + "/Resources/saveFile/SaveData.json", FileMode.Create);
+        form.AddField("Round", ControllerManager.GetInstance().Round);
+        form.AddField("Goal", ControllerManager.GetInstance().Goal);
+        form.AddField("onEnemy", ControllerManager.GetInstance().onEnemy.ToString());
+        form.AddField("onBoss", ControllerManager.GetInstance().onBoss.ToString());
+        form.AddField("BossActive", ControllerManager.GetInstance().BossActive.ToString());
 
-        //byte[] data = Encoding.UTF8.GetBytes(JsonData);
+        form.AddField("LoadGame", ControllerManager.GetInstance().LoadGame.ToString());
+        form.AddField("GoalClear", ControllerManager.GetInstance().GoalClear.ToString());
+        form.AddField("BossClear", ControllerManager.GetInstance().BossClear.ToString());
+        form.AddField("GameOver", ControllerManager.GetInstance().GameOver.ToString());
+        form.AddField("GameClear", ControllerManager.GetInstance().GameClear.ToString());
 
-        //// 파일에 내용 입력
-        //fileStream.Write(data, 0, data.Length);
-        //fileStream.Close();  // 중요!
+        StartCoroutine(SavePost(form));
     }
 
-    public IEnumerator Post(WWWForm form)
+    private IEnumerator SavePost(WWWForm form)
     {
         using (UnityWebRequest request = UnityWebRequest.Post(URL, form))
         {
@@ -299,43 +173,73 @@ public class DataManager : MonoBehaviour
             }
             else
                 Debug.Log("응답없음");
-        }
-    }
 
-    private void OnApplicationQuit()
-    {
-        SaveData();
+            request.Dispose();
+        }
     }
 
     private void OnApplicationPause(bool pause)
     {
-        if(pause)
+        if (pause)
         {
-            if(SceneManager.GetActiveScene().name == "GameStart")
+            if (SceneManager.GetActiveScene().name == "GameStart")
             {
-                GameObject.Find("SideMenuCanvas").GetComponent<SidebarController>().ClickButton();
+                GameObject obj = GameObject.Find("SideMenuCanvas").transform.Find("DarkBackground").gameObject;
+
+                if (!obj.activeSelf && Time.timeScale == 1.0f)  
+                    GameObject.Find("SideMenuCanvas").GetComponent<SidebarController>().ClickButton();
+                // FadeInAnim 실행 중일 때 조건문이 실행되면 버튼 뜬 상태로 timeScale이 1이 되기 때문에 FadeInAnim 중에는 작동 안 하도록 함
+                // (0이 됐던 timeScale이 FadeInAnim이 끝나면서 다시 1이 됨)
+                // (FadeInAnim 중에 pause, focus되면 게임이 일시정지 안 되는 문제는 있음)
+            }
+        }
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (!focus)
+        {
+            if (SceneManager.GetActiveScene().name == "GameStart")
+            {
+                GameObject obj = GameObject.Find("SideMenuCanvas").transform.Find("DarkBackground").gameObject;
+
+                if (!obj.activeSelf && Time.timeScale == 1.0f)
+                    GameObject.Find("SideMenuCanvas").GetComponent<SidebarController>().ClickButton();
             }
         }
     }
 
 
+    /** 1. 로컬 저장 **/
+    /* Start -- Load Data */
+    ////var JsonData = Resources.Load<TextAsset>("saveFile/Data");
+    //var JsonData = Resources.Load<TextAsset>("saveFile/SaveData");
 
-    //form.AddField(PlayerData.Player_HP = ControllerManager.GetInstance().Player_HP);
-    //    form.AddField(PlayerData.Heart = ControllerManager.GetInstance().Heart);
-    //    form.AddField(PlayerData.EnemyCount = ControllerManager.GetInstance().EnemyCount);
-        
-    //    form.AddField(EnemyData.EnemyId = ControllerManager.GetInstance().EnemyId);
-    //    form.AddField(EnemyData.BossId = ControllerManager.GetInstance().BossId);
-        
-    //    form.AddField(RoundData.Round = ControllerManager.GetInstance().Round);
-    //    form.AddField(RoundData.Goal = ControllerManager.GetInstance().Goal);
-    //    form.AddField(RoundData.onEnemy = ControllerManager.GetInstance().onEnemy);
-    //    form.AddField(RoundData.onBoss = ControllerManager.GetInstance().onBoss);
-    //    form.AddField(RoundData.BossActive = ControllerManager.GetInstance().BossActive);
-        
-    //    form.AddField(GameData.LoadGame = ControllerManager.GetInstance().LoadGame);
-    //    form.AddField(GameData.GoalClear = ControllerManager.GetInstance().GoalClear);
-    //    form.AddField(GameData.BossClear = ControllerManager.GetInstance().BossClear);
-    //    form.AddField(GameData.GameOver = ControllerManager.GetInstance().GameOver);
-    //    form.AddField(GameData.GameClear = ControllerManager.GetInstance().GameClear);
+    //if(JsonData)
+    //{
+    //    DataForm form = JsonUtility.FromJson<DataForm>(JsonData.ToString());
+
+    //    value = int.Parse(form.age);
+    //    userName = form.name;
+
+    //    print(userName + " : " + value);
+    //}
+
+    /* custom method -- Save Data */
+    //DataForm form = new DataForm();
+    //string JsonData = JsonUtility.ToJson(form);
+
+    //// 없으면 경로에 파일 생성  // using System.IO; 필요
+    //FileStream fileStream = new FileStream(
+    //    Application.dataPath + "/Resources/saveFile/SaveData.json", FileMode.Create);
+
+    //byte[] data = Encoding.UTF8.GetBytes(JsonData);  // using System.Text; 필요
+
+    //// 파일에 내용 입력
+    //fileStream.Write(data, 0, data.Length);
+    //fileStream.Close();  // 중요!
+
+
+    /** 2. 서버 저장 **/
+    //WWWForm wform = new WWWForm();  // WWWForm 사용
 }
