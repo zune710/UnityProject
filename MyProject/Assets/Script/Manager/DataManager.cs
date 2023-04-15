@@ -66,6 +66,7 @@ public class DataManager : MonoBehaviour
     }
 
     public bool isDone = false;
+    public bool isPaused;
 
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
@@ -73,7 +74,6 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
-        Debug.Log(isDone);
     }
 
     public void LoadData()
@@ -95,6 +95,7 @@ public class DataManager : MonoBehaviour
                 Debug.Log(request.downloadHandler.text);
                 if (request.downloadHandler.text == "데이터 없음")
                 {
+                    isDone = true;
                     yield break;
                 }
 
@@ -184,14 +185,17 @@ public class DataManager : MonoBehaviour
         {
             if (SceneManager.GetActiveScene().name == "GameStart")
             {
+                isPaused = true;  // RoundManager PlayFadeIn 코루틴 함수에서 사용
                 GameObject obj = GameObject.Find("SideMenuCanvas").transform.Find("DarkBackground").gameObject;
 
-                if (!obj.activeSelf && Time.timeScale == 1.0f)  
+                if (!obj.activeSelf)  
                     GameObject.Find("SideMenuCanvas").GetComponent<SidebarController>().ClickButton();
-                // FadeInAnim 실행 중일 때 조건문이 실행되면 버튼 뜬 상태로 timeScale이 1이 되기 때문에 FadeInAnim 중에는 작동 안 하도록 함
-                // (0이 됐던 timeScale이 FadeInAnim이 끝나면서 다시 1이 됨)
-                // (FadeInAnim 중에 pause, focus되면 게임이 일시정지 안 되는 문제는 있음)
             }
+        }
+        else
+        {
+            if(isPaused)
+                isPaused = false;
         }
     }
 
@@ -202,8 +206,8 @@ public class DataManager : MonoBehaviour
             if (SceneManager.GetActiveScene().name == "GameStart")
             {
                 GameObject obj = GameObject.Find("SideMenuCanvas").transform.Find("DarkBackground").gameObject;
-
-                if (!obj.activeSelf && Time.timeScale == 1.0f)
+                
+                if (!obj.activeSelf)
                     GameObject.Find("SideMenuCanvas").GetComponent<SidebarController>().ClickButton();
             }
         }

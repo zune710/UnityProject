@@ -202,6 +202,10 @@ public class RoundManager : MonoBehaviour
         FadeInImg.enabled = false;
         FadeInAnim.SetBool("FadeIn", false);
 
+        // timeScale이 1이 되기 전에 OnApplicationPause, OnApplicationFocus가 실행될 때 일시정지하기 위해(timeScale이 1이 되면 안 되기 때문)
+        if (GameObject.Find("DataManager").GetComponent<DataManager>().isPaused || !Application.isFocused)
+            yield return new WaitForSeconds(0.1f);
+        
         Time.timeScale = 1.0f;
 
         // Info UI(Round)
