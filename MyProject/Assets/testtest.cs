@@ -6,8 +6,8 @@ public class testtest : MonoBehaviour
 {
     void Start()
     {
-        Debug.Log(BossManager.GetInstance.bossType);
-        //Debug.Log(DataManager.GetInstance.isDone);
+        
+        Debug.Log(DataManager.GetInstance.isDone);
     }
 
     void Update()

@@ -70,7 +70,12 @@ public class DataManager : MonoBehaviour
 
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
-
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+    }
+    
     void Start()
     {
         DontDestroyOnLoad(gameObject);

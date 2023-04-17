@@ -26,7 +26,7 @@ public class UIController : MonoBehaviour
     {
         ButtonSFX.Play();  // 소리 나기 전에 넘어가는 듯
 
-        GameObject.Find("DataManager").GetComponent<DataManager>().SaveData();
+        DataManager.GetInstance.SaveData();
         SceneManager.LoadScene("MainMenu");
     }
 

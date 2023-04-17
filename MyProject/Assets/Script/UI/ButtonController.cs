@@ -79,8 +79,6 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             }
             else if(transform.name == "Load Game" && ControllerManager.GetInstance().LoadGame)
             {
-                //GameObject.Find("DataManager").GetComponent<DataManager>().LoadData();
-
                 if (ControllerManager.GetInstance().GameOver)
                 {
                     ControllerManager.GetInstance().GameOver = false;

@@ -10,20 +10,23 @@ public class ProgressBar : MonoBehaviour
     private AsyncOperation asyncOperation;
     public Text text;
     public Text messageText;
-    public Image image;
+    //public Image image;
+    public Slider slider;
 
     IEnumerator Start()
     {
         //EditorApplication.isPaused = true;  // playmode 일시정지
 
         // MainMenu로 이동하기 전에 LoadData 실행
-        DataManager dataManager = GameObject.Find("DataManager").GetComponent<DataManager>();
-        dataManager.LoadData();
+        DataManager.GetInstance.LoadData();
 
         asyncOperation = SceneManager.LoadSceneAsync("MainMenu");
         asyncOperation.allowSceneActivation = false;
 
-        image.fillAmount = 0;
+        //image.fillAmount = 0;
+
+        slider.maxValue = 100;
+        slider.value = 0;
 
         while (!asyncOperation.isDone)
         {
@@ -34,7 +37,9 @@ public class ProgressBar : MonoBehaviour
             float progress = asyncOperation.progress / 0.9f * 100f;  // 0.0 ~ 100.0
             text.text = progress.ToString() + "%";
 
-            image.fillAmount = asyncOperation.progress / 0.9f;  // 0.0 ~ 1.0
+            slider.value = progress;
+
+            //image.fillAmount = asyncOperation.progress / 0.9f;  // 0.0 ~ 1.0
 
             yield return null;
 
@@ -44,7 +49,7 @@ public class ProgressBar : MonoBehaviour
                 //asyncOperation.allowSceneActivation = true;
                 
                 // LoadData 완료되면 다음 Scene으로 이동
-                if(dataManager.isDone)
+                if(DataManager.GetInstance.isDone)
                 {
                     messageText.gameObject.SetActive(true);
                     
