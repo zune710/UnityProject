@@ -7,57 +7,77 @@ using UnityEngine.UI;
 public class ScrollView : MonoBehaviour
 {
     public GameObject ui;
-    public RectTransform uiTranspos;
+    private RectTransform uiTranspos;
 
-    public GameObject SoundButton;
+    public GameObject BgmSoundButton;
+    public GameObject SfxSoundButton;
     public Sprite SoundOn;
     public Sprite SoundOff;
 
-    public GameObject SoundSlider;
-    private Slider Volume;
+    public Slider BgmVolume;
+    public Slider SfxVolume;
 
-    private bool active;
+    private bool BgmActive;
+    private bool SfxActive;
 
     public float sizeX;
     public float sizeY;
 
     private AudioSource ButtonSFX;
-    public AudioSource BGM;
+    private AudioSource BGM;
+    private AudioSource SFX;
 
 
     private void Awake()
     {
         uiTranspos = ui.GetComponent<RectTransform>();
-        Volume = SoundSlider.GetComponent<Slider>();
-        ButtonSFX = GetComponent<AudioSource>();
 
         BGM = GameObject.Find("GameManager").GetComponent<AudioSource>();
+        SFX = GameObject.Find("CanvasController").GetComponent<AudioSource>();  // MainButton
+        ButtonSFX = GetComponent<AudioSource>();  // SubButton
     }
 
     private void Start()
     {
-        active = true;
+        BgmActive = true;
+        SfxActive = true;
 
-        Volume.maxValue = 1;
-        Volume.value = BGM.volume;
+        BgmVolume.maxValue = 1;
+        BgmVolume.value = BGM.volume;
+
+        SfxVolume.maxValue = 1;
+        SfxVolume.value = SFX.volume;
 
         StartCoroutine(EffectUi());
     }
 
     private void Update()
     {
-        BGM.volume = Volume.value;
+        BGM.volume = BgmVolume.value;
+        SFX.volume = SfxVolume.value;
+        ButtonSFX.volume = SfxVolume.value;
 
         // VolumeControl
-        if (Volume.value == 0)
+        if (BgmVolume.value == 0)
         {
-            SoundButton.GetComponent<Image>().sprite = SoundOff;
-            active = false;
+            BgmSoundButton.GetComponent<Image>().sprite = SoundOff;
+            BgmActive = false;
         }
         else
         {
-            SoundButton.GetComponent<Image>().sprite = SoundOn;
-            active = true;
+            BgmSoundButton.GetComponent<Image>().sprite = SoundOn;
+            BgmActive = true;
+        }
+
+        if (SfxVolume.value == 0)
+        {
+            SfxSoundButton.GetComponent<Image>().sprite = SoundOff;
+            SfxActive = false;
+        }
+        else
+        {
+            SfxSoundButton.GetComponent<Image>().sprite = SoundOn;
+            SfxActive = true;
         }
     }
 
@@ -75,13 +95,13 @@ public class ScrollView : MonoBehaviour
     {
         float fTime = 0.0f;
 
-        while(uiTranspos.sizeDelta.y < sizeY)
+        while(uiTranspos.sizeDelta.x < sizeX)
         {
             fTime += Time.unscaledDeltaTime * 10.0f;
 
             uiTranspos.sizeDelta = Vector2.Lerp(
                 new Vector2(5.0f, 5.0f),
-                new Vector2(5.0f, sizeY),
+                new Vector2(sizeX, 5.0f),
                 fTime);
 
             yield return null;
@@ -89,12 +109,12 @@ public class ScrollView : MonoBehaviour
 
         fTime = 0.0f;
 
-        while (uiTranspos.sizeDelta.x < sizeX)
+        while (uiTranspos.sizeDelta.y < sizeY)
         {
             fTime += Time.unscaledDeltaTime * 7.0f;
 
             uiTranspos.sizeDelta = Vector2.Lerp(
-                new Vector2(5.0f, sizeY),
+                new Vector2(sizeX, 5.0f),
                 new Vector2(sizeX, sizeY),
                 fTime);
 
@@ -102,23 +122,43 @@ public class ScrollView : MonoBehaviour
         }
     }
 
-    public void SoundOnOff()
+    public void BgmSoundOnOff()
     {
         ButtonSFX.Play();
 
-        if (active)
+        if (BgmActive)
         {
             // Sound Off
-            SoundButton.GetComponent<Image>().sprite = SoundOff;
-            Volume.value = 0;
+            BgmSoundButton.GetComponent<Image>().sprite = SoundOff;
+            BgmVolume.value = 0;
         }
         else
         {
             // Sound On
-            SoundButton.GetComponent<Image>().sprite = SoundOn;
-            Volume.value = 0.7f;
+            BgmSoundButton.GetComponent<Image>().sprite = SoundOn;
+            BgmVolume.value = 0.7f;
         }
 
-        active = !active;
+        BgmActive = !BgmActive;
+    }
+
+    public void SfxSoundOnOff()
+    {
+        ButtonSFX.Play();
+
+        if (SfxActive)
+        {
+            // Sound Off
+            SfxSoundButton.GetComponent<Image>().sprite = SoundOff;
+            SfxVolume.value = 0;
+        }
+        else
+        {
+            // Sound On
+            SfxSoundButton.GetComponent<Image>().sprite = SoundOn;
+            SfxVolume.value = 0.7f;
+        }
+
+        SfxActive = !SfxActive;
     }
 }

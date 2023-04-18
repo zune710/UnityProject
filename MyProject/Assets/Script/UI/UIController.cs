@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
     public GameObject SettingMenu;
     public bool SettingMenuActive;
+
+    public GameObject SavingData;
+    public GameObject MenuFrame;
+    public Button GameEndButton;
 
     private AudioSource ButtonSFX;
 
@@ -19,15 +24,45 @@ public class UIController : MonoBehaviour
     {
         SettingMenuActive = false;
         SettingMenu.SetActive(SettingMenuActive);
+
+        SavingData.SetActive(false);
     }
 
 
-    public void onMainMenu()
+    public void onMainMenu()  // Save & Exit
     {
         ButtonSFX.Play();  // 소리 나기 전에 넘어가는 듯
 
+        if(ControllerManager.GetInstance().Heart == 0 || ControllerManager.GetInstance().GameClear)
+        {
+            SceneManager.LoadScene("MainMenu");
+            return;
+        }
+
+        MenuFrame.SetActive(false);
+        GameEndButton.interactable = false;
+        SavingData.SetActive(true);
         DataManager.GetInstance.SaveData();
-        SceneManager.LoadScene("MainMenu");
+
+        StartCoroutine(LoadMenu());
+    }
+
+    private IEnumerator LoadMenu()
+    {
+        while (true)
+        {
+            if (DataManager.GetInstance.isDone)
+            {
+                SavingData.SetActive(false);
+                DataManager.GetInstance.isDone = false;
+
+                SceneManager.LoadScene("MainMenu");
+
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
     public void onRestart()  // 해당 라운드 처음부터 다시

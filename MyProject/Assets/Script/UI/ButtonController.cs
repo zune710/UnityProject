@@ -89,6 +89,13 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 if(ControllerManager.GetInstance().onBoss)
                 {
                     ControllerManager.GetInstance().Player_HP = 100;
+                    ControllerManager.GetInstance().EnemyCount = 0;
+                }
+                // 라운드 넘어갈 때 저장되어 onBoss, onEnemy 모두 false인 경우
+                else if (!ControllerManager.GetInstance().onEnemy)
+                {
+                    ControllerManager.GetInstance().onEnemy = true;
+                    ControllerManager.GetInstance().Player_HP = 100;
                 }
 
                 SceneManager.LoadScene("GameStart");
@@ -100,7 +107,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             else if (transform.name == "Quit")
             {
                 Application.Quit();  // 에디터에서는 무시됨
-                //UnityEditor.EditorApplication.ExitPlaymode();  // 에디터 플레이모드 나가기
+                UnityEditor.EditorApplication.ExitPlaymode();  // 에디터 플레이모드 나가기
             }
         }
     }
@@ -138,7 +145,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().Heart = 3;
         ControllerManager.GetInstance().Goal = 20;
 
-        ControllerManager.GetInstance().BossId = 1;
+        ControllerManager.GetInstance().BossId = 0;
         ControllerManager.GetInstance().EnemyId = 1;
         ControllerManager.GetInstance().Round = 1;
 
