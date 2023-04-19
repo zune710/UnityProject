@@ -14,9 +14,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 HorMovement;
     private Vector3 VerMovement;
 
-    // 플레이어 최대 체력
-    private int maxHP;
-
     // ** 플레이어의 Animator 구성요소를 받아오기 위해
     private Animator animator;
 
@@ -27,6 +24,8 @@ public class PlayerController : MonoBehaviour
     private bool onAttack;  // 공격상태
     private bool onHit;     // 피격상태
     private bool onDead;    // 사망
+
+    private bool isStay;
 
     // ** 복제할 총알 원본
     private GameObject BulletPrefab;
@@ -73,9 +72,6 @@ public class PlayerController : MonoBehaviour
         // ** 속도를 초기화
         Speed = 5.0f;
 
-        // 플레이어 최대 체력을 초기화
-        maxHP = ControllerManager.GetInstance().Player_HP;
-
         // ** 초기값 세팅
         onAttack = false;
         onHit = false;
@@ -84,6 +80,8 @@ public class PlayerController : MonoBehaviour
 
         DirLeft = false;
         DirRight = false;
+
+        isStay = false;
     }
 
 
@@ -157,7 +155,7 @@ public class PlayerController : MonoBehaviour
                 ControllerManager.GetInstance().DirLeft = false;
             }
 
-            if(Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 if (transform.position.y < -3.0f)  // -5.5f
                     transform.position += VerMovement;
@@ -194,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
             // ** 플레이어의 움직임에 따라 이동 모션을 실행한다.
             animator.SetFloat("Speed", Hor);
-            if(Hor == 0)
+            if (Hor == 0)
                 animator.SetFloat("Speed", Ver);
         }
     }
@@ -254,7 +252,7 @@ public class PlayerController : MonoBehaviour
         --ControllerManager.GetInstance().Heart;
         ControllerManager.GetInstance().GameOver = true;
 
-        if(ControllerManager.GetInstance().Heart == 0)
+        if (ControllerManager.GetInstance().Heart == 0)
             ControllerManager.GetInstance().LoadGame = false;
     }
 
@@ -328,8 +326,16 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") || 
-            collision.gameObject.layer == LayerMask.NameToLayer("EnemyBullet"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") ||
+            collision.gameObject.layer == LayerMask.NameToLayer("Boss"))
+        {
+            isStay = true;
+            StartCoroutine(DelayTriggerStay());
+
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") ||
+        collision.gameObject.layer == LayerMask.NameToLayer("EnemyBullet"))
         {
             int damage = 5;
 
@@ -338,12 +344,12 @@ public class PlayerController : MonoBehaviour
 
             OnHit();
         }
-        else if(collision.gameObject.layer == LayerMask.NameToLayer("Boss") || 
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Boss") ||
             collision.gameObject.layer == LayerMask.NameToLayer("BossBullet"))
         {
             int damage = 10;
 
-            if(ControllerManager.GetInstance().BossId == 2)
+            if (ControllerManager.GetInstance().BossId == 2)
             {
                 GameObject boss = BossManager.GetInstance.Parent.transform.Find("Boss").gameObject;
                 BossController bossController = boss.GetComponent<BossController>();
@@ -363,6 +369,25 @@ public class PlayerController : MonoBehaviour
 
         // ** 진동 효과 컨트롤러 생성
         camera.AddComponent<CameraController>();
+    }
+
+    private IEnumerator DelayTriggerStay()
+    {
+        while (isStay)
+        {
+            int damage = 1;
+
+            StartCoroutine(DecreaseHP(damage));
+
+            OnHit();
+
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isStay = false;
     }
 
     private IEnumerator DecreaseHP(int damage)

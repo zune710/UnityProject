@@ -26,6 +26,7 @@ public class RoundManager : MonoBehaviour
     private Text RoundText;
 
     public int Goal; // Enemy 처치 수(목표)
+    public bool BossDied;
 
     public GameObject FadeIn;  // Inspector
     private Image FadeInImg;
@@ -53,8 +54,9 @@ public class RoundManager : MonoBehaviour
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
 
             Goal = ControllerManager.GetInstance().Goal;
-            
-            if(ControllerManager.GetInstance().onBoss)
+            BossDied = false;
+
+            if (ControllerManager.GetInstance().onBoss)
                 GoalBar.SetActive(false);
 
             FadeInImg = FadeIn.GetComponent<Image>();
@@ -89,6 +91,12 @@ public class RoundManager : MonoBehaviour
             GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
         }
 
+        if(BossDied)
+        {
+            BossDied = false;
+            StartCoroutine(CheckClear());
+        }
+
         if (ControllerManager.GetInstance().GoalClear || ControllerManager.GetInstance().BossClear)
         {
             /* 목표 도달 ->  다음 라운드 -> ... */
@@ -108,6 +116,26 @@ public class RoundManager : MonoBehaviour
                 StartCoroutine(EnemyRoundSetting());
         }
     }
+
+    private IEnumerator CheckClear()
+    {
+        while (true)
+        {
+            if (Time.timeScale == 1.0f)
+                break;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        if (ControllerManager.GetInstance().BossId == 3)
+            ControllerManager.GetInstance().GameClear = true;
+        else
+            // 다음 라운드로 넘어가기
+            ControllerManager.GetInstance().BossClear = true;
+    }
+
 
     private IEnumerator BossRoundSetting()
     {
@@ -202,7 +230,9 @@ public class RoundManager : MonoBehaviour
         FadeInImg.enabled = false;
         FadeInAnim.SetBool("FadeIn", false);
 
+        #region ...
         // timeScale이 1이 되기 전에 OnApplicationPause, OnApplicationFocus가 실행될 때 일시정지하기 위해(timeScale이 1이 되면 안 되기 때문)
+        #endregion
         if (DataManager.GetInstance.isPaused || !Application.isFocused)
             yield return new WaitForSeconds(0.1f);
         

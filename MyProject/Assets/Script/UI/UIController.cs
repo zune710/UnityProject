@@ -31,23 +31,27 @@ public class UIController : MonoBehaviour
 
     public void onMainMenu()  // Save & Exit
     {
-        ButtonSFX.Play();  // 소리 나기 전에 넘어가는 듯
+        ButtonSFX.Play();
 
-        if(ControllerManager.GetInstance().Heart == 0 || ControllerManager.GetInstance().GameClear)
+        if(ControllerManager.GetInstance().Heart != 0 && !ControllerManager.GetInstance().GameClear)
         {
-            SceneManager.LoadScene("MainMenu");
-            return;
+            SavingData.SetActive(true);
         }
 
         MenuFrame.SetActive(false);
         GameEndButton.interactable = false;
-        SavingData.SetActive(true);
-        DataManager.GetInstance.SaveData();
 
-        StartCoroutine(LoadMenu());
+        DataManager.GetInstance.SaveData();
+        StartCoroutine(LoadMainMenuScene());
+
+        #region memo
+        /* Heart == 0 또는 GameClear 이후 다시 로그인했을 때 LoadGame = false 되려면 SaveData() 해야 함
+           단, '저장 중' 텍스트는 표시하지 않는다. */
+
+        #endregion
     }
 
-    private IEnumerator LoadMenu()
+    private IEnumerator LoadMainMenuScene()
     {
         while (true)
         {
@@ -64,6 +68,7 @@ public class UIController : MonoBehaviour
             yield return null;
         }
     }
+
 
     public void onRestart()  // 해당 라운드 처음부터 다시
     {
@@ -91,15 +96,5 @@ public class UIController : MonoBehaviour
 
         SettingMenuActive = !SettingMenuActive;
         SettingMenu.SetActive(SettingMenuActive);
-    }
-
-    public void onQuit()  // 사용 안 하는 듯
-    {
-        ButtonSFX.Play();
-
-        DataManager.GetInstance.SaveData();
-
-        Application.Quit();  // 에디터에서는 무시됨
-        UnityEditor.EditorApplication.ExitPlaymode();
     }
 }

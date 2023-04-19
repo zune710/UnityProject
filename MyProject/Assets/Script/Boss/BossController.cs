@@ -783,17 +783,21 @@ public class BossController : MonoBehaviour
                     // 죽고 있는 Enemy의 Collider 끄기
                     GetComponent<CapsuleCollider2D>().enabled = false;
 
-                    if (ControllerManager.GetInstance().BossId == 3)
-                        ControllerManager.GetInstance().GameClear = true;
-                    else
-                        // 다음 라운드로 넘어가기
-                        ControllerManager.GetInstance().BossClear = true;
+                    // slow
+                    ChangeTimeScale(0.3f);
+
+                    RoundManager.GetInstance.BossDied = true;
                 }
             }
         }
     }
 
-    private void DestroyEnemy()
+    private void ChangeTimeScale(float value)  // Die Anim Event 1 (value = 1)
+    {
+        Time.timeScale = value;
+    }
+
+    private void DestroyEnemy()  // Die Anim Event 2
     {
         Destroy(gameObject, 0.016f);
     }

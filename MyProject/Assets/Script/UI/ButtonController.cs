@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    private Text PlayerId;
     private Text text;
 
     private bool onHover;
@@ -20,19 +21,24 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void Awake()
     {
+        PlayerId = GameObject.Find("PlayerID").GetComponent<Text>();
         text = transform.Find("Text").GetComponent<Text>();
 
         SubMenuCanvas = GameObject.Find("SubMenuCanvas");
         OptionAnim = SubMenuCanvas.transform.Find("OptionMenu").GetComponent<Animator>();
         AlertMenu = SubMenuCanvas.transform.Find("AlertMenu").gameObject;
+        #region memo
         // 꺼져 있으면 GameObject.Find는 못 찾지만
         // transform.Find는 찾을 수 있음
+        #endregion
 
         ButtonSFX = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
+        PlayerId.text = ControllerManager.GetInstance().PlayerId;
+
         text.text = transform.name;
 
         AlertMenu.gameObject.SetActive(false);
@@ -58,13 +64,13 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if(onHover)
+        if (onHover)
         {
             ButtonSFX.Play();
-            
+
             if (transform.name == "New Game")
             {
-                if(ControllerManager.GetInstance().LoadGame)
+                if (ControllerManager.GetInstance().LoadGame)
                 {
                     // 저장된 데이터 덮어쓰기 경고 UI
                     AlertMenu.gameObject.SetActive(true);
@@ -75,9 +81,9 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                     ControllerManager.GetInstance().LoadGame = true;
                     SceneManager.LoadScene("GameStart");
                 }
-                
+
             }
-            else if(transform.name == "Load Game" && ControllerManager.GetInstance().LoadGame)
+            else if (transform.name == "Load Game" && ControllerManager.GetInstance().LoadGame)
             {
                 if (ControllerManager.GetInstance().GameOver)
                 {
@@ -86,12 +92,14 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                     ControllerManager.GetInstance().EnemyCount = 0;
                 }
 
-                if(ControllerManager.GetInstance().onBoss)
+                if (ControllerManager.GetInstance().onBoss)
                 {
                     ControllerManager.GetInstance().Player_HP = 100;
                     ControllerManager.GetInstance().EnemyCount = 0;
                 }
+                #region ...
                 // 라운드 넘어갈 때 저장되어 onBoss, onEnemy 모두 false인 경우
+                #endregion
                 else if (!ControllerManager.GetInstance().onEnemy)
                 {
                     ControllerManager.GetInstance().onEnemy = true;
@@ -100,7 +108,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
                 SceneManager.LoadScene("GameStart");
             }
-            else if(transform.name == "How To Play")
+            else if (transform.name == "How To Play")
             {
                 OptionAnim.SetBool("Move", true);
             }
@@ -122,7 +130,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        
+
     }
 
     // 마우스가 버튼 위에 있을 때
@@ -139,27 +147,65 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void ResetValue()
     {
-        ControllerManager.GetInstance().Player_HP = 100;
-        ControllerManager.GetInstance().BulletSpeed = 10.0f;
-        ControllerManager.GetInstance().EnemyCount = 0;
-        ControllerManager.GetInstance().Heart = 3;
-        ControllerManager.GetInstance().Goal = 20;
-
-        ControllerManager.GetInstance().BossId = 0;
-        ControllerManager.GetInstance().EnemyId = 1;
         ControllerManager.GetInstance().Round = 1;
-
+        ControllerManager.GetInstance().Goal = 20;
         ControllerManager.GetInstance().onEnemy = true;
         ControllerManager.GetInstance().onBoss = false;
         ControllerManager.GetInstance().BossActive = false;
 
-        ControllerManager.GetInstance().GameClear = false;
+        ControllerManager.GetInstance().Player_HP = 100;
+        ControllerManager.GetInstance().BulletSpeed = 10.0f;
+        ControllerManager.GetInstance().Heart = 3;
+        ControllerManager.GetInstance().EnemyCount = 0;
+
+        ControllerManager.GetInstance().EnemyId = 1;
+        ControllerManager.GetInstance().BossId = 0;
+
         ControllerManager.GetInstance().GameOver = false;
+        ControllerManager.GetInstance().GameClear = false;
+    }
+
+    
+    public void LogOutInGame()  // LogOut Button OnClick
+    {
+        // all button interactble false
+        foreach (Selectable selectableUI in Selectable.allSelectablesArray)
+        {
+            selectableUI.interactable = false;
+        }
+
+        #region ...
+        // 불러올 데이터가 없는 플레이어가 로그인했을 때를 위해 이전 플레이어 값들을 리셋
+        #endregion
+        ResetValue();
+        ControllerManager.GetInstance().LoadGame = false;
+        ControllerManager.GetInstance().GoalClear = false;
+        ControllerManager.GetInstance().BossClear = false;
+
+        DataManager.GetInstance.LogOut();
+
+        StartCoroutine(LoadLogInScene());
+    }
+
+    private IEnumerator LoadLogInScene()
+    {
+        while (true)
+        {
+            if (DataManager.GetInstance.isDone)
+            {
+                DataManager.GetInstance.isDone = false;
+
+                SceneManager.LoadScene("LogInScene");
+
+                yield break;
+            }
+
+            yield return null;
+        }
     }
 
 
-    // 버튼 onClick
-    public void AlertYES()
+    public void AlertYES()  // Button onClick
     {
         ButtonSFX.Play();
 
@@ -169,10 +215,10 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         SceneManager.LoadScene("GameStart");
     }
 
-    public void AlertNO()
+    public void AlertNO()  // Button onClick
     {
         ButtonSFX.Play();
-        
+
         // 경고창 끄기
         AlertMenu.gameObject.SetActive(false);
     }

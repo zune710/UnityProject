@@ -46,7 +46,7 @@ public class ProgressBar : MonoBehaviour
                 {
                     messageText.gameObject.SetActive(true);
                     
-                    if (Input.GetMouseButtonDown(0))  // or Input.anyKeyDown
+                    if (Input.anyKeyDown)  // or Input.GetMouseButtonDown(0)
                     {
                         DataManager.GetInstance.isDone = false;
                         asyncOperation.allowSceneActivation = true;

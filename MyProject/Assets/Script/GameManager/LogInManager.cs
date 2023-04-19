@@ -47,6 +47,8 @@ public class LogInManager : MonoBehaviour
     public Toggle GenderF;
     public Text Notice;
 
+    private AudioSource ButtonSFX;
+
     private string id;
     private string password;
     private string userName;
@@ -55,6 +57,11 @@ public class LogInManager : MonoBehaviour
 
     private bool isChanged;
 
+    private void Awake()
+    {
+        ButtonSFX = GetComponent<AudioSource>();
+
+    }
 
     private void Start()
     {
@@ -118,7 +125,7 @@ public class LogInManager : MonoBehaviour
     {
         id = NewID.text;
         password = NewPassword.text;
-
+        
         userName = UserName.text;
         age = Age.text;
         gender = GenderM.isOn ? "1" : "2";
@@ -132,6 +139,8 @@ public class LogInManager : MonoBehaviour
 
     public void SignUp()
     {
+        ButtonSFX.Play();
+
         Interactable(false);
 
         if (!SetSignUpData())
@@ -144,7 +153,6 @@ public class LogInManager : MonoBehaviour
             return;
         }
         
-        //nameof
         WWWForm form = new WWWForm();
         form.AddField("order", "sign up");
         form.AddField("id", id);
@@ -158,6 +166,8 @@ public class LogInManager : MonoBehaviour
 
     public void LogIn()
     {
+        ButtonSFX.Play();
+
         Interactable(false);
 
         if (!SetLogInData())
@@ -178,6 +188,7 @@ public class LogInManager : MonoBehaviour
         StartCoroutine(Post(form));
     }
 
+
     IEnumerator Post(WWWForm form)
     {
         using (UnityWebRequest request = UnityWebRequest.Post(URL, form))
@@ -190,7 +201,10 @@ public class LogInManager : MonoBehaviour
                 LogInDataForm info = JsonUtility.FromJson<LogInDataForm>(request.downloadHandler.text);
 
                 if (info.login)
+                {
+                    ControllerManager.GetInstance().PlayerId = id;
                     NextScene();
+                }
                 else
                 {
                     if(info.message == "회원가입 완료")
@@ -214,13 +228,15 @@ public class LogInManager : MonoBehaviour
         }
     }
 
-    public void NextScene()
+    private void NextScene()
     {
         SceneManager.LoadScene("progressScene");
     }
 
     public void SetActiveSignUpFrame()
     {
+        ButtonSFX.Play();
+
         Notice.enabled = false;
         SignUpFrame.SetActive(!SignUpFrame.activeSelf);
 
@@ -264,11 +280,11 @@ public class LogInManager : MonoBehaviour
             : new Color(200 / 255f, 200 / 255f, 200 / 255f, 128 / 255f);
     }
 
-    private void OnApplicationQuit()
+    public void OnQuit()
     {
-        WWWForm form = new WWWForm();
-        form.AddField("order", "log out");
+        ButtonSFX.Play();
 
-        StartCoroutine(Post(form));
+        Application.Quit();
+        UnityEditor.EditorApplication.ExitPlaymode();
     }
 }

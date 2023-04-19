@@ -66,7 +66,7 @@ public class DataManager : MonoBehaviour
     }
 
     public bool isDone = false;
-    public bool isPaused;
+    public bool isPaused = false;
 
     string URL = "https://script.google.com/macros/s/AKfycbxn_T-N-5X8mkNQK4UhKlC0zHl3ENXuuCtnAXShkm_Z1Iqd7NhOQzPI-qe47WAjUW9ZwA/exec";
 
@@ -85,58 +85,8 @@ public class DataManager : MonoBehaviour
     {
         WWWForm www = new WWWForm();
         www.AddField("order", "load data");
-
-        StartCoroutine(LoadPost(www));
-    }
-
-    private IEnumerator LoadPost(WWWForm www)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Post(URL, www))
-        {
-            yield return request.SendWebRequest();
-
-            if (request.isDone)
-            {
-                Debug.Log(request.downloadHandler.text);
-                if (request.downloadHandler.text == "데이터 없음")
-                {
-                    isDone = true;
-                    yield break;
-                }
-
-                DataForm form = JsonUtility.FromJson<DataForm>(request.downloadHandler.text);
-
-                InsertData(form);
-            }
-            else
-                Debug.Log("응답없음");
-
-            request.Dispose();
-        }
-
-        isDone = true;
-    }
-
-    private void InsertData(DataForm form)
-    {
-        ControllerManager.GetInstance().Player_HP = form.Player_HP;
-        ControllerManager.GetInstance().Heart = form.Heart;
-        ControllerManager.GetInstance().EnemyCount = form.EnemyCount;
-
-        ControllerManager.GetInstance().EnemyId = form.EnemyId;
-        ControllerManager.GetInstance().BossId = form.BossId;
-
-        ControllerManager.GetInstance().Round = form.Round;
-        ControllerManager.GetInstance().Goal = form.Goal;
-        ControllerManager.GetInstance().onEnemy = form.onEnemy;
-        ControllerManager.GetInstance().onBoss = form.onBoss;
-        ControllerManager.GetInstance().BossActive = form.BossActive;
-
-        ControllerManager.GetInstance().LoadGame = form.LoadGame;
-        ControllerManager.GetInstance().GoalClear = form.GoalClear;
-        ControllerManager.GetInstance().BossClear = form.BossClear;
-        ControllerManager.GetInstance().GameOver = form.GameOver;
-        ControllerManager.GetInstance().GameClear = form.GameClear;
+        
+        StartCoroutine(Post(www, nameof(LoadData)));
     }
 
     public void SaveData()
@@ -164,27 +114,71 @@ public class DataManager : MonoBehaviour
         form.AddField("GameOver", ControllerManager.GetInstance().GameOver.ToString());
         form.AddField("GameClear", ControllerManager.GetInstance().GameClear.ToString());
 
-        StartCoroutine(SavePost(form));
+        StartCoroutine(Post(form, nameof(SaveData)));
     }
 
-    private IEnumerator SavePost(WWWForm form)
+    public void LogOut()
     {
-        using (UnityWebRequest request = UnityWebRequest.Post(URL, form))
+        WWWForm form = new WWWForm();
+        form.AddField("order", "log out");
+
+        ControllerManager.GetInstance().PlayerId = null;
+
+        StartCoroutine(Post(form, nameof(LogOut)));
+    }
+
+    private IEnumerator Post(WWWForm www, string order)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Post(URL, www))
         {
             yield return request.SendWebRequest();
-
+            
             if (request.isDone)
             {
                 Debug.Log(request.downloadHandler.text);
+                
+                if(order == nameof(LoadData))
+                {
+                    if (request.downloadHandler.text == "데이터 없음")
+                    {
+                        isDone = true;
+                        yield break;
+                    }
+
+                    DataForm form = JsonUtility.FromJson<DataForm>(request.downloadHandler.text);
+
+                    InsertData(form);
+                }
             }
             else
                 Debug.Log("응답없음");
-
-            request.Dispose();
         }
 
         isDone = true;
     }
+
+    private void InsertData(DataForm form)
+    {
+        ControllerManager.GetInstance().Player_HP = form.Player_HP;
+        ControllerManager.GetInstance().Heart = form.Heart;
+        ControllerManager.GetInstance().EnemyCount = form.EnemyCount;
+
+        ControllerManager.GetInstance().EnemyId = form.EnemyId;
+        ControllerManager.GetInstance().BossId = form.BossId;
+
+        ControllerManager.GetInstance().Round = form.Round;
+        ControllerManager.GetInstance().Goal = form.Goal;
+        ControllerManager.GetInstance().onEnemy = form.onEnemy;
+        ControllerManager.GetInstance().onBoss = form.onBoss;
+        ControllerManager.GetInstance().BossActive = form.BossActive;
+
+        ControllerManager.GetInstance().LoadGame = form.LoadGame;
+        ControllerManager.GetInstance().GoalClear = form.GoalClear;
+        ControllerManager.GetInstance().BossClear = form.BossClear;
+        ControllerManager.GetInstance().GameOver = form.GameOver;
+        ControllerManager.GetInstance().GameClear = form.GameClear;
+    }
+
 
     private void OnApplicationPause(bool pause)
     {
@@ -220,7 +214,12 @@ public class DataManager : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        LogOut();
+    }
 
+    #region memo
     /** 1. 로컬 저장 **/
     /* Start -- Load Data */
     ////var JsonData = Resources.Load<TextAsset>("saveFile/Data");
@@ -253,4 +252,5 @@ public class DataManager : MonoBehaviour
 
     /** 2. 서버 저장 **/
     //WWWForm wform = new WWWForm();  // WWWForm 사용
+    #endregion
 }

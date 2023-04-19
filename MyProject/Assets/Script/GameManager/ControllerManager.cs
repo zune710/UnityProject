@@ -19,6 +19,8 @@ public class ControllerManager
     public bool DirLeft;
     public bool DirRight;
 
+    public string PlayerId = null;  // guest?
+
     // RoundData
     public int Round = 1;
     public int Goal = 20; // Enemy 처치 수(목표) 20 (10씩 증가)
@@ -28,7 +30,7 @@ public class ControllerManager
     
     // PlayerData
     public int Player_HP = 100;
-    public float BulletSpeed = 10.0f;
+    public float BulletSpeed = 10.0f;  // Save, Load X
     public int Heart = 3;
     public int EnemyCount = 0;
 

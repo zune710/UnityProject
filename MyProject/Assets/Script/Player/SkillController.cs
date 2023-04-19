@@ -61,7 +61,6 @@ public class SkillController : MonoBehaviour
                 Slot1_BigBullet();
                 PushButton();
             }
-            
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -77,7 +76,6 @@ public class SkillController : MonoBehaviour
                 Slot3_Heal();
                 PushButton();
             }
-                
         }
     }
 
@@ -177,7 +175,7 @@ public class SkillController : MonoBehaviour
         if (Time.timeScale > 0)
         {
             slot = 3;
-            cooldown = 0.05f;
+            cooldown = 0.07f;
 
 
             int value = 10;
