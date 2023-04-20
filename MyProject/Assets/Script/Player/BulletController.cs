@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class BulletController : MonoBehaviour
 {
     // ** 총알이 날아가는 속도
     private float Speed;  // [HideInInspector] public float Speed;
 
-    // ** 총알이 충돌한 횟수
+    // ** 총알이 충돌 가능한 횟수
     public int hp;
 
     // ** 이펙트 효과 원본
@@ -15,6 +16,8 @@ public class BulletController : MonoBehaviour
 
     // ** 총알이 날아가야 할 방향
     public Vector3 Direction { get; set; } // 과 동일
+
+    private IObjectPool<GameObject> bulletPool;
 
 
     private void Start()
@@ -66,4 +69,16 @@ public class BulletController : MonoBehaviour
         if (hp == 0)
             Destroy(this.gameObject, 0.016f);
     }
+
+
+
+    //public void SetPool(IObjectPool<GameObject> pool)
+    //{
+    //    bulletPool = pool;
+    //}
+
+    //private void OnBecameInvisible()
+    //{
+    //    bulletPool.Release(this.gameObject);
+    //}
 }

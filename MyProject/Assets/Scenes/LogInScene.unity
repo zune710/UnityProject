@@ -333,13 +333,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 50786028}
   m_TextComponent: {fileID: 1434615700}
   m_Placeholder: {fileID: 2102918745}
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 5
   m_CharacterLimit: 0
   m_OnSubmit:
     m_PersistentCalls:
@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.78632927, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.030305512, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3488,14 +3488,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 1}
+  m_Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4177,6 +4177,7 @@ GameObject:
   - component: {fileID: 1704404700}
   - component: {fileID: 1704404704}
   - component: {fileID: 1704404705}
+  - component: {fileID: 1704404706}
   m_Layer: 5
   m_Name: LogInCanvas
   m_TagString: Untagged
@@ -4283,9 +4284,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SignUpFrame: {fileID: 267635216}
-  LogInButton: {fileID: 169765005}
-  OnSignUpButton: {fileID: 1836316544}
-  SignUpButton: {fileID: 1421338760}
   ID: {fileID: 50786026}
   Password: {fileID: 1133668108}
   NewID: {fileID: 2060692891}
@@ -4392,6 +4390,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1704404706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704404699}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f67d71661ee924783150bf80c98a6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emailInputField: {fileID: 50786026}
+  passwordInputField: {fileID: 1133668108}
+  message: {fileID: 137291118}
 --- !u!1 &1802179906
 GameObject:
   m_ObjectHideFlags: 0
@@ -4889,13 +4902,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2060692889}
   m_TextComponent: {fileID: 1601607447}
   m_Placeholder: {fileID: 2027983408}
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 5
   m_CharacterLimit: 0
   m_OnSubmit:
     m_PersistentCalls:

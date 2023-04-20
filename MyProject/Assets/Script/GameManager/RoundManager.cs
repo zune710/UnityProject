@@ -25,7 +25,6 @@ public class RoundManager : MonoBehaviour
     private Slider GoalSlider;
     private Text RoundText;
 
-    public int Goal; // Enemy 처치 수(목표)
     public bool BossDied;
 
     public GameObject FadeIn;  // Inspector
@@ -53,7 +52,6 @@ public class RoundManager : MonoBehaviour
             GoalSlider = GoalBar.GetComponent<Slider>();
             RoundText = GoalSlider.transform.Find("RoundText").gameObject.GetComponent<Text>();
 
-            Goal = ControllerManager.GetInstance().Goal;
             BossDied = false;
 
             if (ControllerManager.GetInstance().onBoss)
@@ -75,7 +73,7 @@ public class RoundManager : MonoBehaviour
 
         NextInfoText.GetComponent<Text>().text = RoundText.text;
 
-        GoalSlider.maxValue = Goal;
+        GoalSlider.maxValue = ControllerManager.GetInstance().Goal;
         GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
 
         // Fade In + Round Info
@@ -203,8 +201,7 @@ public class RoundManager : MonoBehaviour
 
         // Enemy 처치 목표 증가
         ControllerManager.GetInstance().Goal += 10;
-        Goal = ControllerManager.GetInstance().Goal;
-        GoalSlider.maxValue = Goal;
+        GoalSlider.maxValue = ControllerManager.GetInstance().Goal;
         GoalSlider.value = 0;
 
         // Enemy On

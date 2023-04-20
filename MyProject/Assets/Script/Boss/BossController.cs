@@ -783,7 +783,7 @@ public class BossController : MonoBehaviour
                     // 죽고 있는 Enemy의 Collider 끄기
                     GetComponent<CapsuleCollider2D>().enabled = false;
 
-                    // slow
+                    // slow motion
                     ChangeTimeScale(0.3f);
 
                     RoundManager.GetInstance.BossDied = true;

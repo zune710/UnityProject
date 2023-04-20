@@ -1,25 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
-using TMPro;
+using System.Security.Cryptography;
 
 
 [System.Serializable]
 public class MemberForm
 {
     public int index;
-    public string name;
-    public int age;
+    public string id;
+    public string password;
     public int gender;
 
-    public MemberForm(int index, string name, int age, int gender)
+    public MemberForm(int index, string id, string password, int gender)
     {
         this.index = index;
-        this.name = name;
-        this.age = age;
+        this.id = id;
+        this.password = password;
         this.gender = gender;
     }
 }
@@ -64,8 +63,8 @@ public class ExampleManager : MonoBehaviour
 
             // ** 응답에 대한 작업
             print(json.index);
-            print(json.name);
-            print(json.age);
+            print(json.id);
+            print(json.password);
             print(json.gender);
         }
     }
@@ -73,5 +72,22 @@ public class ExampleManager : MonoBehaviour
     public void NextScene()
     {
         SceneManager.LoadScene("progressScene");
+    }
+
+    IEnumerator Request(int index, string id, string password, int gender)
+    {
+        //MemberForm form = new MemberForm(index, id, (password), gender);
+
+        using (UnityWebRequest request = UnityWebRequest.Get(URL))
+        {
+            yield return request.SendWebRequest();
+
+            MemberForm json = JsonUtility.FromJson<MemberForm>(request.downloadHandler.text);
+
+            // ** 응답에 대한 작업
+            
+        }
+
+
     }
 }

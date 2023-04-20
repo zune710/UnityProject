@@ -117,6 +117,38 @@ public class SkillController : MonoBehaviour
         }
     }
 
+    private void BigBullet()
+    {
+        SpriteRenderer spriteRenderer = Player.GetComponent<SpriteRenderer>();
+
+        float Hor = Input.GetAxisRaw("Horizontal");
+
+        GameObject Obj = Instantiate(BigBulletPrefab);
+
+        Obj.transform.position = new Vector3(
+            Player.transform.position.x, -4.5f, transform.position.z);
+
+        Obj.name = "BigBullet";
+
+        BulletController Controller = Obj.AddComponent<BulletController>();
+        SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
+
+        Controller.fxPrefab = fxPrefab;
+        Controller.hp = 10;
+
+        renderer.flipX = spriteRenderer.flipX;
+
+        if (Hor == 0)
+        {
+            if (spriteRenderer.flipX)
+                Controller.Direction = new Vector3(1.0f, 0.0f, 0.0f);
+            else
+                Controller.Direction = new Vector3(-1.0f, 0.0f, 0.0f);
+        }
+        else
+            Controller.Direction = new Vector3(Hor, 0.0f, 0.0f);
+    }
+
 
     public void Slot2_SpeedUp()  // Player, Bullet Speed 증가
     {
@@ -170,6 +202,7 @@ public class SkillController : MonoBehaviour
         StartCoroutine(Cooldown_Coroutine(value));
     }
 
+
     public void Slot3_Heal()  // 회복
     {
         if (Time.timeScale > 0)
@@ -195,37 +228,5 @@ public class SkillController : MonoBehaviour
             ++ControllerManager.GetInstance().Player_HP;
             yield return null;
         }
-    }
-
-    private void BigBullet()
-    {
-        SpriteRenderer spriteRenderer = Player.GetComponent<SpriteRenderer>();
-
-        float Hor = Input.GetAxisRaw("Horizontal");
-
-        GameObject Obj = Instantiate(BigBulletPrefab);
-
-        Obj.transform.position = new Vector3(
-            Player.transform.position.x, -4.5f, transform.position.z);
-
-        Obj.name = "BigBullet";
-
-        BulletController Controller = Obj.AddComponent<BulletController>();
-        SpriteRenderer renderer = Obj.GetComponent<SpriteRenderer>();
-
-        Controller.fxPrefab = fxPrefab;
-        Controller.hp = 500;
-
-        renderer.flipX = spriteRenderer.flipX;
-
-        if (Hor == 0)
-        {
-            if (spriteRenderer.flipX)
-                Controller.Direction = new Vector3(1.0f, 0.0f, 0.0f);
-            else
-                Controller.Direction = new Vector3(-1.0f, 0.0f, 0.0f);
-        }
-        else
-            Controller.Direction = new Vector3(Hor, 0.0f, 0.0f);
     }
 }

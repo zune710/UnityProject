@@ -368,6 +368,7 @@
 "Assets/99. Resource/_Heathen Engineering/Samples/UX Examples/Flat Icons [Free]/ToggleSetAnimatorBoolean.cs"
 "Assets/FX/Scripts/CFX_AutoDestructShuriken.cs"
 "Assets/FX/Scripts/CFX_LightIntensityFade.cs"
+"Assets/LogInController.cs"
 "Assets/Script/BackgroundController.cs"
 "Assets/Script/Boss/BossController.cs"
 "Assets/Script/Boss/BossHPBar.cs"

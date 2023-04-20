@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    
-
     private Animator Anim;
     private Vector3 Movement;
 
@@ -23,12 +21,13 @@ public class EnemyController : MonoBehaviour
 
     private string EnemyType;
 
+    // Inspector
     public bool hasBullet;
     public int HP;
     public float Speed;
     public float AttackRange;
 
-    private float playerSpeed;
+    private float playerSpeedOffset;
 
 
     private void Awake()
@@ -59,13 +58,13 @@ public class EnemyController : MonoBehaviour
                     Player.transform.position,
                     transform.position);
 
-        playerSpeed = playerController.Speed * 0.2f;  // 1(속도 증가 스킬 사용하면 2)
+        playerSpeedOffset = playerController.Speed * 0.2f;  // 1(속도 증가 스킬 사용하면 2)
 
 
         if (distance < AttackRange)
         {
             Movement = ControllerManager.GetInstance().DirRight ?
-            new Vector3(1.0f * playerSpeed, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f); // 1.0f: Background 2 속도
+            new Vector3(1.0f * playerSpeedOffset, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f); // 1.0f: Background 2 속도
 
             transform.position -= Movement * Time.deltaTime;
 
@@ -74,7 +73,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             Movement = ControllerManager.GetInstance().DirRight ?
-            new Vector3(Speed + 1.0f * playerSpeed, 0.0f, 0.0f) : new Vector3(Speed, 0.0f, 0.0f); // 1.0f: Background 2 속도
+            new Vector3(Speed + 1.0f * playerSpeedOffset, 0.0f, 0.0f) : new Vector3(Speed, 0.0f, 0.0f); // 1.0f: Background 2 속도
 
             transform.position -= Movement * Time.deltaTime;
             Anim.SetFloat("Speed", Movement.x);
@@ -112,7 +111,7 @@ public class EnemyController : MonoBehaviour
 
                 ++ControllerManager.GetInstance().EnemyCount;
 
-                if (ControllerManager.GetInstance().EnemyCount == RoundManager.GetInstance.Goal)
+                if (ControllerManager.GetInstance().EnemyCount == ControllerManager.GetInstance().Goal)
                     ControllerManager.GetInstance().GoalClear = true;
             }
         }

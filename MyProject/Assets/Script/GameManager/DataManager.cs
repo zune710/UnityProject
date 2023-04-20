@@ -120,7 +120,7 @@ public class DataManager : MonoBehaviour
     public void LogOut()
     {
         WWWForm form = new WWWForm();
-        form.AddField("order", "log out");
+        form.AddField("order", "sign out");
 
         ControllerManager.GetInstance().PlayerId = null;
 

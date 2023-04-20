@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 
 [System.Serializable]
@@ -33,9 +36,6 @@ public class LogInManager : MonoBehaviour
     private EventSystem eventSystem;
 
     public GameObject SignUpFrame;
-    public Button LogInButton;
-    public Button OnSignUpButton;
-    public Button SignUpButton;
     public InputField ID;
     public InputField Password;
     public InputField NewID;
@@ -49,6 +49,7 @@ public class LogInManager : MonoBehaviour
 
     private AudioSource ButtonSFX;
 
+    private string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
     private string id;
     private string password;
     private string userName;
@@ -57,10 +58,10 @@ public class LogInManager : MonoBehaviour
 
     private bool isChanged;
 
+
     private void Awake()
     {
         ButtonSFX = GetComponent<AudioSource>();
-
     }
 
     private void Start()
@@ -110,32 +111,86 @@ public class LogInManager : MonoBehaviour
             LogIn();
     }
 
-    private bool SetLogInData()
+    private bool SetLogInData()  // LoginCheck
     {
         id = ID.text;
-        password = Password.text;
 
-        if (id == "" || password == "")
-            return false;
+        if (Regex.IsMatch(id, emailPattern))
+        {
+            // ** true
+            password = Security(Password.text);
+            
+            if (password == null)
+                return false;
+            else
+                return true;
+        }
         else
-            return true;
+        {
+            // ** false
+            Notice.text = "email 형식을 다시 확인하세요.";
+            Notice.enabled = true;
+            return false;
+        }
     }
-
+    
     private bool SetSignUpData()
     {
         id = NewID.text;
-        password = NewPassword.text;
-        
-        userName = UserName.text;
-        age = Age.text;
-        gender = GenderM.isOn ? "1" : "2";
 
-        if (id == "" || password == "" || name == "" ||
-            age == "" || (!GenderM.isOn && !GenderF.isOn))
-            return false;
+        if (Regex.IsMatch(id, emailPattern))
+        {
+            password = Security(NewPassword.text);
+
+            userName = UserName.text;
+            age = Age.text;
+            gender = GenderM.isOn ? "1" : "2";
+
+            if (password == null)
+                return false;
+            else if (name == "" || age == "" || (!GenderM.isOn && !GenderF.isOn))
+            {
+                Notice.text = "모두 입력하세요.";
+                Notice.enabled = true;
+                return false;
+            }
+            else
+                return true;
+        }
         else
-            return true;
+        {
+            Notice.text = "email 형식을 다시 확인하세요.";
+            Notice.enabled = true;
+            return false;
+        }
     }
+
+    string Security(string password)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            // ** true
+            Notice.text = "password는 필수 입력값입니다.";
+            Notice.enabled = true;
+            return null;
+        }
+        else
+        {
+            // ** false
+            // ** 보안처리: 암호화 & 복호화
+            SHA256 sha = new SHA256Managed();
+            byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(password));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (byte b in hash)
+            {
+                stringBuilder.AppendFormat("{0:x2}", b);
+            }
+            
+            return stringBuilder.ToString();
+        }
+    }
+
 
     public void SignUp()
     {
@@ -145,10 +200,6 @@ public class LogInManager : MonoBehaviour
 
         if (!SetSignUpData())
         {
-            Debug.Log("비어있음");
-            Notice.text = "모두 입력하세요.";
-            Notice.enabled = true;
-
             Interactable(true);
             return;
         }
@@ -172,10 +223,6 @@ public class LogInManager : MonoBehaviour
 
         if (!SetLogInData())
         {
-            Debug.Log("비어있음");
-            Notice.text = "모두 입력하세요.";
-            Notice.enabled = true;
-
             Interactable(true);
             return;
         }
@@ -262,19 +309,10 @@ public class LogInManager : MonoBehaviour
 
     private void Interactable(bool value)
     {
-        LogInButton.interactable = value;
-        OnSignUpButton.interactable = value;
-        SignUpButton.interactable = value;
-
-        ID.interactable = value;
-        Password.interactable = value;
-
-        NewID.interactable = value;
-        NewPassword.interactable = value;
-        UserName.interactable = value;
-        Age.interactable = value;
-        GenderM.interactable = value;
-        GenderF.interactable = value;
+        foreach (Selectable selectableUI in Selectable.allSelectablesArray)
+        {
+            selectableUI.interactable = value;
+        }
 
         GenderInput.color = value ? new Color(1.0f, 1.0f, 1.0f, 1.0f) 
             : new Color(200 / 255f, 200 / 255f, 200 / 255f, 128 / 255f);
