@@ -2689,6 +2689,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2693315917673512169, guid: 67ef0d6c84de49940ab59a15a8beb8d7, type: 3}
+      propertyPath: PoolBulletPrefab
+      value: 
+      objectReference: {fileID: 6983490218549656829, guid: cb6fc122913f1744ca16ee58418fd9da, type: 3}
     - target: {fileID: 2693315917673512170, guid: 67ef0d6c84de49940ab59a15a8beb8d7, type: 3}
       propertyPath: m_RootOrder
       value: 1

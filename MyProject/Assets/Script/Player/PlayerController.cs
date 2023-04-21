@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     // ** 복제할 총알 원본
     private GameObject BulletPrefab;
+    [SerializeField] private Bullet PoolBulletPrefab;
 
     // ** 복제할 FX 원본
     private GameObject fxPrefab;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
+    private GameObject Parent;
 
     // ** 플레이어가 마지막으로 바라본 방향
     private float Direction;
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
     [Tooltip("오른쪽")]
     public bool DirRight;
 
-    private IObjectPool<GameObject> bulletPool;
+    private IObjectPool<Bullet> bulletPool;
 
     // Start보다 먼저 실행
     private void Awake()
@@ -66,7 +68,9 @@ public class PlayerController : MonoBehaviour
 
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds/Night"));
 
-        //bulletPool = new ObjectPool<GameObject>(CreateBulletInPool, OnGet, OnRelease, OnDestroy, maxSize : 20);
+        //PoolBulletPrefab = Resources.Load("Prefabs/PoolBullet") as Bullet;  // 안 됨
+        bulletPool = new ObjectPool<Bullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize : 8);
+        Parent = new GameObject("BulletList");
     }
 
     // ** 유니티 기본 제공 함수
@@ -191,19 +195,13 @@ public class PlayerController : MonoBehaviour
             // ** 스페이스바를 입력한다면
             if (Input.GetKey(KeyCode.Space))
             {
-                OnAttack();
+                OnAttack();  // Object Pooling 사용
             }
 
             // ** 플레이어의 움직임에 따라 이동 모션을 실행한다.
             animator.SetFloat("Speed", Hor);
             if (Hor == 0)
                 animator.SetFloat("Speed", Ver);
-
-
-            //if(Input.GetKeyDown(KeyCode.Q))
-            //{
-            //    bulletPool.Get();
-            //}
         }
     }
 
@@ -271,7 +269,7 @@ public class PlayerController : MonoBehaviour
         onDead = false;
     }
 
-    private void CreateBullet()  // Attack Animation Event
+    private void CreateBullet()  // Attack Animation Event (with BulletController Script)
     {
         // ** 총알 원본을 복제한다.
         GameObject Obj = Instantiate(BulletPrefab);
@@ -377,7 +375,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // ** 진동 효과를 생성할 관리자 생성
-        GameObject camera = new GameObject("Camera Test");
+        GameObject camera = new GameObject("CameraFX");
 
         // ** 진동 효과 컨트롤러 생성
         camera.AddComponent<CameraController>();
@@ -425,40 +423,46 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void GetPool()  // Attack Animation Event (with Bullet Script)
+    {
+        bulletPool.Get();
+    }
 
-    //private GameObject CreateBulletInPool()
-    //{
-    //    GameObject bullet = Instantiate(BulletPrefab);
+    private Bullet CreatePoolBullet()
+    {
+        Bullet bullet = Instantiate(PoolBulletPrefab, transform.position, Quaternion.identity);
 
-    //    bullet.transform.position = new Vector3(
-    //        transform.position.x,
-    //        transform.position.y - 0.15f,
-    //        transform.position.z);
+        bullet.SetPool(bulletPool);
 
-    //    BulletController controller = bullet.AddComponent<BulletController>();
-    //    controller.SetPool(bulletPool);
-    //    controller.Direction = new Vector3(Direction, 0.0f, 0.0f);
-    //    controller.fxPrefab = fxPrefab;
-    //    controller.hp = 3;
+        bullet.transform.SetParent(Parent.transform);
 
-    //    SpriteRenderer bulletRenderer = bullet.GetComponent<SpriteRenderer>();
-    //    bulletRenderer.flipX = spriteRenderer.flipX;
+        return bullet;
+    }
 
-    //    return bullet;
-    //}
+    private void OnGetBullet(Bullet bullet)
+    {
+        bullet.gameObject.SetActive(true);
 
-    //private void OnGet(GameObject bullet)
-    //{
-    //    bullet.gameObject.SetActive(true);
-    //}
+        bullet.transform.position = new Vector3(
+            transform.position.x,
+            transform.position.y - 0.15f,
+            transform.position.z);
+        
+        bullet.Direction = new Vector3(Direction, 0.0f, 0.0f);
+        bullet.fxPrefab = fxPrefab;
+        bullet.hp = 3;
 
-    //private void OnRelease(GameObject bullet)
-    //{
-    //    bullet.gameObject.SetActive(false);
-    //}
+        SpriteRenderer bulletRenderer = bullet.GetComponent<SpriteRenderer>();
+        bulletRenderer.flipX = spriteRenderer.flipX;
+    }
 
-    //private void OnDestroy(GameObject bullet)
-    //{
-    //    Destroy(bullet.gameObject);
-    //}
+    private void OnReleaseBullet(Bullet bullet)
+    {
+        bullet.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyBullet(Bullet bullet)
+    {
+        Destroy(bullet.gameObject);
+    }
 }
