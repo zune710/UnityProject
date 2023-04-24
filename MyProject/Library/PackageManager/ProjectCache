@@ -6,8 +6,8 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638177729787434352
-    m_Hash: 3857393360
+      ticks: 638179131413211277
+    m_Hash: 2583787299
   m_LockFileStatus:
     m_FilePath: "D:/\uC9C0\uC724\uC774\uAEBC/\uAC15\uC9C0\uC724/\uC678\uC7A5\uD558\uB4DC
       \uB123\uC5B4\uC5B4\uC57C \uD568/SGA \uAD6D\uAE30\uC218\uC5C5 PPT/Unity/UnityProject/MyProject/Packages/packages-lock.json"
@@ -15,8 +15,8 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638177729787814622
-    m_Hash: 3837341717
+      ticks: 638179131413211277
+    m_Hash: 3939970005
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:

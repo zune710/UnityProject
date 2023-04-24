@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Pool;
 
 
@@ -53,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
     private IObjectPool<Bullet> bulletPool;
 
+    public Text Coin;
+
     // Start보다 먼저 실행
     private void Awake()
     {
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds/Night"));
 
         //PoolBulletPrefab = Resources.Load("Prefabs/PoolBullet") as Bullet;  // 안 됨
-        bulletPool = new ObjectPool<Bullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize : 8);
+        bulletPool = new ObjectPool<Bullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 8);
         Parent = new GameObject("BulletList");
     }
 
@@ -90,6 +93,8 @@ public class PlayerController : MonoBehaviour
         DirRight = false;
 
         isStay = false;
+
+        Coin.text = ControllerManager.GetInstance().Coin.ToString();
     }
 
 
@@ -98,6 +103,8 @@ public class PlayerController : MonoBehaviour
     // 초당 60번(보통) ~ 수천번 업데이트
     void Update()
     {
+        Coin.text = ControllerManager.GetInstance().Coin.ToString();
+
         if (Time.timeScale > 0)
         {
             // ** [실수 연산 IEEE754]
@@ -374,6 +381,9 @@ public class PlayerController : MonoBehaviour
             OnHit();
         }
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Coin"))
+            return;
+
         // ** 진동 효과를 생성할 관리자 생성
         GameObject camera = new GameObject("CameraFX");
 
@@ -447,7 +457,7 @@ public class PlayerController : MonoBehaviour
             transform.position.x,
             transform.position.y - 0.15f,
             transform.position.z);
-        
+
         bullet.Direction = new Vector3(Direction, 0.0f, 0.0f);
         bullet.fxPrefab = fxPrefab;
         bullet.hp = 3;

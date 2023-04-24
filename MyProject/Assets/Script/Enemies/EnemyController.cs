@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class EnemyController : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class EnemyController : MonoBehaviour
     PlayerController playerController;
 
     private GameObject EnemyBullet;
-
     private GameObject fxPrefab;
+    private GameObject CoinPrefab;
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -29,6 +30,8 @@ public class EnemyController : MonoBehaviour
 
     private float playerSpeedOffset;
 
+    private IObjectPool<EnemyController> EnemyPool;
+
 
     private void Awake()
     {
@@ -39,10 +42,11 @@ public class EnemyController : MonoBehaviour
 
         EnemyType = EnemyManager.GetInstance.enemyType.ToString();
 
-        if(hasBullet)
+        if (hasBullet)
             EnemyBullet = Resources.Load("Prefabs/Enemies/" + EnemyType + "Bullet") as GameObject;
 
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
+        CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
     }
 
     void Start()
@@ -151,6 +155,8 @@ public class EnemyController : MonoBehaviour
         // ** 총알 스크립트 내부의 방향 변수를 설정한다. (왼쪽으로만 발사)
         Controller.Direction = new Vector3(-1.0f, 0.0f, 0.0f);
 
+        Controller.BasicAttack = true;
+
         // ** 총알 스크립트 내부의 FX Prefab을 설정한다.
         Controller.fxPrefab = fxPrefab;
 
@@ -165,7 +171,7 @@ public class EnemyController : MonoBehaviour
     private void RockSplit()
     {
         GetComponent<AudioSource>().Play();
-        
+
         GameObject RockPrefab;
         List<GameObject> SplitRock = new List<GameObject>();
         Vector3 pos;
@@ -181,7 +187,7 @@ public class EnemyController : MonoBehaviour
 
             int i = 0;
 
-            while(i < 2)
+            while (i < 2)
             {
                 pos = new Vector3(
                     Random.Range(transform.position.x - 0.5f, transform.position.x + 0.5f),
@@ -193,7 +199,7 @@ public class EnemyController : MonoBehaviour
 
                 // ** 클론의 위치 초기화
                 SplitRock[i].transform.position = pos;
-                
+
                 // ** 클론의 이름 초기화
                 SplitRock[i].transform.name = "Rock2";
 
@@ -238,8 +244,29 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void DestroyEnemy()  // Die Anim Event
+    private void CreateCoin()
+    {
+        GameObject coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+    }
+
+    public void SetPool(IObjectPool<EnemyController> pool)
+    {
+        EnemyPool = pool;
+    }
+
+    private void ReleaseEnemy()   // Die Anim Event
+    {
+        EnemyPool.Release(this);
+
+        if (Random.value <= 0.3f)
+            CreateCoin();
+    }
+
+    private void DestroyEnemy()  // Die Anim Event(Rock2, Rock3)
     {
         Destroy(gameObject, 0.016f);
+
+        if (Random.value <= 0.3f)
+            CreateCoin();
     }
 }

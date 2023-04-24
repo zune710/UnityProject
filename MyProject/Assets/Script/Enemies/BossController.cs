@@ -578,7 +578,7 @@ public class BossController : MonoBehaviour
             // ** 총알의 EnemyBulletController 스크립트를 받아온다.
             EnemyBulletController Controller = Obj.AddComponent<EnemyBulletController>();
 
-            Controller.isAttack = true;
+            Controller.BasicAttack = true;
 
             float Direction;
             if (spriteRenderer.flipX)

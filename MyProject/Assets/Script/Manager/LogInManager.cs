@@ -64,6 +64,10 @@ public class LogInManager : MonoBehaviour
     private AudioSource ButtonSFX;
 
     private string emailPattern = @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$";
+    #region ...
+    // 최소 8자, 하나 이상의 문자, 숫자, 특수문자
+    #endregion
+    private string passwordPattern = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%&*?])[A-Za-z\d!@#$%&*?]{3,}$";  // {8,}
     private string id;
     private string password;
     private string userName;
@@ -124,7 +128,7 @@ public class LogInManager : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
             LogIn();
     }
 
@@ -136,7 +140,7 @@ public class LogInManager : MonoBehaviour
         {
             // ** true
             password = Security(Password.text);
-            
+
             if (password == null)
                 return false;
             else
@@ -150,7 +154,7 @@ public class LogInManager : MonoBehaviour
             return false;
         }
     }
-    
+
     private bool SetSignUpData()
     {
         id = NewID.text;
@@ -194,6 +198,13 @@ public class LogInManager : MonoBehaviour
         else
         {
             // ** false
+            if (!Regex.IsMatch(password, passwordPattern))
+            {
+                Notice.text = "password 형식을 다시 확인하세요.";
+                Notice.enabled = true;
+                return null;
+            }
+
             // ** 보안처리: 암호화 & 복호화
             SHA256 sha = new SHA256Managed();
             byte[] hash = sha.ComputeHash(Encoding.ASCII.GetBytes(password));
@@ -203,7 +214,7 @@ public class LogInManager : MonoBehaviour
             {
                 stringBuilder.AppendFormat("{0:x2}", b);
             }
-            
+
             return stringBuilder.ToString();
         }
     }
@@ -274,7 +285,7 @@ public class LogInManager : MonoBehaviour
                 }
                 else
                 {
-                    if(info.message == "회원가입 완료")
+                    if (info.message == "회원가입 완료")
                         SetActiveSignUpFrame();
                     else if (info.message == "중복ID")
                     {
@@ -322,7 +333,7 @@ public class LogInManager : MonoBehaviour
         Notice.enabled = false;
         SignUpFrame.SetActive(!SignUpFrame.activeSelf);
 
-        if(SignUpFrame.activeSelf)
+        if (SignUpFrame.activeSelf)
             eventSystem.SetSelectedGameObject(NewID.gameObject);
     }
 
@@ -341,7 +352,7 @@ public class LogInManager : MonoBehaviour
         if (GenderF.isOn)
             GenderM.isOn = false;
     }
-    
+
     private void Interactable(bool value)
     {
         foreach (Selectable selectableUI in Selectable.allSelectablesArray)
@@ -349,7 +360,7 @@ public class LogInManager : MonoBehaviour
             selectableUI.interactable = value;
         }
 
-        GenderInput.color = value ? new Color(1.0f, 1.0f, 1.0f, 1.0f) 
+        GenderInput.color = value ? new Color(1.0f, 1.0f, 1.0f, 1.0f)
             : new Color(200 / 255f, 200 / 255f, 200 / 255f, 128 / 255f);
     }
 

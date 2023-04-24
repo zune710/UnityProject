@@ -19,7 +19,7 @@ public class RoundManager : MonoBehaviour
             return instance;
         }
     }
-    
+
     private GameObject RoundInfoCanvas;
     private GameObject GoalBar;
     private Slider GoalSlider;
@@ -66,7 +66,7 @@ public class RoundManager : MonoBehaviour
         }
     }
 
-   private void Start()
+    private void Start()
     {
 
         RoundText.text = "Round " + ControllerManager.GetInstance().Round.ToString();
@@ -89,7 +89,7 @@ public class RoundManager : MonoBehaviour
             GoalSlider.value = ControllerManager.GetInstance().EnemyCount;
         }
 
-        if(BossDied)
+        if (BossDied)
         {
             BossDied = false;
             StartCoroutine(CheckClear());
@@ -110,7 +110,7 @@ public class RoundManager : MonoBehaviour
                 ControllerManager.GetInstance().onEnemy = false;  // Update의 첫 번째 조건문 피하게
                 StartCoroutine(BossRoundSetting());
             }
-            else if(ControllerManager.GetInstance().onBoss)
+            else if (ControllerManager.GetInstance().onBoss)
                 StartCoroutine(EnemyRoundSetting());
         }
     }
@@ -139,7 +139,7 @@ public class RoundManager : MonoBehaviour
     {
         // BossId 변경
         ++ControllerManager.GetInstance().BossId;
-        
+
         // Boss On(1/2)
         ControllerManager.GetInstance().onBoss = true;
 
@@ -172,7 +172,7 @@ public class RoundManager : MonoBehaviour
     {
         // EnemyId 변경
         ++ControllerManager.GetInstance().EnemyId;
-        
+
         // Boss Off
         ControllerManager.GetInstance().onBoss = false;
 
@@ -204,6 +204,9 @@ public class RoundManager : MonoBehaviour
         GoalSlider.maxValue = ControllerManager.GetInstance().Goal;
         GoalSlider.value = 0;
 
+        // Clear EnemyPool
+        EnemyManager.GetInstance.ClearEnemyPool();
+
         // Enemy On
         ControllerManager.GetInstance().onEnemy = true;
 
@@ -232,11 +235,11 @@ public class RoundManager : MonoBehaviour
         #endregion
         if (DataManager.GetInstance.isPaused || !Application.isFocused)
             yield return new WaitForSeconds(0.1f);
-        
+
         Time.timeScale = 1.0f;
 
         // Info UI(Round)
-        if(ControllerManager.GetInstance().onBoss)
+        if (ControllerManager.GetInstance().onBoss)
             NextInfoText.GetComponent<Text>().text = "Boss Round";
         else
             NextInfoText.GetComponent<Text>().text = RoundText.text;

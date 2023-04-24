@@ -10,7 +10,7 @@ public class EnemyBulletController : MonoBehaviour
     public GameObject Target = null;
 
     public bool Option;
-    public bool isAttack = false;
+    public bool BasicAttack = false;
 
     // ** 이펙트 효과 원본
     [HideInInspector]
@@ -28,7 +28,7 @@ public class EnemyBulletController : MonoBehaviour
     private void Start()
     {
         // 기본 공격일 때 총알 속도
-        if (isAttack)
+        if (BasicAttack)
         {
             Speed = 10.0f;
             return;
