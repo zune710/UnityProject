@@ -393,6 +393,7 @@
 "Assets/Script/NotUse/Twist.cs"
 "Assets/Script/Player/Bullet.cs"
 "Assets/Script/Player/BulletController.cs"
+"Assets/Script/Player/Coin.cs"
 "Assets/Script/Player/PlayerController.cs"
 "Assets/Script/Player/PlayerHPBar.cs"
 "Assets/Script/Player/SkillController.cs"

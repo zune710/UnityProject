@@ -212,6 +212,9 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         // New Game 실행
         ResetValue();
         ControllerManager.GetInstance().LoadGame = true;
+
+        DataManager.GetInstance.SaveData();
+
         SceneManager.LoadScene("GameStart");
     }
 

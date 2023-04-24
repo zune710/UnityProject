@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     public GameObject fxPrefab;
 
     // ** 총알이 날아가야 할 방향
-    public Vector3 Direction { get; set; } // 과 동일
+    public Vector3 Direction { get; set; }
 
     private IObjectPool<Bullet> bulletPool;
 

@@ -1,0 +1,49 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Coin : MonoBehaviour
+{
+    private Vector3 Movement;
+    private float playerSpeedOffset;
+    PlayerController playerController;
+
+    private Animator Anim;
+    private AudioSource sfx;
+
+    private void Awake()
+    {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        Anim = GetComponent<Animator>();
+        sfx = GetComponent<AudioSource>();  // sfx 바꿔야 함
+    }
+
+    private void Update()
+    {
+        playerSpeedOffset = playerController.Speed * 0.2f;  // 1.0 또는 2.0
+
+
+        Movement = ControllerManager.GetInstance().DirRight ?
+            new Vector3(1.0f * playerSpeedOffset, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f); // 1.0f: Background 2 속도
+
+        transform.position -= Movement * Time.deltaTime;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            ControllerManager.GetInstance().Coin += 10;
+            sfx.Play();
+            Anim.SetTrigger("Collect");
+
+            GetComponent<CircleCollider2D>().enabled = false;
+        }
+    }
+
+    private void DestroyCoin()
+    {
+        Destroy(gameObject);
+    }
+}
