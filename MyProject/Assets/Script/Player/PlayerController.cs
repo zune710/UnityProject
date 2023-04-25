@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     private IObjectPool<Bullet> bulletPool;
 
-    public Text Coin;
+    public Text CoinText;
 
     // Start보다 먼저 실행
     private void Awake()
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
         isStay = false;
 
-        Coin.text = ControllerManager.GetInstance().Coin.ToString();
+        CoinText.text = ControllerManager.GetInstance().Coin.ToString();
     }
 
 
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     // 초당 60번(보통) ~ 수천번 업데이트
     void Update()
     {
-        Coin.text = ControllerManager.GetInstance().Coin.ToString();
+        CoinText.text = ControllerManager.GetInstance().Coin.ToString();
 
         if (Time.timeScale > 0)
         {

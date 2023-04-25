@@ -181,6 +181,7 @@ public class ButtonController : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         ControllerManager.GetInstance().LoadGame = false;
         ControllerManager.GetInstance().GoalClear = false;
         ControllerManager.GetInstance().BossClear = false;
+        ControllerManager.GetInstance().Coin = 0;
 
         DataManager.GetInstance.LogOut();
 

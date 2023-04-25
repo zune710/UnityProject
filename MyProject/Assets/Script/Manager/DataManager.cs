@@ -42,6 +42,8 @@ public class DataForm
     public int EnemyId;
     public int BossId;
 
+    public int Coin;
+
     public DataForm() { }
 
     //ItemForm item;  // json 안에 json 형태로 저장
@@ -114,6 +116,8 @@ public class DataManager : MonoBehaviour
         form.AddField("GameOver", ControllerManager.GetInstance().GameOver.ToString());
         form.AddField("GameClear", ControllerManager.GetInstance().GameClear.ToString());
 
+        form.AddField("Coin", ControllerManager.GetInstance().Coin);
+
         StartCoroutine(Post(form, nameof(SaveData)));
     }
 
@@ -177,6 +181,8 @@ public class DataManager : MonoBehaviour
         ControllerManager.GetInstance().BossClear = form.BossClear;
         ControllerManager.GetInstance().GameOver = form.GameOver;
         ControllerManager.GetInstance().GameClear = form.GameClear;
+
+        ControllerManager.GetInstance().Coin = form.Coin;
     }
 
 

@@ -11,18 +11,22 @@ public class Coin : MonoBehaviour
     private Animator Anim;
     private AudioSource sfx;
 
+    private Animator CoinUpAnim;
+
+
     private void Awake()
     {
         playerController = GameObject.Find("Player").GetComponent<PlayerController>();
 
         Anim = GetComponent<Animator>();
-        sfx = GetComponent<AudioSource>();  // sfx 바꿔야 함
+        sfx = GetComponent<AudioSource>();  // Coin
+
+        CoinUpAnim = GameObject.Find("IncreaseText").GetComponent<Animator>();
     }
 
     private void Update()
     {
         playerSpeedOffset = playerController.Speed * 0.2f;  // 1.0 또는 2.0
-
 
         Movement = ControllerManager.GetInstance().DirRight ?
             new Vector3(1.0f * playerSpeedOffset, 0.0f, 0.0f) : new Vector3(0.0f, 0.0f, 0.0f); // 1.0f: Background 2 속도
@@ -35,10 +39,13 @@ public class Coin : MonoBehaviour
         if (collision.tag == "Player")
         {
             ControllerManager.GetInstance().Coin += 10;
-            sfx.Play();
-            Anim.SetTrigger("Collect");
 
-            GetComponent<CircleCollider2D>().enabled = false;
+            sfx.Play();
+
+            Anim.SetTrigger("Collect");
+            CoinUpAnim.SetTrigger("Collect");
+
+            GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 

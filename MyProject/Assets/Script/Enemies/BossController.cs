@@ -54,6 +54,9 @@ public class BossController : MonoBehaviour
     private List<GameObject> BulletList = new List<GameObject>();
     private GameObject TreeBulletPrefab;
     private GameObject fxPrefab;
+    private GameObject CoinPrefab;
+
+    private GameObject CoinParent;
 
     /* //Pool
     private IObjectPool<EnemyBullet> bulletPool;
@@ -78,8 +81,10 @@ public class BossController : MonoBehaviour
         ApearAnim = ApearUI.GetComponent<Animator>();
 
         TreeBulletPrefab = Resources.Load("Prefabs/Boss/TreeBullet") as GameObject;
-
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
+        CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
+
+        CoinParent = GameObject.Find("CoinList") ? GameObject.Find("CoinList").gameObject : new GameObject("CoinList");
 
         //// Pool
         //bulletPool = new ObjectPool<EnemyBullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 8);
@@ -802,10 +807,29 @@ public class BossController : MonoBehaviour
                 }
 
                 if (collision.transform.name == "BigBullet")
+                {
                     HP -= 10;
+
+                    float value = Random.value;
+                    float count;
+
+                    if (value <= 0.8f)
+                        count = 3;
+                    else if (value <= 0.95f)
+                        count = 5;
+                    else
+                        count = 10;
+
+                    for(int i = 0; i < count; ++i)
+                        CreateCoin();
+                }
                 else
                 {
                     --HP;
+
+                    if (Random.value <= 0.1f)
+                        CreateCoin();
+
                     //Anim.SetTrigger("Hit");
                 }
 
@@ -823,6 +847,26 @@ public class BossController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void CreateCoin()
+    {
+        float posX = Random.Range(transform.position.x - 1, transform.position.x + 1);
+        float posY;
+
+        while(true)
+        {
+            posY = Random.Range(transform.position.y - 1, transform.position.y + 1);
+
+            if (-6 < posY && posY < -3)  // 플레이어가 갈 수 있는 Y값 범위
+                break;
+        }
+
+        Vector3 pos = new Vector3(posX, posY, 0.0f);
+
+        GameObject coin = Instantiate(CoinPrefab, pos, Quaternion.identity);
+        
+        coin.transform.SetParent(CoinParent.transform);
     }
 
     private void ChangeTimeScale(float value)  // Die Anim Event 1 (value = 1)

@@ -33,7 +33,9 @@ public class ControllerManager
     public float BulletSpeed = 10.0f;  // Save, Load X
     public int Heart = 3;
     public int EnemyCount = 0;
-    public int Coin = 0;  // 구글에 추가해야 함. new game해도 리셋되면 안 됨.
+
+    // CoinData
+    public int Coin = 0;
 
     // EnemyData
     public int EnemyId = 1;

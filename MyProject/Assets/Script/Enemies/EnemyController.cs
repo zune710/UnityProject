@@ -32,6 +32,8 @@ public class EnemyController : MonoBehaviour
 
     private IObjectPool<EnemyController> EnemyPool;
 
+    private GameObject CoinParent;
+
 
     private void Awake()
     {
@@ -47,6 +49,8 @@ public class EnemyController : MonoBehaviour
 
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
         CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
+
+        CoinParent = GameObject.Find("CoinList") ? GameObject.Find("CoinList").gameObject : new GameObject("CoinList");
     }
 
     void Start()
@@ -117,6 +121,9 @@ public class EnemyController : MonoBehaviour
 
                 if (ControllerManager.GetInstance().EnemyCount == ControllerManager.GetInstance().Goal)
                     ControllerManager.GetInstance().GoalClear = true;
+
+                if (Random.value <= 0.3f)
+                    CreateCoin();
             }
         }
     }
@@ -247,6 +254,8 @@ public class EnemyController : MonoBehaviour
     private void CreateCoin()
     {
         GameObject coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+
+        coin.transform.SetParent(CoinParent.transform);
     }
 
     public void SetPool(IObjectPool<EnemyController> pool)
@@ -257,16 +266,10 @@ public class EnemyController : MonoBehaviour
     private void ReleaseEnemy()   // Die Anim Event
     {
         EnemyPool.Release(this);
-
-        if (Random.value <= 0.3f)
-            CreateCoin();
     }
 
     private void DestroyEnemy()  // Die Anim Event(Rock2, Rock3)
     {
         Destroy(gameObject, 0.016f);
-
-        if (Random.value <= 0.3f)
-            CreateCoin();
     }
 }
