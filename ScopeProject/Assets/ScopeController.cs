@@ -18,8 +18,12 @@ public class ScopeController : MonoBehaviour
 
     public List<Vector3> PointList = new List<Vector3>();
 
+
+    public List<GameObject> LeftPointList = new List<GameObject>();
+    public List<GameObject> RightPointList = new List<GameObject>();
+
 #if UNITY_EDITOR
-    //private List<GameObject> PointList2 = new List<GameObject>();
+
 #else
 
 #endif
@@ -31,26 +35,28 @@ public class ScopeController : MonoBehaviour
         radius = 5.0f;
 
 
-        float angle = 360 / Segments;
 
-        //for(int i = 0; i < Segments; ++i)
-        //{
+
+
 #if UNITY_EDITOR  // 에디터 모드에서만 사용
-        //GameObject Object = new GameObject("EditorGizmo");
 
-        //MyGizmo gizmo = Object.AddComponent<MyGizmo>();
-
-        //Object.transform.position = new Vector3(
-        //    Mathf.Cos((angle * i) * Mathf.Deg2Rad),
-        //    Mathf.Sin((angle * i) * Mathf.Deg2Rad),
-        //    0.0f) * radius;
-
-        //PointList.Add(Object.transform.position);
-
-        //PointList2.Add(Object);
 #else
 
 #endif
+        //float angle = Angle / Segments;
+
+        //for (int i = 0; i < Segments + 1; ++i)
+        //{
+        //    GameObject Object = new GameObject("EditorGizmo");
+
+        //    MyGizmo gizmo = Object.AddComponent<MyGizmo>();
+
+        //    Object.transform.position = new Vector3(
+        //        Mathf.Sin(-(angle * i) * Mathf.Deg2Rad),
+        //        0.0f,
+        //        Mathf.Cos(-(angle * i) * Mathf.Deg2Rad)) * radius + transform.position;
+
+        //    PointList.Add(Object.transform.position);
         //}
     }
 
@@ -58,7 +64,7 @@ public class ScopeController : MonoBehaviour
     {
 #if UNITY_EDITOR
 
-        print(transform.eulerAngles.y);
+        //print(transform.eulerAngles.y);
 
         //float angle = 360 / Segments;
         //for (int i = 0; i < Segments; ++i)

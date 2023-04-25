@@ -32,20 +32,44 @@ public class ScopeEditor : Editor  // Editor: component 내부를 변경  /  EditorWi
 
             Handles.DrawLine(targetComponent.transform.position,
                 targetComponent.transform.position + angleRightPoint * targetComponent.radius);
+
+
+
+            targetComponent.LeftPointList[i].transform.position = targetComponent.transform.position + angleLeftPoint * targetComponent.radius;
+            targetComponent.RightPointList[i].transform.position = targetComponent.transform.position + angleRightPoint * targetComponent.radius;
+        }
+    }
+
+    private void OnEnable()
+    {
+        GameObject gizmoPrefab = Resources.Load("EditorGizmo") as GameObject;
+
+        ScopeController targetComponent = (ScopeController)target;
+        float Segments = targetComponent.Angle / targetComponent.Segments;
+
+        for (int i = 0; i < targetComponent.LeftPointList.Count; ++i)
+        {
+            DestroyImmediate(targetComponent.LeftPointList[i]);
+            DestroyImmediate(targetComponent.RightPointList[i]);
         }
 
-        for (int i = 0; i < targetComponent.Segments; ++i)
+        targetComponent.LeftPointList.Clear();
+        targetComponent.RightPointList.Clear();
+
+        for (int i = 0; i < targetComponent.Segments + 1; ++i)
         {
-            GameObject Object = new GameObject("EditorGizmo");
+            targetComponent.LeftPointList.Add(Instantiate(gizmoPrefab));
+            targetComponent.RightPointList.Add(Instantiate(gizmoPrefab));
 
-            MyGizmo gizmo = Object.AddComponent<MyGizmo>();
+            targetComponent.LeftPointList[i].transform.position = new Vector3(
+                    Mathf.Sin(-(Segments * i) * Mathf.Deg2Rad),
+                    0.0f,
+                    Mathf.Cos(-(Segments * i) * Mathf.Deg2Rad)) * targetComponent.radius + targetComponent.transform.position;
 
-            Object.transform.position = new Vector3(
-                Mathf.Cos((Segments * i) * Mathf.Deg2Rad),
-                Mathf.Sin((Segments * i) * Mathf.Deg2Rad),
-                0.0f) * targetComponent.radius;
-
-            targetComponent.PointList.Add(Object.transform.position);
+            targetComponent.RightPointList[i].transform.position = new Vector3(
+                   Mathf.Sin((Segments * i) * Mathf.Deg2Rad),
+                   0.0f,
+                   Mathf.Cos((Segments * i) * Mathf.Deg2Rad)) * targetComponent.radius + targetComponent.transform.position;
         }
     }
 }
