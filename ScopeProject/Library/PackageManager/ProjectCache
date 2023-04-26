@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638180173224295214
-    m_Hash: 2465031950
+      ticks: 638180997560200777
+    m_Hash: 1411460284
   m_LockFileStatus:
     m_FilePath: C:/Users/user/Desktop/UnityProject/ScopeProject/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 638180173445132149
-    m_Hash: 3333413975
+      ticks: 638180997560200777
+    m_Hash: 4090777657
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
