@@ -836,7 +836,7 @@ public class BossController : MonoBehaviour
 
                     //Anim.SetTrigger("Hit");
                 }
-
+                
                 if (HP <= 0)
                 {
                     Anim.SetTrigger("Die");
