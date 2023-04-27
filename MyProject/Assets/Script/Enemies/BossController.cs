@@ -54,19 +54,18 @@ public class BossController : MonoBehaviour
     private List<GameObject> BulletList = new List<GameObject>();
     private GameObject TreeBulletPrefab;
     private GameObject fxPrefab;
-    private GameObject CoinPrefab;
-    private Coin PoolCoinPrefab;
+    private Coin CoinPrefab;
 
+    private GameObject TreeBulletParent;
     private GameObject CoinParent;
 
+    private IObjectPool<EnemyBullet> TreeBulletPool;
     private IObjectPool<Coin> CoinPool;
 
     /* //Pool
-    private IObjectPool<EnemyBullet> bulletPool;
     private IObjectPool<EnemyBullet> screwBulletPool;
     private GameObject TreePoolBulletPrefab;
     private EnemyBullet PoolBulletPrefab;
-    private GameObject Parent;
     private GameObject ScrewParent;
     private float angle;
     */
@@ -85,20 +84,19 @@ public class BossController : MonoBehaviour
 
         TreeBulletPrefab = Resources.Load("Prefabs/Boss/TreeBullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
-        CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
-        PoolCoinPrefab = CoinPrefab.GetComponent<Coin>();
+        CoinPrefab = Resources.Load<GameObject>("Prefabs/Coin").GetComponent<Coin>();
 
+        TreeBulletPool = new ObjectPool<EnemyBullet>(CreateTreeBullet, OnGetTreeBullet, OnReleaseTreeBullet, OnDestroyTreeBullet, maxSize: 10);
         CoinPool = new ObjectPool<Coin>(CreateCoin, OnGetCoin, OnReleaseCoin, OnDestroyCoin, maxSize: 5);
 
+        TreeBulletParent = new GameObject("BossBulletList");
         CoinParent = GameObject.Find("CoinList") ? GameObject.Find("CoinList").gameObject : new GameObject("CoinList");
 
         //// Pool
-        //bulletPool = new ObjectPool<EnemyBullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 8);
         //screwBulletPool = new ObjectPool<EnemyBullet>(CreatePoolBullet, OnGetScrewBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 72);
 
         //TreePoolBulletPrefab = Resources.Load("Prefabs/Boss/TreePoolBullet") as GameObject;
         //PoolBulletPrefab = TreePoolBulletPrefab.GetComponent<EnemyBullet>();
-        //Parent = new GameObject("BossBulletList");
         //ScrewParent = new GameObject("BossScrewBulletList");
     }
 
@@ -867,19 +865,19 @@ public class BossController : MonoBehaviour
 
 
     #region Object Pooling
-    /*
-    private EnemyBullet CreatePoolBullet()
+    
+    private EnemyBullet CreateTreeBullet()
     {
-        EnemyBullet bullet = Instantiate(PoolBulletPrefab, transform.position, Quaternion.identity);
+        EnemyBullet bullet = Instantiate(TreeBulletPrefab.GetComponent<EnemyBullet>(), transform.position, Quaternion.identity);
 
-        bullet.SetPool(screwBulletPool);
+        bullet.SetPool(TreeBulletPool);
 
-        bullet.transform.SetParent(Parent.transform);
+        bullet.transform.SetParent(TreeBulletParent.transform);
 
         return bullet;
     }
 
-    private void OnGetBullet(EnemyBullet Obj)
+    private void OnGetTreeBullet(EnemyBullet Obj)
     {
         Obj.gameObject.SetActive(true);
 
@@ -909,7 +907,7 @@ public class BossController : MonoBehaviour
         Obj.Direction = new Vector3(Direction, 0.0f, 0.0f);
 
         Obj.Option = false;
-        Obj.isAttack = true;
+        Obj.BasicAttack = true;
         Obj.fxPrefab = fxPrefab;
 
         // ** 총알의 SpriteRenderer를 받아온다.
@@ -919,7 +917,7 @@ public class BossController : MonoBehaviour
         bulletRenderer.flipX = spriteRenderer.flipX;
 
     }
-
+    /*
     private void OnGetScrewBullet(EnemyBullet Obj)
     {
         Obj.transform.SetParent(ScrewParent.transform);
@@ -937,24 +935,24 @@ public class BossController : MonoBehaviour
 
         Obj.transform.position = transform.position;
     }
-
-    private void OnReleaseBullet(EnemyBullet bullet)
+    */
+    private void OnReleaseTreeBullet(EnemyBullet bullet)
     {
         bullet.gameObject.SetActive(false);
     }
 
-    private void OnDestroyBullet(EnemyBullet bullet)
+    private void OnDestroyTreeBullet(EnemyBullet bullet)
     {
         Destroy(bullet.gameObject);
     }
-    */
+    
     #endregion
 
 
 
     private Coin CreateCoin()
     {
-        Coin coin = Instantiate(PoolCoinPrefab, transform.position, Quaternion.identity);
+        Coin coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
 
         coin.SetPool(CoinPool);
 

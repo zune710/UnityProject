@@ -52,7 +52,7 @@ public class BossManager : MonoBehaviour
 
         // ** Enemy로 사용할 원형 객체
         Prefab = Resources.Load("Prefabs/Boss/" + bossType.ToString()) as GameObject;
-        HPPrefab = Resources.Load("Prefabs/BossHPSlider") as GameObject;
+        HPPrefab = Resources.Load("Prefabs/UI/BossHPSlider") as GameObject;
     }
 
     private void Update()

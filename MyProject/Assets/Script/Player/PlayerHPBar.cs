@@ -17,7 +17,7 @@ public class PlayerHPBar : MonoBehaviour
         HPBar = GetComponent<Slider>();
         HPText = transform.Find("HPText").GetComponent<Text>();
 
-        HeartPrefab = Resources.Load("Prefabs/Heart") as GameObject;
+        HeartPrefab = Resources.Load("Prefabs/UI/Heart") as GameObject;
     }
 
     private void Start()

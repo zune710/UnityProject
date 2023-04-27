@@ -57,7 +57,7 @@ public class Coin : MonoBehaviour
         CoinPool = pool;
     }
 
-    private void ReleaseCoin()
+    private void ReleaseCoin()  // Coin_Collect Animation Event
     {
         CoinPool.Release(this);
     }

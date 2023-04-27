@@ -29,8 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool isStay;    // OnTriggerStay2D 상태
 
     // ** 복제할 총알 원본
-    private GameObject BulletPrefab;
-    [SerializeField] private Bullet PoolBulletPrefab;
+    private Bullet BulletPrefab;
 
     // ** 복제할 FX 원본
     private GameObject fxPrefab;
@@ -56,6 +55,10 @@ public class PlayerController : MonoBehaviour
 
     public Text CoinText;
 
+    //private GameObject ObjParent = null;
+    //private string EnemyName = "Enemy";
+
+
     // Start보다 먼저 실행
     private void Awake()
     {
@@ -66,14 +69,15 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = this.GetComponent<SpriteRenderer>();
 
         // ** [Resources] 폴더에서, 사용할 리소스를 들고온다.
-        BulletPrefab = Resources.Load("Prefabs/Bullet") as GameObject;
+        BulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet").GetComponent<Bullet>();
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
 
         stageBack = new List<GameObject>(Resources.LoadAll<GameObject>("Backgrounds/Night"));
 
-        //PoolBulletPrefab = Resources.Load("Prefabs/PoolBullet") as Bullet;  // 안 됨
         bulletPool = new ObjectPool<Bullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 8);
         Parent = new GameObject("BulletList");
+
+        //ObjParent = new GameObject("ObjectList");
     }
 
     // ** 유니티 기본 제공 함수
@@ -103,6 +107,10 @@ public class PlayerController : MonoBehaviour
     // 초당 60번(보통) ~ 수천번 업데이트
     void Update()
     {
+        //if (Input.GetKeyDown(KeyCode.Return))
+        //    Instantiate(
+        //        PrefabManager.GetInstance.GetPrefabByName(EnemyName)).transform.SetParent(Parent.transform);
+
         CoinText.text = ControllerManager.GetInstance().Coin.ToString();
 
         if (Time.timeScale > 0)
@@ -279,7 +287,7 @@ public class PlayerController : MonoBehaviour
     private void CreateBullet()  // Attack Animation Event (with BulletController Script)
     {
         // ** 총알 원본을 복제한다.
-        GameObject Obj = Instantiate(BulletPrefab);
+        GameObject Obj = Instantiate(BulletPrefab.gameObject);
         // Obj.transform.name = "";
 
         //** 복제된 총알의 위치를 현재 플레이어의 위치로 초기화한다.
@@ -316,7 +324,7 @@ public class PlayerController : MonoBehaviour
     {
         float Hor = Input.GetAxisRaw("Horizontal");
 
-        GameObject Obj = Instantiate(BulletPrefab);
+        GameObject Obj = Instantiate(BulletPrefab.gameObject);
         Obj.transform.name = "Bullet";
         Obj.transform.position = transform.position;
         BulletController Controller = Obj.AddComponent<BulletController>();
@@ -440,7 +448,7 @@ public class PlayerController : MonoBehaviour
 
     private Bullet CreatePoolBullet()
     {
-        Bullet bullet = Instantiate(PoolBulletPrefab, transform.position, Quaternion.identity);
+        Bullet bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
 
         bullet.SetPool(bulletPool);
 

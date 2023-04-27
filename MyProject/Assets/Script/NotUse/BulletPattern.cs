@@ -24,7 +24,7 @@ public class BulletPattern : MonoBehaviour
 
     void Start()
     {
-        BulletPrefab = Resources.Load("Prefabs/PatternBullet") as GameObject;
+        BulletPrefab = Resources.Load("Prefabs/NotUse/PatternBullet") as GameObject;
 
         switch (pattern)
         {
@@ -126,7 +126,7 @@ public class BulletPattern : MonoBehaviour
         {
             fTime -= Time.deltaTime;
 
-            GameObject Obj = Instantiate(Resources.Load("Prefabs/Twist")) as GameObject;
+            GameObject Obj = Instantiate(Resources.Load("Prefabs/NotUse/Twist")) as GameObject;
 
             yield return null;
         }
