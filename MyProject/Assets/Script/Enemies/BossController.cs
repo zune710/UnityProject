@@ -55,8 +55,11 @@ public class BossController : MonoBehaviour
     private GameObject TreeBulletPrefab;
     private GameObject fxPrefab;
     private GameObject CoinPrefab;
+    private Coin PoolCoinPrefab;
 
     private GameObject CoinParent;
+
+    private IObjectPool<Coin> CoinPool;
 
     /* //Pool
     private IObjectPool<EnemyBullet> bulletPool;
@@ -83,6 +86,9 @@ public class BossController : MonoBehaviour
         TreeBulletPrefab = Resources.Load("Prefabs/Boss/TreeBullet") as GameObject;
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
         CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
+        PoolCoinPrefab = CoinPrefab.GetComponent<Coin>();
+
+        CoinPool = new ObjectPool<Coin>(CreateCoin, OnGetCoin, OnReleaseCoin, OnDestroyCoin, maxSize: 5);
 
         CoinParent = GameObject.Find("CoinList") ? GameObject.Find("CoinList").gameObject : new GameObject("CoinList");
 
@@ -821,14 +827,14 @@ public class BossController : MonoBehaviour
                         count = 10;
 
                     for(int i = 0; i < count; ++i)
-                        CreateCoin();
+                        CoinPool.Get();
                 }
                 else
                 {
                     --HP;
 
                     if (Random.value <= 0.1f)
-                        CreateCoin();
+                        CoinPool.Get();
 
                     //Anim.SetTrigger("Hit");
                 }
@@ -847,26 +853,6 @@ public class BossController : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void CreateCoin()
-    {
-        float posX = Random.Range(transform.position.x - 1, transform.position.x + 1);
-        float posY;
-
-        while(true)
-        {
-            posY = Random.Range(transform.position.y - 1, transform.position.y + 1);
-
-            if (-6 < posY && posY < -3)  // 플레이어가 갈 수 있는 Y값 범위
-                break;
-        }
-
-        Vector3 pos = new Vector3(posX, posY, 0.0f);
-
-        GameObject coin = Instantiate(CoinPrefab, pos, Quaternion.identity);
-        
-        coin.transform.SetParent(CoinParent.transform);
     }
 
     private void ChangeTimeScale(float value)  // Die Anim Event 1 (value = 1)
@@ -964,4 +950,46 @@ public class BossController : MonoBehaviour
     */
     #endregion
 
+
+
+    private Coin CreateCoin()
+    {
+        Coin coin = Instantiate(PoolCoinPrefab, transform.position, Quaternion.identity);
+
+        coin.SetPool(CoinPool);
+
+        coin.transform.SetParent(CoinParent.transform);
+
+        return coin;
+    }
+
+    private void OnGetCoin(Coin coin)
+    {
+        float posX = Random.Range(transform.position.x - 1, transform.position.x + 1);
+        float posY;
+
+        while (true)
+        {
+            posY = Random.Range(transform.position.y - 1, transform.position.y + 1);
+
+            if (-6 < posY && posY < -3)  // 플레이어가 갈 수 있는 Y값 범위
+                break;
+        }
+
+        coin.gameObject.SetActive(true);
+
+        coin.transform.position = new Vector3(posX, posY, 0.0f);
+        coin.transform.name = "Coin";
+        coin.GetComponent<CapsuleCollider2D>().enabled = true;
+    }
+
+    private void OnReleaseCoin(Coin coin)
+    {
+        coin.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyCoin(Coin coin)
+    {
+        Destroy(coin.gameObject);
+    }
 }

@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     private GameObject EnemyBullet;
     private GameObject fxPrefab;
     private GameObject CoinPrefab;
+    private Coin PoolCoinPrefab;
 
     // ** 복제된 총알의 저장공간
     private List<GameObject> Bullets = new List<GameObject>();
@@ -31,6 +32,7 @@ public class EnemyController : MonoBehaviour
     private float playerSpeedOffset;
 
     private IObjectPool<EnemyController> EnemyPool;
+    private IObjectPool<Coin> CoinPool;
 
     private GameObject CoinParent;
 
@@ -49,6 +51,9 @@ public class EnemyController : MonoBehaviour
 
         fxPrefab = Resources.Load("Prefabs/FX/Hit") as GameObject;
         CoinPrefab = Resources.Load("Prefabs/Coin") as GameObject;
+        PoolCoinPrefab = CoinPrefab.GetComponent<Coin>();
+
+        CoinPool = new ObjectPool<Coin>(CreateCoin, OnGetCoin, OnReleaseCoin, OnDestroyCoin, maxSize: 5);
 
         CoinParent = GameObject.Find("CoinList") ? GameObject.Find("CoinList").gameObject : new GameObject("CoinList");
     }
@@ -123,7 +128,7 @@ public class EnemyController : MonoBehaviour
                     ControllerManager.GetInstance().GoalClear = true;
 
                 if (Random.value <= 0.3f)
-                    CreateCoin();
+                    CoinPool.Get();
             }
         }
     }
@@ -251,12 +256,39 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void CreateCoin()
+
+    private Coin CreateCoin()
     {
-        GameObject coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+        Coin coin = Instantiate(PoolCoinPrefab, transform.position, Quaternion.identity);
+
+        coin.SetPool(CoinPool);
 
         coin.transform.SetParent(CoinParent.transform);
+
+        return coin;
     }
+
+    private void OnGetCoin(Coin coin)
+    {
+        coin.gameObject.SetActive(true);
+
+        coin.transform.position = transform.position;
+
+        coin.transform.name = "Coin";
+
+        coin.GetComponent<CapsuleCollider2D>().enabled = true;
+    }
+
+    private void OnReleaseCoin(Coin coin)
+    {
+        coin.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyCoin(Coin coin)
+    {
+        Destroy(coin.gameObject);
+    }
+
 
     public void SetPool(IObjectPool<EnemyController> pool)
     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Coin : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Coin : MonoBehaviour
     private AudioSource sfx;
 
     private Animator CoinUpAnim;
+
+    private IObjectPool<Coin> CoinPool;
 
 
     private void Awake()
@@ -49,8 +52,13 @@ public class Coin : MonoBehaviour
         }
     }
 
-    private void DestroyCoin()
+    public void SetPool(IObjectPool<Coin> pool)
     {
-        Destroy(gameObject);
+        CoinPool = pool;
+    }
+
+    private void ReleaseCoin()
+    {
+        CoinPool.Release(this);
     }
 }
