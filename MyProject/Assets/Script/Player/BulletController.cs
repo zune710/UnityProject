@@ -20,6 +20,13 @@ public class BulletController : MonoBehaviour
     // ** 총알이 날아가야 할 방향
     public Vector3 Direction { get; set; }
 
+    private GameObject ObjParent = null;
+    private string FxName = "Hit";
+
+    private void Awake()
+    {
+        ObjParent = new GameObject("ObjectList");
+    }
 
     private void Start()
     {
@@ -56,7 +63,9 @@ public class BulletController : MonoBehaviour
         else
         {
             // ** 이펙트 효과 복제
-            GameObject Obj = Instantiate(fxPrefab);
+            //GameObject Obj = Instantiate(fxPrefab);
+            GameObject Obj = Instantiate(PrefabManager.GetInstance.GetPrefabByName(FxName));
+            Obj.transform.SetParent(ObjParent.transform);
 
             // ** 이펙트 효과의 위치를 지정
             Obj.transform.position = transform.position;

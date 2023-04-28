@@ -6,6 +6,8 @@ public class Initializer : MonoBehaviour
 {
     private void Awake()
     {
-        var prefabManager = PrefabManager.GetInstance;  // 활성화
+        // 활성화
+        var prefabManager = PrefabManager.GetInstance;
+        var objectPoolManager = ObjectPoolManager.GetInstance;
     }
 }

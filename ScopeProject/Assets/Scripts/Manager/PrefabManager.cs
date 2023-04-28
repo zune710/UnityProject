@@ -38,7 +38,7 @@ public class PrefabManager //where<string, ...> as :
     {
         // ** 만약에 key가 존재한다면 원형 객체를 반환하고,
         if(prototypeObjectList.ContainsKey(key))
-            return prototypeObjectList[key];
+            return GameObject.Instantiate(prototypeObjectList[key]);
 
         // ** 그렇지 않을 때에는 null을 반환한다.
         return null;

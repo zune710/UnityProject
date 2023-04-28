@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Return))
-            Instantiate(
-                PrefabManager.GetInstance.GetPrefabByName(EnemyName)).transform.SetParent(Parent.transform);
+            ObjectPoolManager.GetInstance.getObject(EnemyName).transform.SetParent(Parent.transform); ;
     }
 }

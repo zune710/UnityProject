@@ -55,8 +55,7 @@ public class PlayerController : MonoBehaviour
 
     public Text CoinText;
 
-    //private GameObject ObjParent = null;
-    //private string EnemyName = "Enemy";
+    private string BulletName = "Bullet";
 
 
     // Start보다 먼저 실행
@@ -76,8 +75,6 @@ public class PlayerController : MonoBehaviour
 
         bulletPool = new ObjectPool<Bullet>(CreatePoolBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 8);
         Parent = new GameObject("BulletList");
-
-        //ObjParent = new GameObject("ObjectList");
     }
 
     // ** 유니티 기본 제공 함수
@@ -107,10 +104,6 @@ public class PlayerController : MonoBehaviour
     // 초당 60번(보통) ~ 수천번 업데이트
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Return))
-        //    Instantiate(
-        //        PrefabManager.GetInstance.GetPrefabByName(EnemyName)).transform.SetParent(Parent.transform);
-
         CoinText.text = ControllerManager.GetInstance().Coin.ToString();
 
         if (Time.timeScale > 0)
@@ -448,8 +441,8 @@ public class PlayerController : MonoBehaviour
 
     private Bullet CreatePoolBullet()
     {
-        Bullet bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
-
+        //Bullet bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
+        Bullet bullet = Instantiate(PrefabManager.GetInstance.GetPrefabByName(BulletName)).GetComponent<Bullet>();
         bullet.SetPool(bulletPool);
 
         bullet.transform.SetParent(Parent.transform);
@@ -467,7 +460,7 @@ public class PlayerController : MonoBehaviour
             transform.position.z);
 
         bullet.Direction = new Vector3(Direction, 0.0f, 0.0f);
-        bullet.fxPrefab = fxPrefab;
+        //bullet.fxPrefab = fxPrefab;
         bullet.hp = 3;
 
         SpriteRenderer bulletRenderer = bullet.GetComponent<SpriteRenderer>();
